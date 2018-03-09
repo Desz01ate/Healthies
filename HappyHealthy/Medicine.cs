@@ -141,7 +141,7 @@ namespace HappyHealthyCSharp
             medObject.ud_id = Extension.getPreference("ud_id", 0, this);
             medObject.Insert();
             var idHeader = medObject.ma_id.ToString();
-            var beforeAfterDecision = before.Checked ? Convert.ToInt32(afterText.Text) : Convert.ToInt32(beforeText.Text);
+            var beforeAfterDecision = before.Checked ? Convert.ToInt32(beforeText.Text) : Convert.ToInt32(afterText.Text);
             var user = new UserTABLE().Select<UserTABLE>($@"SELECT * FROM UserTABLE WHERE UD_ID = '{medObject.ud_id}'")[0];
             DateTime time;
             if (breakfast.Checked)
