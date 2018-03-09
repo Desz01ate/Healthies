@@ -113,7 +113,6 @@
                 <CheckBox
                     android:layout_width="wrap_content"
                     android:layout_height="35dp"
-                    android:text="เช้า"
                     android:id="@+id/CheckBox_button_breakfast"
                     android:textColor="#ffffff"
                     android:layout_weight="1"
