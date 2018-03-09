@@ -104,6 +104,6 @@
             android:onClick="ClickDevelop"
             android:layout_marginTop="15dp"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="15dp" />
+            android:layout_marginRight="15dp"/>
     </RelativeLayout>
 </ScrollView>
