@@ -31,7 +31,7 @@ namespace HappyHealthyCSharp
         MedicineTABLE medObject;
         CheckBox breakfast, lunch, dinner, sleep;
         RadioButton before, after;
-        TextView beforeText, afterText;
+        EditText beforeText, afterText;
         string filePath;
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -43,6 +43,12 @@ namespace HappyHealthyCSharp
             medName = FindViewById<EditText>(Resource.Id.ma_name);
             medDesc = FindViewById<EditText>(Resource.Id.ma_desc);
             medImage = FindViewById<ImageView>(Resource.Id.imageView_show_image);
+            breakfast = FindViewById<CheckBox>(Resource.Id.CheckBox_button_breakfast);
+            lunch = FindViewById<CheckBox>(Resource.Id.CheckBox_button_lunch);
+            dinner = FindViewById<CheckBox>(Resource.Id.CheckBox_button_dinner);
+            sleep = FindViewById<CheckBox>(Resource.Id.CheckBox_button_af_sleep);
+            before = FindViewById<RadioButton>(Resource.Id.Radio_button_bf_food);
+            after = FindViewById<RadioButton>(Resource.Id.Radio_button_af_food);
             var saveButton = FindViewById<ImageView>(Resource.Id.imageView_button_save_pill);
             //var deleteButton = FindViewById<ImageView>(Resource.Id.imageView_button_delete_pill);
             //code goes below
@@ -71,7 +77,17 @@ namespace HappyHealthyCSharp
                 camerabtt.Click += cameraClickEvent;
                 //System.Console.WriteLine(IsAppToTakePicturesAvailable());
             }
-
+            before.Click += delegate {
+                afterText.Text = string.Empty;
+                afterText.Enabled = false;
+                afterText.Enabled = true;
+            };
+            after.Click += delegate
+            {
+                beforeText.Text = string.Empty;
+                beforeText.Enabled = false;
+                afterText.Enabled = true;
+            };
             // Create your application here
         }
 

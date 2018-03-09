@@ -2641,6 +2641,18 @@ namespace HappyHealthyCSharp
 		public partial class Id
 		{
 			
+			// aapt resource value: 0x7f0800b9
+			public const int CheckBox_button_af_sleep = 2131230905;
+			
+			// aapt resource value: 0x7f0800b6
+			public const int CheckBox_button_breakfast = 2131230902;
+			
+			// aapt resource value: 0x7f0800b8
+			public const int CheckBox_button_dinner = 2131230904;
+			
+			// aapt resource value: 0x7f0800b7
+			public const int CheckBox_button_lunch = 2131230903;
+			
 			// aapt resource value: 0x7f0801be
 			public const int ClickAddDia = 2131231166;
 			
@@ -2704,20 +2716,8 @@ namespace HappyHealthyCSharp
 			// aapt resource value: 0x7f0800bc
 			public const int Radio_button_af_food = 2131230908;
 			
-			// aapt resource value: 0x7f0800b9
-			public const int Radio_button_af_sleep = 2131230905;
-			
 			// aapt resource value: 0x7f0800bb
 			public const int Radio_button_bf_food = 2131230907;
-			
-			// aapt resource value: 0x7f0800b6
-			public const int Radio_button_breakfast = 2131230902;
-			
-			// aapt resource value: 0x7f0800b8
-			public const int Radio_button_dinner = 2131230904;
-			
-			// aapt resource value: 0x7f0800b7
-			public const int Radio_button_lunch = 2131230903;
 			
 			// aapt resource value: 0x7f0800ca
 			public const int User_Age = 2131230922;
