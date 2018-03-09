@@ -28,6 +28,7 @@ namespace HappyHealthyCSharp
         public DateTime ud_bf_time { get; set; }
         public DateTime ud_lu_time { get; set; }
         public DateTime ud_dn_time { get; set; }
+        public DateTime ud_sl_time { get; set; }
         public DateTime ud_usually_meal_time { get; set; }
         [SQLite.Unique]
         public string ud_email { get; set; }

@@ -29,6 +29,7 @@ namespace HappyHealthyCSharp
         public static DateTime Lunch => DateTime.Parse("12:00 PM");
         public static DateTime Dinner => DateTime.Parse("6:00 PM");
         public static DateTime Sleep => DateTime.Parse("10:00 PM");
+        public static DateTime GetCustom => DateTime.Now.AddSeconds(30);
         [SQLite.PrimaryKey, SQLite.AutoIncrement]
         public int ma_id { get; set; }
         [SQLite.MaxLength(100)]

@@ -14,6 +14,8 @@ using TaskStackBuilder = Android.Support.V4.App.TaskStackBuilder;
 using Java.Lang;
 using Android.Media;
 using Android.Icu.Util;
+using System.Globalization;
+using Newtonsoft.Json;
 
 namespace HappyHealthyCSharp
 {
@@ -24,7 +26,7 @@ namespace HappyHealthyCSharp
         {
             base.OnCreate(savedInstanceState);
         }
-        private static NotificationCompat.Builder setNotification(Context c,string content,Type secondActivity)
+        private static NotificationCompat.Builder setNotification(Context c, string content, Type secondActivity)
         {
             var stackBuilder = TaskStackBuilder.Create(c);
             var valuesForActivity = new Bundle();
@@ -39,13 +41,13 @@ namespace HappyHealthyCSharp
                 .SetContentTitle("Happy Healthy")
                 .SetSmallIcon(Resource.Drawable.iconfood)
                 .SetVibrate(new long[0])
-                .SetContentText(content);                
+                .SetContentText(content);
             return builder;
         }
-        public static void Show(Context c,string content,Type target,int customSoundResourceID = -9999)
+        public static void Show(Context c, string content, Type target, int customSoundResourceID = -9999)
         {
             var filePath = RingtoneManager.GetDefaultUri(RingtoneType.Notification);
-            if(customSoundResourceID != -9999)
+            if (customSoundResourceID != -9999)
             {
                 filePath = Android.Net.Uri.Parse($@"android.resource://{c.PackageName}/{customSoundResourceID}");
             }
@@ -64,7 +66,7 @@ namespace HappyHealthyCSharp
         /// <param name="repeatDateOfWeek">Repeating date for speciific date</param>
         /// <param name="alertTime">Repeating time for specific time</param>
         /// <param name="customSoundResourceID">Resource id for sound</param>
-        public static void SetAlarmManager(Context c,int requestId,string content, DateTime alertTime)
+        public static void SetAlarmManager(Context c, int requestId, string content, DateTime alertTime)
         {
             /*
             var filePath = RingtoneManager.GetDefaultUri(RingtoneType.Notification).Path;
@@ -90,36 +92,75 @@ namespace HappyHealthyCSharp
             manager.SetRepeating(AlarmType.RtcWakeup, SystemClock.ElapsedRealtime() + calendar.TimeInMillis, fiveMin, pendingIntent);
             //reference : https://stackoverflow.com/questions/42237920/xamarin-android-how-to-schedule-and-alarm-with-a-broadcastreceiver
             */
-            var calendar = Calendar.Instance;
-            calendar.Set(CalendarField.HourOfDay, alertTime.Hour);
+            /*
+            var calendar = Calendar.GetInstance(Android.Icu.Util.TimeZone.GetTimeZone("GMT+7"));
+            //calendar.Clear(CalendarField.Date); calendar.Clear(CalendarField.Month); calendar.Clear(CalendarField.Year);
+            calendar.Clear(CalendarField.Hour); calendar.Clear(CalendarField.Minute); calendar.Clear(CalendarField.Second);
+            calendar.Set(CalendarField.Hour, alertTime.Hour);
             calendar.Set(CalendarField.Minute, alertTime.Minute);
-            calendar.Set(CalendarField.Second, 0);
+            calendar.Set(CalendarField.Second, alertTime.Second);
+            */
+            var realId = Convert.ToInt32(Convert.ToString(requestId).Substring(0, requestId.ToString().Length - 2));
+            var calendar = ToJavaCalendar(alertTime);
             var intent = new Intent(c, typeof(AlarmReceiver));
             intent.PutExtra("content", content);
+            intent.PutExtra("mid",realId);
             var pendingIntent = PendingIntent.GetBroadcast(c, requestId, intent, PendingIntentFlags.UpdateCurrent);
             var am = (AlarmManager)c.GetSystemService(AlarmService);
             am.SetRepeating(AlarmType.RtcWakeup, calendar.TimeInMillis, AlarmManager.IntervalDay, pendingIntent);
         }
-        public static bool CancelAllAlarmManager(Context c, int requestId, string content, DateTime alertTime)
+        public static bool CancelAlarmManager(Context c, int requestId, string content, DateTime alertTime)
         {
+            var requestIdStr = requestId.ToString();
             try
             {
-                var calendar = Calendar.Instance;
-                calendar.Set(CalendarField.HourOfDay, alertTime.Hour);
-                calendar.Set(CalendarField.Minute, alertTime.Minute);
-                calendar.Set(CalendarField.Second, 0);
+                var calendar = ToJavaCalendar(alertTime);
                 var intent = new Intent(c, typeof(AlarmReceiver));
                 intent.PutExtra("content", content);
-                var pendingIntent = PendingIntent.GetBroadcast(c, requestId, intent, PendingIntentFlags.UpdateCurrent);
+                var pendingIntent = PendingIntent.GetBroadcast(c, Convert.ToInt32(requestIdStr+"1"), intent, PendingIntentFlags.UpdateCurrent);
                 var am = (AlarmManager)c.GetSystemService(AlarmService);
+                am.Cancel(pendingIntent);
+                //
+                calendar = ToJavaCalendar(alertTime);
+                intent = new Intent(c, typeof(AlarmReceiver));
+                intent.PutExtra("content", content);
+                pendingIntent = PendingIntent.GetBroadcast(c, Convert.ToInt32(requestIdStr + "2"), intent, PendingIntentFlags.UpdateCurrent);
+                am = (AlarmManager)c.GetSystemService(AlarmService);
+                am.Cancel(pendingIntent);
+                //
+                calendar = ToJavaCalendar(alertTime);
+                intent = new Intent(c, typeof(AlarmReceiver));
+                intent.PutExtra("content", content);
+                pendingIntent = PendingIntent.GetBroadcast(c, Convert.ToInt32(requestIdStr + "3"), intent, PendingIntentFlags.UpdateCurrent);
+                am = (AlarmManager)c.GetSystemService(AlarmService);
+                am.Cancel(pendingIntent);
+                //
+                calendar = ToJavaCalendar(alertTime);
+                intent = new Intent(c, typeof(AlarmReceiver));
+                intent.PutExtra("content", content);
+                pendingIntent = PendingIntent.GetBroadcast(c, Convert.ToInt32(requestIdStr + "4"), intent, PendingIntentFlags.UpdateCurrent);
+                am = (AlarmManager)c.GetSystemService(AlarmService);
                 am.Cancel(pendingIntent);
                 return true;
             }
-            catch(System.Exception ex)
+            catch (System.Exception ex)
             {
                 Console.WriteLine(ex);
             }
             return false;
+        }
+        private static Java.Util.Calendar ToJavaCalendar(DateTime date)
+        {
+            Java.Util.Calendar calendar = Java.Util.Calendar.GetInstance(Java.Util.TimeZone.Default);
+
+            //calendar.Set(date.Year, date.Month - 1, date.Day, date.Hour, date.Minute, date.Second);
+            var am_pm = date.ToString("tt", CultureInfo.InvariantCulture) == "AM" ? Android.Icu.Util.Calendar.Am : Android.Icu.Util.Calendar.Pm; 
+            //Ok, the above line is VERY VERY IMPORTANT PART of this functiom. Don't mess with it unless you know what you're doing.
+            calendar.Set(Java.Util.CalendarField.AmPm, am_pm);
+            calendar.Set(Java.Util.CalendarField.Hour, date.Hour % 12);
+            calendar.Set(Java.Util.CalendarField.Minute, date.Minute);
+            calendar.Set(Java.Util.CalendarField.Second, date.Second);
+            return calendar;
         }
     }
     [BroadcastReceiver]
@@ -147,20 +188,26 @@ namespace HappyHealthyCSharp
             manager.Notify(1337, notification);
             */
             var alertContent = intent.GetStringExtra("content");
+            var realId = intent.GetStringExtra("mid");
+            var medObject = new MedicineTABLE().Select<MedicineTABLE>($"SELECT * From MedicineTABLE where ma_id = {realId}")[0];
+            var medJson = JsonConvert.SerializeObject(medObject);
             var when = JavaSystem.CurrentTimeMillis();
+
             var notificationManager = (NotificationManager)context.GetSystemService(Context.NotificationService);
-            var notificationIntent = new Intent(context, typeof(EmptyDemo));
+            var notificationIntent = new Intent(context, typeof(Medicine));
+            notificationIntent.PutExtra("targetObject", medJson);
             notificationIntent.SetFlags(ActivityFlags.ClearTop);
             var pendingIntent = PendingIntent.GetActivity(context, 0, notificationIntent, PendingIntentFlags.UpdateCurrent);
             var alarmSound = RingtoneManager.GetDefaultUri(RingtoneType.Notification);
             var mNotifyBuilder = new NotificationCompat.Builder(context);
             mNotifyBuilder.SetSmallIcon(Resource.Drawable.logormutsb);
-            mNotifyBuilder.SetContentTitle("HHCS");
-            mNotifyBuilder.SetContentText(alertContent).SetSound(alarmSound);
+            mNotifyBuilder.SetContentTitle("ถึงเวลาทานยา " + alertContent);
+            mNotifyBuilder.SetContentText($@"ถึงเวลาทานยา {alertContent} ({DateTime.Now.ToString("HH:mm")})").SetSound(alarmSound);
             mNotifyBuilder.SetAutoCancel(true).SetWhen(when);
             mNotifyBuilder.SetContentIntent(pendingIntent);
-            mNotifyBuilder.SetVibrate(new long[] {1000,1000,1000,1000,1000 });
+            mNotifyBuilder.SetVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 });
             notificationManager.Notify(1000, mNotifyBuilder.Build());
         }
+
     }
 }

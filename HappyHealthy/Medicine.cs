@@ -29,6 +29,9 @@ namespace HappyHealthyCSharp
         EditText medName;
         EditText medDesc;
         MedicineTABLE medObject;
+        CheckBox breakfast, lunch, dinner, sleep;
+        RadioButton before, after;
+        TextView beforeText, afterText;
         string filePath;
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -74,17 +77,8 @@ namespace HappyHealthyCSharp
 
         public void DeleteValue(object sender, EventArgs e)
         {
+            throw new NotImplementedException();
             /*
-            Extension.CreateDialogue(this, "Do you want to delete this value?", delegate
-            {
-                // Android.Net.Uri eventUri = Android.Net.Uri.Parse("content://com.android.calendar/events");
-                //var deleteUri = ContentUris.WithAppendedId(eventUri, Convert.ToInt32(docObject.da_calendar_uri.Substring(docObject.da_calendar_uri.LastIndexOf(@"/") + 1)));
-                var deleteUri = CalendarHelper.GetDeleteEventURI(medObject.ma_calendar_uri);
-                ContentResolver.Delete(deleteUri, null, null);
-                medObject.Delete<MedicineTABLE>(medObject.ma_id);
-                Finish();
-            }, delegate { }, "Yes", "No").Show();
-            */
             Extension.CreateDialogue2(
                  this
                  , "ต้องการลบข้อมูลนี้หรือไม่?"
@@ -103,6 +97,7 @@ namespace HappyHealthyCSharp
                  , delegate { }
                  , "\u2713"
                  , "X");
+                 */
         }
 
         public void InitialForUpdateEvent()
@@ -145,16 +140,37 @@ namespace HappyHealthyCSharp
             medObject.ma_pic = picPath;
             medObject.ud_id = Extension.getPreference("ud_id", 0, this);
             medObject.Insert();
+            var idHeader = medObject.ma_id.ToString();
+            var beforeAfterDecision = before.Checked ? Convert.ToInt32(afterText.Text) : Convert.ToInt32(beforeText.Text);
+            var user = new UserTABLE().Select<UserTABLE>($@"SELECT * FROM UserTABLE WHERE UD_ID = '{medObject.ud_id}'")[0];
+            DateTime time;
+            if (breakfast.Checked)
+            {
+                time = user.ud_bf_time.AddMinutes(before.Checked ? -beforeAfterDecision : beforeAfterDecision);
+                CustomNotification.SetAlarmManager(this, Convert.ToInt32(idHeader + "1"), medObject.ma_name, time);
+            }
+            if (lunch.Checked)
+            {
+                time = user.ud_bf_time.AddMinutes(before.Checked ? -beforeAfterDecision : beforeAfterDecision);
+                CustomNotification.SetAlarmManager(this, Convert.ToInt32(idHeader + "2"), medObject.ma_name, time);
+            }
+            if (dinner.Checked)
+            {
+                time = user.ud_bf_time.AddMinutes(before.Checked ? -beforeAfterDecision : beforeAfterDecision);
+                CustomNotification.SetAlarmManager(this, Convert.ToInt32(idHeader + "3"), medObject.ma_name, time);
+            }
+            if (sleep.Checked)
+            {
+                time = user.ud_bf_time.AddMinutes(before.Checked ? -beforeAfterDecision : beforeAfterDecision);
+                CustomNotification.SetAlarmManager(this, Convert.ToInt32(idHeader + "4"), medObject.ma_name, time);
+            }
             /*
-            var testRRULE = "FREQ=WEEKLY";
-            var insertUri = CalendarHelper.GetEventContentValues(1, medName.Text, medDesc.Text, DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 10, 12, false, "UTC+7", testRRULE);
-            var savedUri = ContentResolver.Insert(CalendarContract.Events.ContentUri, insertUri);
-            medObject.ma_calendar_uri = savedUri.ToString();
-            */
-            var time = MedicineTABLE.Morning;
+            var time = MedicineTABLE.GetCustom;
             CustomNotification.SetAlarmManager(this,medObject.ma_id, medObject.ma_name,time );
+            */
             //if(a) morning if(b) lunch and so on...
-            medObject.Update();
+            //medObject.Update();
+            
             //CustomNotification.SetAlarmManager(this, $"ได้เวลาทานยา {medObject.ma_name}",(int)DateTime.Now.DayOfWeek,medObject.ma_set_time, Resource.Raw.notialert);
             this.Finish();
         }
