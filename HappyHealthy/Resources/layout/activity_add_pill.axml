@@ -117,6 +117,7 @@
                     android:textColor="#ffffff"
                     android:layout_weight="1"
                     android:checked="false"
+                    android:text="เช้า"
                     android:textSize="12dp"
                     android:textStyle="bold"
                     android:layout_marginRight="0.0dp"
@@ -172,42 +173,86 @@
                 android:orientation="horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:foregroundGravity="center_vertical|center_horizontal"
-                android:gravity="center_vertical|center_horizontal"
-                android:layout_gravity="center_horizontal"
+                android:foregroundGravity="center_vertical"
+                android:gravity="center_vertical"
+                android:layout_gravity="center_vertical"
                 android:layout_marginTop="5dp">
                 <RadioGroup
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:id="@+id/D_People"
-                    android:layout_gravity="center_horizontal">
-                    <RadioButton
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="86.5dp"
+                    android:gravity="center_horizontal">
+                    <LinearLayout
+                        android:orientation="horizontal"
                         android:layout_width="wrap_content"
-                        android:layout_height="35dp"
-                        android:text="ก่อนอาหาร"
-                        android:id="@+id/Radio_button_bf_food"
-                        android:textColor="#ffffff"
-                        android:layout_weight="1"
-                        android:checked="false"
-                        android:textSize="12dp"
-                        android:textStyle="bold"
-                        android:layout_marginRight="6.0dp"
-                        android:layout_marginLeft="0.0dp"
-                        android:layout_gravity="center_vertical"
-                        android:buttonTint="#5d5d5d" />
-                    <RadioButton
+                        android:layout_height="wrap_content"
+                        android:foregroundGravity="center_horizontal"
+                        android:gravity="center_horizontal"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="5dp">
+                        <RadioButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="35dp"
+                            android:text="ก่อนอาหาร"
+                            android:id="@+id/Radio_button_bf_food"
+                            android:textColor="#ffffff"
+                            android:layout_weight="1"
+                            android:checked="false"
+                            android:textSize="12dp"
+                            android:textStyle="bold"
+                            android:layout_marginRight="6.0dp"
+                            android:layout_marginLeft="0.0dp"
+                            android:layout_gravity="center_vertical"
+                            android:buttonTint="#5d5d5d" />
+                        <EditText
+                            android:layout_width="70dp"
+                            android:layout_height="wrap_content"
+                            android:inputType="text"
+                            android:ems="10"
+                            android:id="@+id/edit_bf_food"
+                            android:textColor="#6f6f6f"
+                            android:textSize="19dp"
+                            android:textStyle="bold"
+                            android:gravity="center_vertical"
+                            android:background="@drawable/my_box_dis"
+                            android:layout_marginTop="5.0dp" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:orientation="horizontal"
                         android:layout_width="wrap_content"
-                        android:layout_height="35dp"
-                        android:text="หลังอาหาร"
-                        android:id="@+id/Radio_button_af_food"
-                        android:textColor="#ffffff"
-                        android:layout_weight="1"
-                        android:textSize="12dp"
-                        android:textStyle="bold"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginRight="5dp"
-                        android:buttonTint="#5d5d5d" />
+                        android:layout_height="wrap_content"
+                        android:foregroundGravity="center_horizontal"
+                        android:gravity="center_horizontal"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="5dp">
+                        <RadioButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="35dp"
+                            android:text="หลังอาหาร"
+                            android:id="@+id/Radio_button_af_food"
+                            android:textColor="#ffffff"
+                            android:layout_weight="1"
+                            android:textSize="12dp"
+                            android:textStyle="bold"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginRight="5dp"
+                            android:buttonTint="#5d5d5d" />
+                        <EditText
+                            android:layout_width="70dp"
+                            android:layout_height="wrap_content"
+                            android:inputType="text"
+                            android:ems="10"
+                            android:id="@+id/edit_af_food"
+                            android:textColor="#6f6f6f"
+                            android:textSize="19dp"
+                            android:textStyle="bold"
+                            android:gravity="center_vertical|center_horizontal"
+                            android:background="@drawable/my_box_dis"
+                            android:layout_marginTop="5.0dp" />
+                    </LinearLayout>
                 </RadioGroup>
             </LinearLayout>
             <ImageView
