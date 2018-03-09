@@ -61,7 +61,7 @@ namespace HappyHealthyCSharp
                 delegate
                 {
                     var jsonObject = JsonConvert.SerializeObject(medObject);
-                    var medicineIntent = new Intent(this, typeof(Diabetes));
+                    var medicineIntent = new Intent(this, typeof(Medicine));
                     medicineIntent.PutExtra("targetObject", jsonObject);
                     StartActivity(medicineIntent);
                 }, delegate
@@ -74,7 +74,11 @@ namespace HappyHealthyCSharp
                     , Extension.adFontSize
                     , delegate
                     {
-                        medObject.Delete<DiabetesTABLE>(medObject.ma_id);
+                        //var deleteUri = CalendarHelper.GetDeleteEventURI(medObject.ma_calendar_uri);
+                        //ContentResolver.Delete(deleteUri, null, null);
+                        var time = MedicineTABLE.GetCustom;
+                        CustomNotification.CancelAlarmManager(this, medObject.ma_id, medObject.ma_name, time);
+                        medObject.Delete<MedicineTABLE>(medObject.ma_id);
                         SetListView();
                     }
                     , delegate { }

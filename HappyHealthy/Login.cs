@@ -68,7 +68,7 @@ namespace HappyHealthyCSharp
             {
                 StartActivity(new Intent(this, typeof(Register)));
             };
-            forgot.Visibility = ViewStates.Invisible;
+            //forgot.Visibility = ViewStates.Invisible;
             forgot.Click += delegate
             {
                 StartActivity(new Intent(this, typeof(PasswordResetActivity)));

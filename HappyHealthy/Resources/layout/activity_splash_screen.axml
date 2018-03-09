@@ -19,7 +19,7 @@
             android:layout_height="160dp"
             android:id="@+id/splashScreenImg"
             android:focusable="false"
-            android:background="@drawable/splashlist"
+            android:src="@drawable/icon"
             android:layout_gravity="center_horizontal" />
     </LinearLayout>
 

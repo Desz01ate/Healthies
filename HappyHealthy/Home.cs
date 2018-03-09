@@ -45,7 +45,7 @@ namespace HappyHealthyCSharp
             KidneyButton.Click += ClickKidney;
             PressureButton.Click += ClickPressure;
             FoodButton.Click += ClickFood;
-            MedicineButton.Click += ClickPill;
+            MedicineButton.Click += ClickMedicine;
             DoctorButton.Click += ClickDoctor;
             DevButton.Click += ClickDev;
             var imageView = FindViewById<ImageView>(Resource.Id.imageView4);
@@ -167,10 +167,22 @@ namespace HappyHealthyCSharp
         {
             StartActivity(new Intent(this, typeof(History_Pressure)));
         }
-        public void ClickPill(object sender, EventArgs e)
+        public void ClickMedicine(object sender, EventArgs e)
         {
             //GlobalFunction.createDialog(this, "Not implemented").Show();
-            StartActivity(new Intent(this, typeof(History_Medicine)));
+            var user = new UserTABLE().Select<UserTABLE>($@"SELECT * FROM UserTABLE WHERE UD_ID = '{Extension.getPreference("ud_id", 0, this)}'")[0];
+            if (!user.ud_bf_time.TimeValidate() || !user.ud_lu_time.TimeValidate() || !user.ud_dn_time.TimeValidate() || !user.ud_sl_time.TimeValidate())
+            {
+                Extension.CreateDialogue(this, "กรุณาตั้งค่าเวลาทานอาหาร และเวลาเข้านอน ก่อนใช้งานการบันทึกแจ้งเตือนทานยา", delegate {
+                    var act = (MainActivity)this.Parent;
+                    var th = act.TabHost;
+                    th.SetCurrentTabByTag("User");
+                }).Show();
+            }
+            else
+            {
+                StartActivity(new Intent(this, typeof(History_Medicine)));
+            }
         }
         public void ClickDoctor(object sender, EventArgs e)
         {
