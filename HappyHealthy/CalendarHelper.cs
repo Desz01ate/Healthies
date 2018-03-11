@@ -17,54 +17,51 @@ namespace HappyHealthyCSharp
 {
     public class CalendarHelper
     {
-        public static ContentValues GetEventContentValues(int calendarId, string title, string description, int year, int month, int date, int startHour, int endHour, bool allday = false, string timeZone = "UTC+7", string rrule = "")
+        public static ContentValues GetEventContentValues(int calendarId, string title, string description, int year, int month, int date, int startHour, int endHour, string timeZone = "UTC+7")
         {
-            /*
+            var calId = GetProperId();
+            ContentValues eventValues = new ContentValues();
+            eventValues.Put(CalendarContract.Events.InterfaceConsts.CalendarId, calId);
+            eventValues.Put(CalendarContract.Events.InterfaceConsts.Title, title);
+            eventValues.Put(CalendarContract.Events.InterfaceConsts.Description,description);
+            eventValues.Put(CalendarContract.Events.InterfaceConsts.Dtstart, CalendarMillisecConverter(year, month, date, startHour, 0));
+            eventValues.Put(CalendarContract.Events.InterfaceConsts.Dtend, CalendarMillisecConverter(year, month, date,endHour, 0));
+            eventValues.Put(CalendarContract.Events.InterfaceConsts.EventTimezone, timeZone);
+            eventValues.Put(CalendarContract.Events.InterfaceConsts.EventEndTimezone, timeZone);
+            //eventValues.Put(CalendarContract.Events.InterfaceConsts.AllDay, true);
+            //Interface All-Day cause the ContentValues to crash on adding to calendar, avoid using it at all cost unless you have enough idea of what you are going to do.
+            return eventValues;
+        }
+
+        private static int GetProperId()
+        {
             var usageId = 0;
-            Android.Net.Uri calendars = Android.Net.Uri.Parse("content://com.android.calendar/calendars");
+            var calendars = CalendarContract.Calendars.ContentUri;
             var projection = new[] {
                 CalendarContract.Events.InterfaceConsts.Id,
                 CalendarContract.Events.InterfaceConsts.CalendarDisplayName
             };
-            var cr = Login.getContext().ContentResolver;
-            var mc = cr.Query(calendars, projection, null, null, null);
-            if (mc.MoveToFirst())
+            var loader = new CursorLoader(Login.getContext(), calendars, projection, null, null, null);
+            var cursor = (ICursor)loader.LoadInBackground();
+            if (cursor.MoveToFirst())
             {
                 do
                 {
-                    var id = mc.GetColumnIndex(projection[0]);
-                    var name = mc.GetColumnIndex(projection[1]);
+                    var id = cursor.GetColumnIndex(projection[0]);
+                    var name = cursor.GetColumnIndex(projection[1]);
 
-                    if (mc.GetString(name).Contains("@"))
+                    if (cursor.GetString(name).Contains("@"))
                     {
-                        usageId = mc.GetInt(id);
+                        usageId = cursor.GetInt(id);
                         break;
+                        
                     }
-                } while (mc.MoveToNext());
-                mc.Close();
+                } while (cursor.MoveToNext());
+                cursor.Close();
             }
-            */
-
-            ContentValues eventValues = new ContentValues();
-            //eventValues.Put(CalendarContract.Events.InterfaceConsts.CalendarId, usageId); //4
-            eventValues.Put(CalendarContract.Events.InterfaceConsts.Title, title);
-            eventValues.Put(CalendarContract.Events.InterfaceConsts.Description, description);
-            eventValues.Put(CalendarContract.Events.InterfaceConsts.AllDay, allday);
-            // GitHub issue #9 : Event start and end times need timezone support.
-            // https://github.com/xamarin/monodroid-samples/issues/9
-            eventValues.Put(CalendarContract.Events.InterfaceConsts.EventTimezone, "UTC+7");
-            eventValues.Put(CalendarContract.Events.InterfaceConsts.EventEndTimezone, "UTC+7");
-            if (rrule != string.Empty)
-            {
-                eventValues.Put(CalendarContract.Events.InterfaceConsts.Rrule, rrule);
-            }
-            if (!allday)
-            {
-                eventValues.Put(CalendarContract.Events.InterfaceConsts.Dtstart, CalendarMillisecConverter(year, month, date, startHour, 0));
-                eventValues.Put(CalendarContract.Events.InterfaceConsts.Dtend, CalendarMillisecConverter(year, month, date, endHour, 0));
-            }
-            return eventValues;
+            return usageId;
         }
+
         public static Android.Net.Uri GetDeleteEventURI(string uri, string baseEvent = "content://com.android.calendar/events")
         {
             Android.Net.Uri eventUri = Android.Net.Uri.Parse(baseEvent);

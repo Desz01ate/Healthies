@@ -49,6 +49,10 @@ namespace HappyHealthyCSharp
             sleep = FindViewById<CheckBox>(Resource.Id.CheckBox_button_af_sleep);
             before = FindViewById<RadioButton>(Resource.Id.Radio_button_bf_food);
             after = FindViewById<RadioButton>(Resource.Id.Radio_button_af_food);
+            beforeText = FindViewById<EditText>(Resource.Id.edit_bf_food);
+            afterText = FindViewById<EditText>(Resource.Id.edit_af_food);
+            beforeText.Enabled = false;
+            afterText.Enabled = false;
             var saveButton = FindViewById<ImageView>(Resource.Id.imageView_button_save_pill);
             //var deleteButton = FindViewById<ImageView>(Resource.Id.imageView_button_delete_pill);
             //code goes below
@@ -80,13 +84,15 @@ namespace HappyHealthyCSharp
             before.Click += delegate {
                 afterText.Text = string.Empty;
                 afterText.Enabled = false;
-                afterText.Enabled = true;
+                beforeText.Enabled = true;
+                after.Checked = false;
             };
             after.Click += delegate
             {
                 beforeText.Text = string.Empty;
                 beforeText.Enabled = false;
                 afterText.Enabled = true;
+                before.Checked = false;
             };
             // Create your application here
         }

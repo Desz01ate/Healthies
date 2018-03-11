@@ -100,7 +100,7 @@ namespace HappyHealthyCSharp
             calendar.Set(CalendarField.Minute, alertTime.Minute);
             calendar.Set(CalendarField.Second, alertTime.Second);
             */
-            var realId = Convert.ToInt32(Convert.ToString(requestId).Substring(0, requestId.ToString().Length - 2));
+            var realId = Convert.ToInt32(Convert.ToString(requestId).Substring(0, requestId.ToString().Length - 1));
             var calendar = ToJavaCalendar(alertTime);
             var intent = new Intent(c, typeof(AlarmReceiver));
             intent.PutExtra("content", content);
@@ -188,7 +188,7 @@ namespace HappyHealthyCSharp
             manager.Notify(1337, notification);
             */
             var alertContent = intent.GetStringExtra("content");
-            var realId = intent.GetStringExtra("mid");
+            var realId = intent.GetIntExtra("mid",0);
             var medObject = new MedicineTABLE().Select<MedicineTABLE>($"SELECT * From MedicineTABLE where ma_id = {realId}")[0];
             var medJson = JsonConvert.SerializeObject(medObject);
             var when = JavaSystem.CurrentTimeMillis();
