@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff">
+    android:background="#dfe4ea">
   <LinearLayout
       android:id="@+id/container_toolbar"
       android:layout_width="match_parent"
@@ -22,7 +22,7 @@
           android:text="เบาหวาน"
           android:textStyle="bold"
           android:textSize="16dp"
-          android:textColor="#5d5d5d" />
+          android:textColor="#3a3a3a" />
       <RadioButton
           android:id="@+id/report_ckd"
           android:layout_width="wrap_content"
@@ -30,7 +30,7 @@
           android:text="ไต"
           android:textStyle="bold"
           android:textSize="16dp"
-          android:textColor="#5d5d5d"
+          android:textColor="#3a3a3a"
           android:layout_marginLeft="12.0dp" />
       <RadioButton
           android:id="@+id/report_bp"
@@ -39,7 +39,7 @@
           android:text="ความดัน"
           android:textStyle="bold"
           android:textSize="16dp"
-          android:textColor="#5d5d5d"
+          android:textColor="#3a3a3a"
           android:layout_marginLeft="12.0dp" />
     </RadioGroup>
     <TextView

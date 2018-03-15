@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="?attr/actionBarSize"
-    android:background="#ec7e41"
+    android:background="#29297c"
     local:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
     local:popupTheme="@style/ThemeOverlay.AppCompat.Light">
     <LinearLayout
@@ -25,7 +25,7 @@
         <TextView
             android:layout_width="290.0dp"
             android:layout_height="wrap_content"
-            android:text="ประวัติบันทึกไต"
+            android:text="ประวัติบันทึกค่าไต"
             android:id="@+id/textView_header_name_kidey"
             android:layout_centerHorizontal="true"
             android:textSize="20dp"

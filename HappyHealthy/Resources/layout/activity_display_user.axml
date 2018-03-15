@@ -5,305 +5,314 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="#f4f0f0">
-  <LinearLayout
-      android:id="@+id/container_toolbar"
-      android:layout_width="fill_parent"
-      android:layout_height="fill_parent"
-      android:orientation="vertical">
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar" />
-  </LinearLayout>
-  <TextView
-      android:id="@+id/textView18"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_centerHorizontal="true"
-      android:layout_marginTop="15dp"
-      android:text="ข้อมูลผู้ใช้งาน"
-      android:textColor="#ffffff"
-      android:textSize="20dp"
-      android:textStyle="bold" />
-  <TextView
-      android:id="@+id/savedatauser"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignParentLeft="false"
-      android:layout_alignParentRight="true"
-      android:layout_centerHorizontal="true"
-      android:layout_marginRight="15dp"
-      android:layout_marginTop="20dp"
-      android:onClick="ClickSaveDataUser"
-      android:text="บันทึก"
-      android:textStyle="bold"
-      android:textColor="#ffffff"
-      android:textSize="16dp" />
-  <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginLeft="15dp"
-      android:layout_marginRight="15dp"
-      android:layout_marginTop="70dp"
-      android:orientation="vertical">
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-      <ImageView
-          android:id="@+id/imageView15"
-          android:layout_width="wrap_content"
-          android:layout_height="19dp"
-          android:layout_marginLeft="50.0dp"
-          android:layout_marginTop="3dp"
-          android:src="@drawable/da5" />
-      <EditText
-          android:id="@+id/user_detail_name"
-          android:layout_width="150dp"
-          android:layout_height="22dp"
-          android:layout_gravity="center_vertical"
-          android:layout_marginLeft="4.0dp"
-          android:background="@drawable/my_border_box"
-          android:gravity="center_vertical|center_horizontal"
-          android:textColor="#505050"
-          android:textSize="15dp"
-          android:textStyle="bold" />
+        android:id="@+id/container_toolbar"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar" />
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/textView18"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="10.5dp">
-      <ImageView
-          android:id="@+id/imageView17"
-          android:layout_width="wrap_content"
-          android:layout_height="19dp"
-          android:layout_marginLeft="84.5dp"
-          android:layout_marginTop="1.5dp"
-          android:src="@drawable/da6" />
-      <EditText
-          android:id="@+id/ud_gen"
-          android:layout_width="150dp"
-          android:layout_height="22dp"
-          android:layout_gravity="center_vertical"
-          android:layout_marginLeft="12.0dp"
-          android:layout_marginTop="0.0dp"
-          android:autoText="false"
-          android:background="@drawable/my_border_box"
-          android:gravity="center_vertical|center_horizontal"
-          android:inputType="number"
-          android:numeric="integer"
-          android:textColor="#505050"
-          android:textSize="15dp"
-          android:textStyle="bold"
-          android:focusable="false" />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:text="ข้อมูลผู้ใช้งาน"
+        android:textColor="#ffffff"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+    <TextView
+        android:id="@+id/savedatauser"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-      <ImageView
-          android:id="@+id/imageView20"
-          android:layout_width="wrap_content"
-          android:layout_height="19dp"
-          android:layout_marginLeft="86.5dp"
-          android:layout_marginTop="10.0dp"
-          android:src="@drawable/da7" />
-      <EditText
-          android:id="@+id/user_detail_age"
-          android:layout_width="150dp"
-          android:layout_height="22dp"
-          android:layout_gravity="center_vertical"
-          android:layout_marginLeft="13.5dp"
-          android:layout_marginTop="4dp"
-          android:autoText="false"
-          android:background="@drawable/my_border_box"
-          android:gravity="center_vertical|center_horizontal"
-          android:inputType="number"
-          android:numeric="integer"
-          android:textColor="#505050"
-          android:textSize="15dp"
-          android:textStyle="bold"
-          android:focusable="false" />
-      <ImageView
-          android:id="@+id/imageView60"
-          android:layout_width="wrap_content"
-          android:layout_height="25dp"
-          android:layout_marginLeft="5dp"
-          android:layout_marginTop="10dp"
-          android:src="@drawable/year" />
-    </LinearLayout>
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentRight="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="20dp"
+        android:onClick="ClickSaveDataUser"
+        android:text="บันทึก"
+        android:textStyle="bold"
+        android:textColor="#ffffff"
+        android:textSize="16dp" />
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="left"
-        android:layout_marginTop="19.0dp"
-        android:layout_marginLeft="65.5dp">
-      <ImageView
-          android:layout_width="20dp"
-          android:layout_height="20dp"
-          android:id="@+id/imageview_ud_sl_time"
-          android:src="@drawable/ic_clock"
-          android:layout_marginTop="0.0dp" />
-      <TextView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="เช้า"
-          android:id="@+id/textview_ud_bf_time"
-          android:textColor="#f2787b"
-          android:textSize="16dp"
-          android:layout_marginLeft="5.0dp" />
-      <EditText
-          android:id="@+id/ud_bf_time"
-          android:layout_width="150dp"
-          android:layout_height="22dp"
-          android:layout_gravity="center_vertical"
-          android:layout_marginLeft="41dp"
-          android:layout_marginTop="0.0dp"
-          android:autoText="false"
-          android:background="@drawable/my_border_box"
-          android:gravity="center_vertical|center_horizontal"
-          android:inputType="number"
-          android:numeric="integer"
-          android:textColor="#505050"
-          android:textSize="15dp"
-          android:textStyle="bold"
-          android:focusable="false" />
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="70dp"
+        android:orientation="vertical"
+        android:layout_centerHorizontal="true">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="left">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ชื่อผู้ใช้งาน"
+                android:id="@+id/textview_ud_sl_time"
+                android:textColor="#3a3a3a"
+                android:textSize="16dp"
+                android:layout_gravity="center_vertical" />
+            <EditText
+                android:id="@+id/user_detail_name"
+                android:layout_width="150dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="19.0dp"
+                android:background="@drawable/my_box_dis"
+                android:gravity="center_vertical|center_horizontal"
+                android:textColor="#505050"
+                android:textSize="15dp"
+                android:textStyle="bold" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="left"
+            android:layout_marginTop="10.5dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="เพศ"
+                android:id="@+id/textview_ud_sl_time"
+                android:textColor="#3a3a3a"
+                android:textSize="16dp"
+                android:layout_gravity="center_vertical" />
+            <EditText
+                android:id="@+id/ud_gen"
+                android:layout_width="150dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="65dp"
+                android:layout_marginTop="0.0dp"
+                android:autoText="false"
+                android:background="@drawable/my_box_dis"
+                android:gravity="center_vertical|center_horizontal"
+                android:inputType="number"
+                android:numeric="integer"
+                android:textColor="#505050"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                android:focusable="false" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10.5dp"
+            android:layout_gravity="left">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="อายุ"
+                android:id="@+id/textview_ud_sl_time"
+                android:textColor="#3a3a3a"
+                android:textSize="16dp"
+                android:layout_gravity="center_vertical" />
+            <EditText
+                android:id="@+id/user_detail_age"
+                android:layout_width="150dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="65dp"
+                android:layout_marginTop="0.0dp"
+                android:autoText="false"
+                android:background="@drawable/my_box_dis"
+                android:gravity="center_vertical|center_horizontal"
+                android:inputType="number"
+                android:numeric="integer"
+                android:textColor="#505050"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                android:focusable="false" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ปี"
+                android:id="@+id/textview_ud_sl_time"
+                android:textColor="#3a3a3a"
+                android:textSize="16dp"
+                android:layout_marginLeft="9.0dp"
+                android:layout_gravity="center_vertical" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="left"
+            android:layout_marginTop="19.0dp"
+            android:layout_marginLeft="0.0dp">
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:id="@+id/imageview_ud_sl_time"
+                android:src="@drawable/ic_clock"
+                android:layout_marginTop="0.0dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="เช้า"
+                android:id="@+id/textview_ud_bf_time"
+                android:textColor="#3a3a3a"
+                android:textSize="16dp"
+                android:layout_marginLeft="5.0dp" />
+            <EditText
+                android:id="@+id/ud_bf_time"
+                android:layout_width="150dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="44dp"
+                android:layout_marginTop="0.0dp"
+                android:autoText="false"
+                android:background="@drawable/my_box_dis"
+                android:gravity="center_vertical|center_horizontal"
+                android:inputType="number"
+                android:numeric="integer"
+                android:textColor="#505050"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                android:focusable="false" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="left"
+            android:layout_marginTop="12.5dp"
+            android:layout_marginLeft="0.0dp">
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:id="@+id/imageview_ud_sl_time"
+                android:src="@drawable/ic_clock"
+                android:layout_marginTop="0.0dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="กลางวัน"
+                android:id="@+id/text_view_ud_lu_time"
+                android:textColor="#3a3a3a"
+                android:textSize="16dp"
+                android:layout_marginLeft="5.0dp" />
+            <EditText
+                android:id="@+id/ud_lu_time"
+                android:layout_width="150dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="14.0dp"
+                android:layout_marginTop="0.0dp"
+                android:autoText="false"
+                android:background="@drawable/my_box_dis"
+                android:gravity="center_vertical|center_horizontal"
+                android:inputType="number"
+                android:numeric="integer"
+                android:textColor="#505050"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                android:focusable="false" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="left"
+            android:layout_marginTop="9.5dp"
+            android:layout_marginLeft="0.0dp"
+            android:id="@+id/linearLayout2">
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:id="@+id/imageview_ud_sl_time"
+                android:src="@drawable/ic_clock"
+                android:layout_marginTop="0.0dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="เย็น"
+                android:id="@+id/textview_ud_dn_time"
+                android:textColor="#3a3a3a"
+                android:textSize="16dp"
+                android:layout_marginLeft="5.0dp" />
+            <EditText
+                android:id="@+id/ud_dn_time"
+                android:layout_width="150dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="42dp"
+                android:layout_marginTop="0.0dp"
+                android:autoText="false"
+                android:background="@drawable/my_box_dis"
+                android:gravity="center_vertical|center_horizontal"
+                android:inputType="number"
+                android:numeric="integer"
+                android:textColor="#505050"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                android:focusable="false" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="left"
+            android:layout_marginTop="9.5dp"
+            android:layout_marginLeft="0.0dp">
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:id="@+id/imageview_ud_sl_time"
+                android:src="@drawable/ic_clock"
+                android:layout_marginTop="0.0dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ก่อนนอน"
+                android:id="@+id/textview_ud_sl_time"
+                android:textColor="#3a3a3a"
+                android:textSize="16dp"
+                android:layout_marginLeft="5.0dp" />
+            <EditText
+                android:id="@+id/ud_sl_time"
+                android:layout_width="150dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="8.0dp"
+                android:layout_marginTop="0.0dp"
+                android:autoText="false"
+                android:background="@drawable/my_box_dis"
+                android:gravity="center_vertical|center_horizontal"
+                android:inputType="number"
+                android:numeric="integer"
+                android:textColor="#505050"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                android:focusable="false" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="20.0dp"
+            android:layout_gravity="center_horizontal">
+            <ImageView
+                android:id="@+id/save_button_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="0.0dp"
+                android:src="@drawable/save_button_ac_user" />
+            <ImageView
+                android:id="@+id/logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10.0dp"
+                android:onClick="ClickLogout"
+                android:src="@drawable/logout_button_ac_user" />
+        </LinearLayout>
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="left"
-        android:layout_marginTop="12.5dp"
-        android:layout_marginLeft="65.5dp">
-      <ImageView
-          android:layout_width="20dp"
-          android:layout_height="20dp"
-          android:id="@+id/imageview_ud_sl_time"
-          android:src="@drawable/ic_clock"
-          android:layout_marginTop="0.0dp" />
-      <TextView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="กลางวัน"
-          android:id="@+id/text_view_ud_lu_time"
-          android:textColor="#f2787b"
-          android:textSize="16dp"
-          android:layout_marginLeft="5.0dp" />
-      <EditText
-          android:id="@+id/ud_lu_time"
-          android:layout_width="150dp"
-          android:layout_height="22dp"
-          android:layout_gravity="center_vertical"
-          android:layout_marginLeft="13.0dp"
-          android:layout_marginTop="0.0dp"
-          android:autoText="false"
-          android:background="@drawable/my_border_box"
-          android:gravity="center_vertical|center_horizontal"
-          android:inputType="number"
-          android:numeric="integer"
-          android:textColor="#505050"
-          android:textSize="15dp"
-          android:textStyle="bold"
-          android:focusable="false" />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="left"
-        android:layout_marginTop="9.5dp"
-        android:layout_marginLeft="65.5dp"
-        android:id="@+id/linearLayout2">
-      <ImageView
-          android:layout_width="20dp"
-          android:layout_height="20dp"
-          android:id="@+id/imageview_ud_sl_time"
-          android:src="@drawable/ic_clock"
-          android:layout_marginTop="0.0dp" />
-      <TextView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="เย็น"
-          android:id="@+id/textview_ud_dn_time"
-          android:textColor="#f2787b"
-          android:textSize="16dp"
-          android:layout_marginLeft="5.0dp" />
-      <EditText
-          android:id="@+id/ud_dn_time"
-          android:layout_width="150dp"
-          android:layout_height="22dp"
-          android:layout_gravity="center_vertical"
-          android:layout_marginLeft="41dp"
-          android:layout_marginTop="0.0dp"
-          android:autoText="false"
-          android:background="@drawable/my_border_box"
-          android:gravity="center_vertical|center_horizontal"
-          android:inputType="number"
-          android:numeric="integer"
-          android:textColor="#505050"
-          android:textSize="15dp"
-          android:textStyle="bold"
-          android:focusable="false" />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="left"
-        android:layout_marginTop="9.5dp"
-        android:layout_marginLeft="65.5dp">
-      <ImageView
-          android:layout_width="20dp"
-          android:layout_height="20dp"
-          android:id="@+id/imageview_ud_sl_time"
-          android:src="@drawable/ic_clock"
-          android:layout_marginTop="0.0dp" />
-      <TextView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="ก่อนนอน"
-          android:id="@+id/textview_ud_sl_time"
-          android:textColor="#f2787b"
-          android:textSize="16dp"
-          android:layout_marginLeft="5.0dp" />
-      <EditText
-          android:id="@+id/ud_sl_time"
-          android:layout_width="150dp"
-          android:layout_height="22dp"
-          android:layout_gravity="center_vertical"
-          android:layout_marginLeft="8.0dp"
-          android:layout_marginTop="0.0dp"
-          android:autoText="false"
-          android:background="@drawable/my_border_box"
-          android:gravity="center_vertical|center_horizontal"
-          android:inputType="number"
-          android:numeric="integer"
-          android:textColor="#505050"
-          android:textSize="15dp"
-          android:textStyle="bold"
-          android:focusable="false" />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:layout_marginTop="20.0dp"
-        android:layout_gravity="center_horizontal">
-      <ImageView
-          android:id="@+id/save_button_user"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginLeft="0.0dp"
-          android:src="@drawable/save_button_ac_user" />
-      <ImageView
-          android:id="@+id/logout"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginLeft="10.0dp"
-          android:onClick="ClickLogout"
-          android:src="@drawable/logout_button_ac_user" />
-    </LinearLayout>
-  </LinearLayout>
 </RelativeLayout>

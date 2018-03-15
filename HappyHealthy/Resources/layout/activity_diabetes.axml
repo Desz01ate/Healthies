@@ -4,7 +4,7 @@
     android:layout_height="fill_parent"
     android:orientation="vertical"
     android:weightSum="1"
-    android:background="#66f7e3bb">
+    android:background="#dfe4ea">
     <LinearLayout
         android:id="@+id/container_toolbar"
         android:layout_width="match_parent"
@@ -12,7 +12,7 @@
         android:orientation="vertical">
         <include
             android:id="@+id/toolbar"
-            layout="@layout/toolbardiabetes" />
+            layout="@layout/toolbardiabetes_history" />
     </LinearLayout>
     <LinearLayout
         android:orientation="vertical"
@@ -21,7 +21,6 @@
         android:layout_marginRight="25dp"
         android:layout_marginTop="115dp"
         android:id="@+id/Layout_background_diabetes"
-        android:background="@drawable/my_bg_dia"
         android:layout_height="wrap_content">
         <LinearLayout
             android:orientation="horizontal"
@@ -38,7 +37,7 @@
                 android:layout_centerHorizontal="true"
                 android:textSize="18dp"
                 android:textStyle="bold"
-                android:textColor="#ffffff"
+                android:textColor="#3a3a3a"
                 android:gravity="center_vertical" />
         </LinearLayout>
         <LinearLayout
@@ -78,7 +77,7 @@
             android:layout_centerHorizontal="true"
             android:textSize="14dp"
             android:textStyle="bold"
-            android:textColor="#ffffff"
+            android:textColor="#3a3a3a"
             android:gravity="fill_horizontal"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="10.0dp" />
