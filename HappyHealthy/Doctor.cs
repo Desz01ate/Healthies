@@ -40,6 +40,7 @@ namespace HappyHealthyCSharp
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_add_doc);
             var camerabtt = FindViewById<ImageView>(Resource.Id.imageView_button_save_pic_doc);
+            camerabtt.Visibility = ViewStates.Gone;
             var backbtt = FindViewById<ImageView>(Resource.Id.imageView_button_back_doc);
             //var deletebtt = FindViewById<ImageView>(Resource.Id.imageView_button_delete_doc);
             docAttendDate = FindViewById<TextView>(Resource.Id.choosedate_doc);
@@ -51,6 +52,7 @@ namespace HappyHealthyCSharp
             et_hospital = FindViewById<EditText>(Resource.Id.da_hospital);
             et_comment = FindViewById<EditText>(Resource.Id.da_comment);
             docAttendPicture = FindViewById<ImageView>(Resource.Id.imageView_show_image);
+            docAttendPicture.Visibility = ViewStates.Gone;
             var saveButton = FindViewById<ImageView>(Resource.Id.imageView_button_save_doc);
             //code goes below
             var flagObjectJson = Intent.GetStringExtra("targetObject") ?? string.Empty;

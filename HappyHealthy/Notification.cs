@@ -100,11 +100,14 @@ namespace HappyHealthyCSharp
             calendar.Set(CalendarField.Minute, alertTime.Minute);
             calendar.Set(CalendarField.Second, alertTime.Second);
             */
-            var realId = Convert.ToInt32(Convert.ToString(requestId).Substring(0, requestId.ToString().Length - 2));
+            int realId = 0;
+            if (Convert.ToString(requestId).Length >= 2)
+                realId = Convert.ToInt32(Convert.ToString(requestId).Substring(0, Convert.ToString(requestId).Length - 1));
             var calendar = ToJavaCalendar(alertTime);
             var intent = new Intent(c, typeof(AlarmReceiver));
             intent.PutExtra("content", content);
-            intent.PutExtra("mid",realId);
+            intent.PutExtra("mid", realId);
+            intent.PutExtra("alert_time", calendar.TimeInMillis);
             var pendingIntent = PendingIntent.GetBroadcast(c, requestId, intent, PendingIntentFlags.UpdateCurrent);
             var am = (AlarmManager)c.GetSystemService(AlarmService);
             am.SetRepeating(AlarmType.RtcWakeup, calendar.TimeInMillis, AlarmManager.IntervalDay, pendingIntent);
@@ -117,7 +120,7 @@ namespace HappyHealthyCSharp
                 var calendar = ToJavaCalendar(alertTime);
                 var intent = new Intent(c, typeof(AlarmReceiver));
                 intent.PutExtra("content", content);
-                var pendingIntent = PendingIntent.GetBroadcast(c, Convert.ToInt32(requestIdStr+"1"), intent, PendingIntentFlags.UpdateCurrent);
+                var pendingIntent = PendingIntent.GetBroadcast(c, Convert.ToInt32(requestIdStr + "1"), intent, PendingIntentFlags.UpdateCurrent);
                 var am = (AlarmManager)c.GetSystemService(AlarmService);
                 am.Cancel(pendingIntent);
                 //
@@ -154,7 +157,7 @@ namespace HappyHealthyCSharp
             Java.Util.Calendar calendar = Java.Util.Calendar.GetInstance(Java.Util.TimeZone.Default);
 
             //calendar.Set(date.Year, date.Month - 1, date.Day, date.Hour, date.Minute, date.Second);
-            var am_pm = date.ToString("tt", CultureInfo.InvariantCulture) == "AM" ? Android.Icu.Util.Calendar.Am : Android.Icu.Util.Calendar.Pm; 
+            var am_pm = date.ToString("tt", CultureInfo.InvariantCulture) == "AM" ? Android.Icu.Util.Calendar.Am : Android.Icu.Util.Calendar.Pm;
             //Ok, the above line is VERY VERY IMPORTANT PART of this functiom. Don't mess with it unless you know what you're doing.
             calendar.Set(Java.Util.CalendarField.AmPm, am_pm);
             calendar.Set(Java.Util.CalendarField.Hour, date.Hour % 12);
@@ -188,7 +191,7 @@ namespace HappyHealthyCSharp
             manager.Notify(1337, notification);
             */
             var alertContent = intent.GetStringExtra("content");
-            var realId = intent.GetStringExtra("mid");
+            var realId = intent.GetIntExtra("mid", 0);
             var medObject = new MedicineTABLE().Select<MedicineTABLE>($"SELECT * From MedicineTABLE where ma_id = {realId}")[0];
             var medJson = JsonConvert.SerializeObject(medObject);
             var when = JavaSystem.CurrentTimeMillis();

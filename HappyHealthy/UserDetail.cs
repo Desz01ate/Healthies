@@ -32,9 +32,9 @@ namespace HappyHealthyCSharp
             lunch = FindViewById<TextView>(Resource.Id.ud_lu_time);
             dinner = FindViewById<TextView>(Resource.Id.ud_dn_time);
             sleep = FindViewById<TextView>(Resource.Id.ud_sl_time);
-            var tempLogOut = FindViewById<ImageView>(Resource.Id.logout);
+            var logoutBtn = FindViewById<ImageView>(Resource.Id.logout);
             user = user.Select<UserTABLE>($@"SELECT * FROM UserTABLE WHERE UD_ID = '{Extension.getPreference("ud_id", 0, this)}'")[0];
-            tempLogOut.Click += delegate
+            logoutBtn.Click += delegate
             {
                 Extension.clearAllPreference(this);
                 StartActivity(new Intent(this, typeof(Login)));
@@ -43,6 +43,10 @@ namespace HappyHealthyCSharp
             InitializeUserData();
             var updateButton = FindViewById<ImageView>(Resource.Id.save_button_user);
             updateButton.Click += UpdateUserInfo;
+            name.TextChanged += delegate {
+                user.ud_name = name.Text;
+                user.Update();
+            };
             breakfast.Click += SetTime;
             lunch.Click += SetTime;
             dinner.Click += SetTime;
@@ -65,6 +69,7 @@ namespace HappyHealthyCSharp
                     user.ud_dn_time = time;
                 else if (id == Resource.Id.ud_sl_time)
                     user.ud_sl_time = time;
+                user.Update();
             });
             tpickerFragment.Show(FragmentManager, TimePickerFragment.TAG);
         }
@@ -73,13 +78,11 @@ namespace HappyHealthyCSharp
         {
             //UserTABLE.UpdateUserToSQL(txtName.Text, txtSex.Text[0], txtIdenNo.Text,null, null, this);
             //var user = new UserTABLE().Select<UserTABLE>($@"SELECT * FROM UserTABLE WHERE UD_ID = '{Extension.getPreference("ud_id", 0, this)}'")[0];
-            user.ud_name = name.Text;
+            //user.ud_name = name.Text;
             //user.ud_iden_number = txtIdenNo.Text;
-            user.ud_gender = sex.Text;
-            user.Update();
+            //user.ud_gender = sex.Text;
+            //user.Update();
             Extension.CreateDialogue(this, "บันทึกการตั้งค่าผู้ใช้เรียบร้อยแล้ว").Show();
-
-
         }
 
         private void InitializeUserData()
@@ -90,10 +93,10 @@ namespace HappyHealthyCSharp
             name.Text = user.ud_name;
             //txtIdenNo.Text = user.ud_iden_number;
             sex.Text = Convert.ToString(Extension.StringValidation(user.ud_gender));
-            breakfast.Text = user.ud_bf_time.ToString("hh:MM tt");
-            lunch.Text = user.ud_lu_time.ToString("hh:MM tt");
-            dinner.Text = user.ud_dn_time.ToString("hh:MM tt");
-            sleep.Text = user.ud_sl_time.ToString("hh:MM tt");
+            breakfast.Text = user.ud_bf_time.ToString("hh:mm tt");
+            lunch.Text = user.ud_lu_time.ToString("hh:mm tt");
+            dinner.Text = user.ud_dn_time.ToString("hh:mm tt");
+            sleep.Text = user.ud_sl_time.ToString("hh:mm tt");
         }
     }
 }
