@@ -96,7 +96,7 @@
             android:textStyle="normal|bold" />
 
         <TextView
-            android:text="นางสาว จิราพร ปราณีต "
+            android:text="นาย วสุพล ศิระสวัสดิ์"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/textView42"
@@ -107,7 +107,7 @@
             android:textColor="@color/font" />
 
         <TextView
-            android:text="E-Mail: Nut.jirapornpraneet@gmail.com "
+            android:text="E-Mail: jame.hub@hotmail.com"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/textViewEmailnut"
@@ -118,7 +118,7 @@
             android:textColor="@color/font" />
 
         <TextView
-            android:text="นางสาว สุกัญญา สาระมนต์ "
+            android:text="นาย ชาญวุฒิ บุญเอียด"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -130,7 +130,7 @@
             android:textColor="@color/font" />
 
         <TextView
-            android:text="E-Mail: Kampoo2416@gmail.com "
+            android:text="E-Mail: deszolate@gmail.com"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/textViewEmailKampoo"

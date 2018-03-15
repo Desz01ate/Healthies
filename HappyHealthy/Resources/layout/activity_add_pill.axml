@@ -104,194 +104,155 @@
             </LinearLayout>
             <LinearLayout
                 android:orientation="horizontal"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:foregroundGravity="center_vertical|center_horizontal"
                 android:gravity="center_vertical|center_horizontal"
-                android:layout_gravity="center_vertical"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="5dp">
-                <RadioGroup
+                <CheckBox
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:id="@+id/med_time"
-                    android:layout_gravity="center_horizontal">
-                    <RadioButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="35dp"
-                        android:text="เช้า"
-                        android:id="@+id/Radio_button_breakfast"
-                        android:textColor="#ffffff"
-                        android:layout_weight="1"
-                        android:checked="false"
-                        android:textSize="12dp"
-                        android:textStyle="bold"
-                        android:layout_marginRight="25.0dp"
-                        android:layout_marginLeft="0.0dp"
-                        android:layout_gravity="center_vertical"
-                        android:buttonTint="#5d5d5d" />
-                    <RadioButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="35dp"
-                        android:text="กลางวัน"
-                        android:id="@+id/Radio_button_lunch"
-                        android:textColor="#ffffff"
-                        android:layout_weight="1"
-                        android:textSize="12dp"
-                        android:textStyle="bold"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginRight="0.0dp"
-                        android:buttonTint="#5d5d5d" />
-                </RadioGroup>
+                    android:layout_height="35dp"
+                    android:id="@+id/CheckBox_button_breakfast"
+                    android:textColor="#ffffff"
+                    android:layout_weight="1"
+                    android:checked="false"
+                    android:text="เช้า"
+                    android:textSize="12dp"
+                    android:textStyle="bold"
+                    android:layout_marginRight="0.0dp"
+                    android:layout_marginLeft="0.0dp"
+                    android:layout_gravity="center_vertical"
+                    android:buttonTint="#5d5d5d" />
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:text="กลางวัน"
+                    android:id="@+id/CheckBox_button_lunch"
+                    android:textColor="#ffffff"
+                    android:layout_weight="1"
+                    android:textSize="12dp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginRight="0.0dp"
+                    android:buttonTint="#5d5d5d" />
             </LinearLayout>
             <LinearLayout
                 android:orientation="horizontal"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:foregroundGravity="center_vertical|center_horizontal"
                 android:gravity="center_vertical|center_horizontal"
-                android:layout_gravity="center_vertical"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="5dp">
-                <RadioGroup
+                <CheckBox
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:id="@+id/med_time2"
-                    android:layout_gravity="center_horizontal">
-                    <RadioButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="35dp"
-                        android:text="เย็น"
-                        android:id="@+id/Radio_button_dinner"
-                        android:textColor="#ffffff"
-                        android:layout_weight="1"
-                        android:checked="false"
-                        android:textSize="12dp"
-                        android:textStyle="bold"
-                        android:layout_marginRight="25.0dp"
-                        android:layout_marginLeft="0.0dp"
-                        android:layout_gravity="center_vertical"
-                        android:buttonTint="#5d5d5d" />
-                    <RadioButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="35dp"
-                        android:text="ก่อนนอน"
-                        android:id="@+id/Radio_button_af_sleep"
-                        android:textColor="#ffffff"
-                        android:layout_weight="1"
-                        android:textSize="12dp"
-                        android:textStyle="bold"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginRight="0.0dp"
-                        android:buttonTint="#5d5d5d" />
-                </RadioGroup>
+                    android:layout_height="35dp"
+                    android:text="เย็น"
+                    android:id="@+id/CheckBox_button_dinner"
+                    android:textColor="#ffffff"
+                    android:layout_weight="1"
+                    android:checked="false"
+                    android:textSize="12dp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center_vertical"
+                    android:buttonTint="#5d5d5d" />
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:text="ก่อนนอน"
+                    android:id="@+id/CheckBox_button_af_sleep"
+                    android:textColor="#ffffff"
+                    android:layout_weight="1"
+                    android:textSize="12dp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center_vertical"
+                    android:buttonTint="#5d5d5d" />
             </LinearLayout>
             <LinearLayout
                 android:orientation="horizontal"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:foregroundGravity="center_vertical|center_horizontal"
-                android:gravity="center_vertical|center_horizontal"
+                android:foregroundGravity="center_vertical"
+                android:gravity="center_vertical"
                 android:layout_gravity="center_vertical"
                 android:layout_marginTop="5dp">
                 <RadioGroup
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:id="@+id/D_People"
-                    android:layout_gravity="center_horizontal">
-                    <RadioButton
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="86.5dp"
+                    android:gravity="center_horizontal">
+                    <LinearLayout
+                        android:orientation="horizontal"
                         android:layout_width="wrap_content"
-                        android:layout_height="35dp"
-                        android:text="ก่อนอาหาร"
-                        android:id="@+id/Radio_button_bf_food"
-                        android:textColor="#ffffff"
-                        android:layout_weight="1"
-                        android:checked="false"
-                        android:textSize="12dp"
-                        android:textStyle="bold"
-                        android:layout_marginRight="6.0dp"
-                        android:layout_marginLeft="0.0dp"
-                        android:layout_gravity="center_vertical"
-                        android:buttonTint="#5d5d5d" />
-                    <EditText
-                        android:layout_width="50dp"
-                        android:layout_height="30dp"
-                        android:inputType="number"
-                        android:ems="10"
-                        android:id="@+id/textView_bf_food"
-                        android:textColor="#6f6f6f"
-                        android:layout_gravity="center_vertical"
-                        android:textSize="12dp"
-                        android:textStyle="bold"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:background="@drawable/my_box_dis" />
-                    <TextView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:text="นาที"
-                        android:id="@+id/textView_detail_minute_bf_food"
-                        android:layout_centerHorizontal="true"
-                        android:textSize="12dp"
-                        android:textStyle="bold"
-                        android:textColor="#ffffff"
-                        android:gravity="center_vertical"
-                        android:layout_marginTop="6.0dp"
-                        android:layout_marginLeft="8.0dp"
-                        android:layout_marginRight="1.0dp" />
-                </RadioGroup>
-            </LinearLayout>
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:foregroundGravity="center_vertical|center_horizontal"
-                android:gravity="center_vertical|center_horizontal"
-                android:layout_gravity="center_vertical"
-                android:layout_marginTop="5dp">
-                <RadioGroup
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:id="@+id/D_People"
-                    android:layout_gravity="center_horizontal">
-                    <RadioButton
+                        android:layout_height="wrap_content"
+                        android:foregroundGravity="center_horizontal"
+                        android:gravity="center_horizontal"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="5dp">
+                        <RadioButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="35dp"
+                            android:text="ก่อนอาหาร"
+                            android:id="@+id/Radio_button_bf_food"
+                            android:textColor="#ffffff"
+                            android:layout_weight="1"
+                            android:checked="false"
+                            android:textSize="12dp"
+                            android:textStyle="bold"
+                            android:layout_marginRight="6.0dp"
+                            android:layout_marginLeft="0.0dp"
+                            android:layout_gravity="center_vertical"
+                            android:buttonTint="#5d5d5d" />
+                        <EditText
+                            android:layout_width="70dp"
+                            android:layout_height="wrap_content"
+                            android:inputType="text"
+                            android:ems="10"
+                            android:id="@+id/edit_bf_food"
+                            android:textColor="#6f6f6f"
+                            android:textSize="19dp"
+                            android:textStyle="bold"
+                            android:gravity="center_vertical"
+                            android:background="@drawable/my_box_dis"
+                            android:layout_marginTop="5.0dp" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:orientation="horizontal"
                         android:layout_width="wrap_content"
-                        android:layout_height="35dp"
-                        android:text="หลังอาหาร"
-                        android:id="@+id/Radio_button_af_food"
-                        android:textColor="#ffffff"
-                        android:layout_weight="1"
-                        android:textSize="12dp"
-                        android:textStyle="bold"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginRight="5dp"
-                        android:buttonTint="#5d5d5d" />
-                    <EditText
-                        android:layout_width="50dp"
-                        android:layout_height="30dp"
-                        android:inputType="number"
-                        android:ems="10"
-                        android:id="@+id/textView_af_food"
-                        android:textColor="#6f6f6f"
-                        android:layout_gravity="center_vertical"
-                        android:textSize="12dp"
-                        android:textStyle="bold"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:background="@drawable/my_box_dis" />
-                    <TextView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:text="นาที"
-                        android:id="@+id/textView_detail_minute_af_food"
-                        android:layout_centerHorizontal="true"
-                        android:textSize="12dp"
-                        android:textStyle="bold"
-                        android:textColor="#ffffff"
-                        android:gravity="center_vertical"
-                        android:layout_marginTop="6.0dp"
-                        android:layout_marginLeft="8.0dp"
-                        android:layout_marginRight="1.0dp" />
+                        android:layout_height="wrap_content"
+                        android:foregroundGravity="center_horizontal"
+                        android:gravity="center_horizontal"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="5dp">
+                        <RadioButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="35dp"
+                            android:text="หลังอาหาร"
+                            android:id="@+id/Radio_button_af_food"
+                            android:textColor="#ffffff"
+                            android:layout_weight="1"
+                            android:textSize="12dp"
+                            android:textStyle="bold"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginRight="5dp"
+                            android:buttonTint="#5d5d5d" />
+                        <EditText
+                            android:layout_width="70dp"
+                            android:layout_height="wrap_content"
+                            android:inputType="text"
+                            android:ems="10"
+                            android:id="@+id/edit_af_food"
+                            android:textColor="#6f6f6f"
+                            android:textSize="19dp"
+                            android:textStyle="bold"
+                            android:gravity="center_vertical|center_horizontal"
+                            android:background="@drawable/my_box_dis"
+                            android:layout_marginTop="5.0dp" />
+                    </LinearLayout>
                 </RadioGroup>
             </LinearLayout>
             <ImageView
