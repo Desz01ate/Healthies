@@ -26,6 +26,10 @@ namespace HappyHealthyCSharp
             SetTheme(Resource.Style.Base_Theme_AppCompat_Light);
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_history_pressure);
+            var add = FindViewById<ImageView>(Resource.Id.imageView41);
+            add.Click += delegate { StartActivity(new Intent(this, typeof(Pressure))); };
+            var back = FindViewById<ImageView>(Resource.Id.imageView38);
+            back.Click += delegate { Finish(); };
             //ListView = FindViewById<ListView>(Resource.Id.listView);
             bpTable = new PressureTABLE();
             ListView.ItemClick += onItemClick;
@@ -67,17 +71,6 @@ namespace HappyHealthyCSharp
                     , "\u2713"
                     , "X");
                 }, "ดูข้อมูล", "ลบข้อมูล").Show();
-        }
-
-        [Export("ClickAddPre")]
-        public void ClickAddDia(View v)
-        {
-            StartActivity(new Intent(this, typeof(Pressure)));
-        }
-        [Export("ClickBackHisPreHome")]
-        public void ClickBackHisDiaHome(View v)
-        {
-            this.Finish();
         }
         public void SetListView()
         {

@@ -37,7 +37,12 @@ namespace HappyHealthyCSharp
             BPUp = FindViewById<EditText>(Resource.Id.P_costPressureTop);
             HeartRate = FindViewById<EditText>(Resource.Id.P_HeartRate);
             var saveButton = FindViewById<ImageView>(Resource.Id.imageView_button_save_pressure);
-            //var deleteButton = FindViewById<ImageView>(Resource.Id.imageView_button_delete_pressure);
+            var header = FindViewById<TextView>(Resource.Id.textView_header_name_pressure);
+            header.Text = "บันทึกค่าความดัน";
+            var addhiding = FindViewById<ImageView>(Resource.Id.imageView41);
+            addhiding.Visibility = ViewStates.Gone;
+            var back = FindViewById<ImageView>(Resource.Id.imageView38);
+            back.Click += delegate { Finish(); };
             var micButton = FindViewById<ImageView>(Resource.Id.ic_microphone_pressure);
             //code goes below
             var flagObjectJson = Intent.GetStringExtra("targetObject") ?? string.Empty;

@@ -29,7 +29,10 @@ namespace HappyHealthyCSharp
             SetTheme(Resource.Style.Base_Theme_AppCompat_Light);
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_history_diabetes);
-            //ListView = FindViewById<ListView>(Resource.Id.listView);
+            var add = FindViewById<ImageView>(Resource.Id.ClickAddDia);
+            add.Click += delegate { StartActivity(new Intent(this,typeof(Diabetes))); };
+            var back = FindViewById<ImageView>(Resource.Id.imageView38);
+            back.Click += delegate { Finish(); };
             diaTable = new DiabetesTABLE();
             ListView.ItemClick += onItemClick;
             SetListView();

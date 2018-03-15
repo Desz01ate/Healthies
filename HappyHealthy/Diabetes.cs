@@ -44,6 +44,12 @@ namespace HappyHealthyCSharp
             BloodValue = FindViewById<EditText>(Resource.Id.sugar_value);
             micButton = FindViewById<ImageView>(Resource.Id.ic_microphone_diabetes);
             saveButton = FindViewById<ImageView>(Resource.Id.imageView_button_save_diabetes);
+            var header = FindViewById<TextView>(Resource.Id.textView_header_name_diabetes);
+            header.Text = "บันทึกค่าเบาหวาน";
+            var addhiding = FindViewById<ImageView>(Resource.Id.ClickAddDia);
+            addhiding.Visibility = ViewStates.Gone;
+            var backBtt = FindViewById<ImageView>(Resource.Id.imageView38);
+            backBtt.Click += delegate { Finish(); };
            //deleteButton = FindViewById<ImageView>(Resource.Id.imageView_button_delete_diabetes);
             // Create your application here
             var flagObjectJson = Intent.GetStringExtra("targetObject") ?? string.Empty;

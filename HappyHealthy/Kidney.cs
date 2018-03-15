@@ -46,6 +46,12 @@ namespace HappyHealthyCSharp
             SetTheme(Resource.Style.Base_Theme_AppCompat_Light);
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_kidney);
+            var header = FindViewById<TextView>(Resource.Id.textView_header_name_kidey);
+            header.Text = "บันทึกค่าไต";
+            var addhiding = FindViewById<ImageView>(Resource.Id.imageView41);
+            addhiding.Visibility = ViewStates.Gone;
+            var back = FindViewById<ImageView>(Resource.Id.imageView38);
+            back.Click += delegate { Finish(); };
             field_gfr = FindViewById<EditText>(Resource.Id.ckd_gfr);
             field_creatinine = FindViewById<EditText>(Resource.Id.ckd_creatinine);
             field_bun = FindViewById<EditText>(Resource.Id.ckd_bun);
