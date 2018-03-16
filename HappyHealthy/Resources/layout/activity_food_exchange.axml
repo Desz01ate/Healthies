@@ -5,7 +5,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     tools:context="com.jiraporn.nut.happyhealthy.Food_Type_1"
-    android:background="#66f7e3bb">
+    android:background="#dfe4ea">
     <LinearLayout
         android:id="@+id/container_toolbar"
         android:layout_width="match_parent"
@@ -13,7 +13,7 @@
         android:orientation="vertical">
         <include
             android:id="@+id/toolbar"
-            layout="@layout/toolbarfood" />
+            layout="@layout/toolbarfood_list" />
     </LinearLayout>
     <ListView
         android:layout_width="fill_parent"
@@ -26,5 +26,4 @@
         android:layout_alignParentEnd="false"
         android:layout_marginTop="60dp"
         android:drawSelectorOnTop="false" />
-    
 </RelativeLayout>

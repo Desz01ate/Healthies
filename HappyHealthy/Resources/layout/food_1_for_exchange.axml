@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#FAFFFFFF">
+    android:background="#dfe4ea">
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -12,6 +12,7 @@
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:text="Food"
+            android:textColor="#3a3a3a"
             android:textIsSelectable="false"
             android:textSize="14dp"
             android:layout_marginLeft="70dp"
@@ -21,6 +22,7 @@
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:text="Cal"
+            android:textColor="#3a3a3a"
             android:id="@+id/his_foodex_calories"
             android:paddingLeft="10dp"
             android:layout_marginLeft="4dp"
@@ -31,6 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="kcal"
+            android:textColor="#3a3a3a"
             android:id="@+id/textView"
             android:textSize="13.5dp"
             android:gravity="right"
@@ -53,7 +56,7 @@
             android:textSize="11dp"
             android:hint="food_detail"
             android:layout_marginTop="8dp"
-            android:textColor="#ffa27f"
+            android:textColor="#3a3a3a"
             android:textStyle="bold"
             android:layout_marginBottom="3dp" />
     </LinearLayout>

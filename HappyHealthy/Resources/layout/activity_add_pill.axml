@@ -9,7 +9,7 @@
         android:layout_height="fill_parent"
         android:orientation="vertical"
         android:weightSum="1"
-        android:background="#66f7e3bb">
+        android:background="#dfe4ea">
         <LinearLayout
             android:id="@+id/container_toolbar"
             android:layout_width="match_parent"
@@ -17,7 +17,7 @@
             android:orientation="vertical">
             <include
                 android:id="@+id/toolbar"
-                layout="@layout/toolbarpill" />
+                layout="@layout/toolbarpill_history" />
         </LinearLayout>
         <LinearLayout
             android:orientation="vertical"
@@ -26,7 +26,6 @@
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
             android:layout_marginTop="115dp"
-            android:background="@drawable/my_bg_pill"
             android:id="@+id/Layout_background_pill">
             <LinearLayout
                 android:orientation="horizontal"
@@ -44,7 +43,7 @@
                     android:layout_centerHorizontal="true"
                     android:textSize="12dp"
                     android:textStyle="bold"
-                    android:textColor="#ffffff"
+                    android:textColor="#3a3a3a"
                     android:gravity="center_vertical"
                     android:layout_marginTop="0.0dp"
                     android:layout_marginBottom="0.0dp"
@@ -80,7 +79,7 @@
                     android:layout_centerHorizontal="true"
                     android:textSize="12dp"
                     android:textStyle="bold"
-                    android:textColor="#ffffff"
+                    android:textColor="#3a3a3a"
                     android:layout_marginTop="0.0dp"
                     android:layout_marginBottom="0.0dp"
                     android:layout_marginRight="3.0dp" />
@@ -114,7 +113,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="35dp"
                     android:id="@+id/CheckBox_button_breakfast"
-                    android:textColor="#ffffff"
+                    android:textColor="#3a3a3a"
                     android:layout_weight="1"
                     android:checked="false"
                     android:text="เช้า"
@@ -123,19 +122,19 @@
                     android:layout_marginRight="0.0dp"
                     android:layout_marginLeft="0.0dp"
                     android:layout_gravity="center_vertical"
-                    android:buttonTint="#5d5d5d" />
+                    android:buttonTint="#29297c" />
                 <CheckBox
                     android:layout_width="wrap_content"
                     android:layout_height="35dp"
                     android:text="กลางวัน"
                     android:id="@+id/CheckBox_button_lunch"
-                    android:textColor="#ffffff"
+                    android:textColor="#3a3a3a"
                     android:layout_weight="1"
                     android:textSize="12dp"
                     android:textStyle="bold"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginRight="0.0dp"
-                    android:buttonTint="#5d5d5d" />
+                    android:buttonTint="#29297c" />
             </LinearLayout>
             <LinearLayout
                 android:orientation="horizontal"
@@ -150,104 +149,103 @@
                     android:layout_height="35dp"
                     android:text="เย็น"
                     android:id="@+id/CheckBox_button_dinner"
-                    android:textColor="#ffffff"
+                    android:textColor="#3a3a3a"
                     android:layout_weight="1"
                     android:checked="false"
                     android:textSize="12dp"
                     android:textStyle="bold"
                     android:layout_gravity="center_vertical"
-                    android:buttonTint="#5d5d5d" />
+                    android:buttonTint="#29297c" />
                 <CheckBox
                     android:layout_width="wrap_content"
                     android:layout_height="35dp"
                     android:text="ก่อนนอน"
                     android:id="@+id/CheckBox_button_af_sleep"
-                    android:textColor="#ffffff"
+                    android:textColor="#3a3a3a"
                     android:layout_weight="1"
                     android:textSize="12dp"
                     android:textStyle="bold"
                     android:layout_gravity="center_vertical"
-                    android:buttonTint="#5d5d5d" />
+                    android:buttonTint="#29297c" />
             </LinearLayout>
             <LinearLayout
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:foregroundGravity="center_vertical"
-                android:gravity="center_vertical"
+                android:gravity="center_horizontal"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="5dp">
                 <RadioGroup
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:orientation="horizontal"
                     android:id="@+id/D_People"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="0.0dp"
                     android:gravity="center_horizontal">
-                    <LinearLayout
-                        android:orientation="horizontal"
+                    <RadioButton
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:foregroundGravity="center_horizontal"
-                        android:gravity="center_horizontal"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="5dp">
-                        <RadioButton
-                            android:layout_width="wrap_content"
-                            android:layout_height="35dp"
-                            android:text="ก่อนอาหาร"
-                            android:id="@+id/Radio_button_bf_food"
-                            android:textColor="#ffffff"
-                            android:layout_weight="1"
-                            android:checked="false"
-                            android:textSize="12dp"
-                            android:textStyle="bold"
-                            android:layout_marginRight="6.0dp"
-                            android:layout_marginLeft="0.0dp"
-                            android:layout_gravity="center_vertical"
-                            android:buttonTint="#5d5d5d" />
-                        <RadioButton
-                            android:layout_width="wrap_content"
-                            android:layout_height="35dp"
-                            android:text="หลังอาหาร"
-                            android:id="@+id/Radio_button_af_food"
-                            android:textColor="#ffffff"
-                            android:layout_weight="1"
-                            android:textSize="12dp"
-                            android:textStyle="bold"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginRight="5dp"
-                            android:buttonTint="#5d5d5d" />
-                    </LinearLayout>
-                    <LinearLayout
-                        android:orientation="horizontal"
+                        android:layout_height="35dp"
+                        android:text="ก่อนอาหาร"
+                        android:id="@+id/Radio_button_bf_food"
+                        android:textColor="#3a3a3a"
+                        android:layout_weight="1"
+                        android:checked="false"
+                        android:textSize="12dp"
+                        android:textStyle="bold"
+                        android:layout_marginRight="6.0dp"
+                        android:layout_marginLeft="0.0dp"
+                        android:layout_gravity="center_vertical"
+                        android:buttonTint="#29297c" />
+                    <RadioButton
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:foregroundGravity="center_horizontal"
-                        android:gravity="center_horizontal"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="5dp">
-                        <EditText
-                            android:layout_width="70dp"
-                            android:layout_height="wrap_content"
-                            android:inputType="text"
-                            android:ems="10"
-                            android:id="@+id/edit_af_food"
-                            android:textColor="#6f6f6f"
-                            android:textSize="19dp"
-                            android:textStyle="bold"
-                            android:gravity="center_vertical|center_horizontal"
-                            android:background="@drawable/my_box_dis"
-                            android:layout_marginTop="5.0dp" />
-                    </LinearLayout>
+                        android:layout_height="35dp"
+                        android:text="หลังอาหาร"
+                        android:id="@+id/Radio_button_af_food"
+                        android:textColor="#3a3a3a"
+                        android:layout_weight="1"
+                        android:textSize="12dp"
+                        android:textStyle="bold"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="5dp"
+                        android:buttonTint="#29297c" />
                 </RadioGroup>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="5dp">
+                    <EditText
+                        android:layout_width="70dp"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:ems="10"
+                        android:id="@+id/edit_af_food"
+                        android:textColor="#6f6f6f"
+                        android:textSize="19dp"
+                        android:textStyle="bold"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:background="@drawable/my_box_dis"
+                        android:layout_marginTop="0.0dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="นาที"
+                        android:id="@+id/textView_minute"
+                        android:textSize="12dp"
+                        android:textStyle="bold"
+                        android:textColor="#3a3a3a"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical"
+                        android:layout_marginLeft="10.0dp" />
+                </LinearLayout>
             </LinearLayout>
             <ImageView
                 android:layout_width="150dp"
                 android:layout_height="100dp"
                 android:id="@+id/imageView_button_camera"
-                android:src="@drawable/button_save_image_pill"
+                android:src="@drawable/button_save_image"
                 android:layout_marginTop="10.5dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="20.0dp" />

@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#FAFFFFFF">
+    android:background="#dfe4ea">
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -17,7 +17,7 @@
             android:layout_marginLeft="70dp"
             android:textStyle="bold"
             android:layout_marginTop="10dp"
-            android:textColor="#979797" />
+            android:textColor="#3a3a3a" />
     </LinearLayout>
     <LinearLayout
         android:orientation="horizontal"
@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="รายละเอียดยา"
-            android:textColor="#979797"
+            android:textColor="#3a3a3a"
             android:id="@+id/his_pill_desc"
             android:textSize="13dp"
             android:layout_marginTop="4dp"
