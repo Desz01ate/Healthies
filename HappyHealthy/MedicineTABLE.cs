@@ -21,7 +21,12 @@ namespace HappyHealthyCSharp
             "ma_id",
             "ma_name",
             "ma_desc",
-            "ma_set_time",
+            "ma_bf",
+            "ma_lu",
+            "ma_dn",
+            "ma_sl",
+            "ma_before_or_after",
+            "ma_before_or_after_minute",
             "ma_calendar_uri",
             "ma_pic"
         };
@@ -36,7 +41,12 @@ namespace HappyHealthyCSharp
         public string ma_name { get; set; }
         [SQLite.MaxLength(255)]
         public string ma_desc { get; set; }
-        public DateTime ma_set_time { get; set; }
+        public bool ma_bf { get; set; }
+        public bool ma_lu { get; set; }
+        public bool ma_dn { get; set; }
+        public bool ma_sl { get; set; }
+        public bool ma_before_or_after { get; set; }
+        public int ma_before_or_after_minute { get; set; }
         [SQLite.NotNull]
         public bool ma_repeat_monday { get; set; }
         [SQLite.NotNull]

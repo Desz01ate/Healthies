@@ -298,6 +298,15 @@ namespace HappyHealthyCSharp
             };
             return true;
         }
+        public static bool CheckBoxValidate(List<object> controlList)
+        {
+            foreach(var control in controlList)
+            {
+                if (((bool)control.GetType().GetProperty("Checked").GetValue(control)) == true)
+                    return true;
+            }
+            return false;
+        }
         public static bool TimeValidate(this DateTime dt)
         {
             return dt.Hour != 0 || dt.Minute != 0;

@@ -23,9 +23,9 @@ namespace HappyHealthyCSharp
             ContentValues eventValues = new ContentValues();
             eventValues.Put(CalendarContract.Events.InterfaceConsts.CalendarId, calId);
             eventValues.Put(CalendarContract.Events.InterfaceConsts.Title, title);
-            eventValues.Put(CalendarContract.Events.InterfaceConsts.Description, description);
+            eventValues.Put(CalendarContract.Events.InterfaceConsts.Description,description);
             eventValues.Put(CalendarContract.Events.InterfaceConsts.Dtstart, CalendarMillisecConverter(year, month, date, startHour, 0));
-            eventValues.Put(CalendarContract.Events.InterfaceConsts.Dtend, CalendarMillisecConverter(year, month, date, endHour, 0));
+            eventValues.Put(CalendarContract.Events.InterfaceConsts.Dtend, CalendarMillisecConverter(year, month, date,endHour, 0));
             eventValues.Put(CalendarContract.Events.InterfaceConsts.EventTimezone, timeZone);
             eventValues.Put(CalendarContract.Events.InterfaceConsts.EventEndTimezone, timeZone);
             //eventValues.Put(CalendarContract.Events.InterfaceConsts.AllDay, true);
@@ -54,7 +54,7 @@ namespace HappyHealthyCSharp
                     {
                         usageId = cursor.GetInt(id);
                         break;
-
+                        
                     }
                 } while (cursor.MoveToNext());
                 cursor.Close();

@@ -42,10 +42,11 @@ namespace HappyHealthyCSharp
         protected override void OnResume()
         {
             base.OnResume();
-            setDoctorList();
+            SetListView();
         }
         private void onItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
+            /*
             //pillList[e.Position].TryGetValue("ma_name", out object pillValue);
             docList[e.Position].TryGetValue("da_id", out object docID);
             var docObject = new DoctorTABLE();
@@ -58,13 +59,47 @@ namespace HappyHealthyCSharp
                 Intent.PutExtra("targetObject", jsonObject);
                 StartActivity(Intent);
             }, "OK", "Edit").Show();
-            */
             var jsonObject = JsonConvert.SerializeObject(docObject);
             var Intent = new Intent(this, typeof(Doctor));
             Intent.PutExtra("targetObject", jsonObject);
             StartActivity(Intent);
+            */
+            docList[e.Position].TryGetValue("da_id", out object docID);
+            var docObject = new DoctorTABLE();
+            docObject = docObject.Select<DoctorTABLE>($"SELECT * From DoctorTABLE where da_id = {docID}")[0];
+            Extension.CreateDialogue(this, "กรุณาเลือกรายการที่ต้องการจะดำเนินการ",
+                delegate
+                {
+                    var jsonObject = JsonConvert.SerializeObject(docObject);
+                    var DoctorIntent = new Intent(this, typeof(Doctor));
+                    DoctorIntent.PutExtra("targetObject", jsonObject);
+                    StartActivity(DoctorIntent);
+                }, delegate
+                {
+                    Extension.CreateDialogue2(
+                    this
+                    , "คุณต้องการลบข้อมูลนี้ใช่หรือไม่?"
+                    , Android.Graphics.Color.White, Android.Graphics.Color.LightGreen
+                    , Android.Graphics.Color.White, Android.Graphics.Color.Red
+                    , Extension.adFontSize
+                    , delegate
+                    {
+                        //var deleteUri = CalendarHelper.GetDeleteEventURI(docObject.ma_calendar_uri);
+                        //ContentResolver.Delete(deleteUri, null, null);
+                        if (docObject.da_calendar_uri != null)
+                        {
+                            var deleteUri = CalendarHelper.GetDeleteEventURI(docObject.da_calendar_uri);
+                            ContentResolver.Delete(deleteUri, null, null);
+                        }
+                        docObject.Delete<DoctorTABLE>(docObject.da_id);
+                        SetListView();
+                    }
+                    , delegate { }
+                    , "\u2713"
+                    , "X");
+                }, "ดูข้อมูล", "ลบข้อมูล").Show();
         }
-        public void setDoctorList()
+        public void SetListView()
         {
             docList = docTable.GetJavaList<DoctorTABLE>($"SELECT * FROM DoctorTABLE", new DoctorTABLE().Column);
             //pillList = pillTable.getPillList($"SELECT * FROM PillTABLE WHERE UD_ID = {GlobalFunction.getPreference("ud_id", "", this)}");
