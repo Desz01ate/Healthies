@@ -91,8 +91,8 @@ namespace HappyHealthyCSharp
 		public partial class Array
 		{
 			
-			// aapt resource value: 0x7f0e000a
-			public const int ckd_array = 2131623946;
+			// aapt resource value: 0x7f0e000b
+			public const int ckd_array = 2131623947;
 			
 			// aapt resource value: 0x7f0e0000
 			public const int my_act = 2131623936;
@@ -123,6 +123,9 @@ namespace HappyHealthyCSharp
 			
 			// aapt resource value: 0x7f0e0009
 			public const int nav_drawer_labels = 2131623945;
+			
+			// aapt resource value: 0x7f0e000a
+			public const int report_label = 2131623946;
 			
 			static Array()
 			{
@@ -3295,6 +3298,12 @@ namespace HappyHealthyCSharp
 			// aapt resource value: 0x7f080171
 			public const int imageViewBirthday = 2131231089;
 			
+			// aapt resource value: 0x7f0801c4
+			public const int imageViewFoodAdd = 2131231172;
+			
+			// aapt resource value: 0x7f0801c3
+			public const int imageViewFoodBackState = 2131231171;
+			
 			// aapt resource value: 0x7f0801b9
 			public const int imageView_button_back_diabetes = 2131231161;
 			
@@ -3375,12 +3384,6 @@ namespace HappyHealthyCSharp
 			
 			// aapt resource value: 0x7f0801cb
 			public const int imageViewbackpill = 2131231179;
-			
-			// aapt resource value: 0x7f0801c4
-			public const int imageViewfoodAdd = 2131231172;
-			
-			// aapt resource value: 0x7f0801c3
-			public const int imageViewfoodDelete = 2131231171;
 			
 			// aapt resource value: 0x7f0800fb
 			public const int imageViewsugatafter = 2131230971;

@@ -40,14 +40,16 @@ namespace HappyHealthyCSharp
         Dictionary<string, string> detailFood;
         double total;
         EditText editCal_Total;
-        TextView f_name, f_cal, f_unit, f_netweight, f_netunit, f_pro, f_fat, f_car, f_sugar, f_sodium, f_amount, f_detail;
+        TextView header,f_name, f_cal, f_unit, f_netweight, f_netunit, f_pro, f_fat, f_car, f_sugar, f_sodium, f_amount, f_detail;
         protected override void OnCreate(Bundle savedInstanceState)
         {
 
             SetTheme(Resource.Style.Base_Theme_AppCompat_Light);
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_food_detail);
-            var img_back = FindViewById<ImageView>(Resource.Id.imageView46);
+            var addhiding = FindViewById<ImageView>(Resource.Id.imageViewFoodAdd);
+            addhiding.Visibility = ViewStates.Gone;
+            var img_back = FindViewById<ImageView>(Resource.Id.imageViewFoodBackState);
             img_back.Click += delegate {
                 //StartActivity(new Intent(this, typeof(Food_Type_1)));
                 this.Finish();
@@ -77,7 +79,6 @@ namespace HappyHealthyCSharp
                 SetFoodDetail(total);
             };
             detailFood = foodTABLE.selectDetailByID(Intent.GetIntExtra("food_id", 0));
-
             SetFoodDetail(total);
             //GlobalFunction.createDialog(this, Intent.GetIntExtra("food_id", 0).ToString()).Show();
             // Create your application here
@@ -86,6 +87,8 @@ namespace HappyHealthyCSharp
         public void SetFoodDetail(double t)
         {
             f_name.Text = detailFood["food_name"];
+            header = FindViewById<TextView>(Resource.Id.textView24);
+            header.Text = detailFood["food_name"];
             
         }
         protected override void OnPause()

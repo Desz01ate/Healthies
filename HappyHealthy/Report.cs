@@ -31,42 +31,56 @@ namespace HappyHealthyCSharp
             SetContentView(Resource.Layout.activity_report);
             reportStatus = FindViewById<TextView>(Resource.Id.reportStatus);
             PlotView view = FindViewById<PlotView>(Resource.Id.plot_view);
-            //var fbs = FindViewById<RadioButton>(Resource.Id.report_fbs);
-            //var ckd = FindViewById<RadioButton>(Resource.Id.report_ckd);
-            //var bp = FindViewById<RadioButton>(Resource.Id.report_bp);
-            //fbs.Click += delegate
-            //{
-            //    view.Model = CreatePlotModel(
-            //        "รายงานค่าเบาหวาน",
-            //        new DiabetesTABLE().GetJavaList<DiabetesTABLE>($"SELECT * FROM DiabetesTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)} ORDER BY FBS_TIME",
-            //        new DiabetesTABLE().Column),
-            //        "fbs_time",
-            //        "fbs_fbs",
-            //        DiabetesTABLE.caseLevel.High);
-            //};
-            //ckd.Click += delegate
-            //{
-            //    view.Model = CreatePlotModel(
-            //        "รายงานค่าโรคไต",
-            //        new KidneyTABLE().GetJavaList<KidneyTABLE>($@"SELECT * FROM KidneyTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)} ORDER BY CKD_TIME",
-            //        new KidneyTABLE().Column),
-            //        "ckd_time",
-            //        "ckd_gfr",
-            //        KidneyTABLE.caseLevel.High);
-            //};
-            //bp.Click += delegate
-            //{
-            //    view.Model = CreatePlotModel(
-            //        "รายงานค่าความดัน",
-            //        new PressureTABLE().GetJavaList<PressureTABLE>($@"SELECT * FROM PressureTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)} ORDER BY BP_TIME",
-            //        new PressureTABLE().Column),
-            //        "bp_time",
-            //        "bp_hr",
-            //        PressureTABLE.caseLevel.uHigh);
-            //};
-            //fbs.Checked = true;
-            //fbs.CallOnClick();
+            var spinner = FindViewById<Spinner>(Resource.Id.spinner);
+            var adapter = ArrayAdapter.CreateFromResource(this, Resource.Array.report_label, Android.Resource.Layout.SimpleSpinnerItem);
+            spinner.Adapter = adapter;
+            spinner.ItemSelected += delegate
+            {
+                if (spinner.SelectedItemPosition == 0)
+                {
+                    view.Model = CreatePlotModel(
+                        "รายงานค่าเบาหวาน",
+                        new DiabetesTABLE().GetJavaList<DiabetesTABLE>($"SELECT * FROM DiabetesTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)} ORDER BY FBS_TIME",
+                        new DiabetesTABLE().Column),
+                        "fbs_time",
+                        "fbs_fbs",
+                        DiabetesTABLE.caseLevel.High);
+                }
+                else if (spinner.SelectedItemPosition == 1)
+                {
+                    view.Model = CreatePlotModel(
+                        "รายงานค่าความดัน",
+                        new PressureTABLE().GetJavaList<PressureTABLE>($@"SELECT * FROM PressureTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)} ORDER BY BP_TIME",
+                        new PressureTABLE().Column),
+                        "bp_time",
+                        "bp_hr",
+                        PressureTABLE.caseLevel.uHigh);
+                }
+                else if (spinner.SelectedItemPosition == 2)
+                {
+                    view.Model = CreatePlotModel(
+                        "รายงานค่าโรคไต",
+                        new KidneyTABLE().GetJavaList<KidneyTABLE>($@"SELECT * FROM KidneyTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)} ORDER BY CKD_TIME",
+                        new KidneyTABLE().Column),
+                        "ckd_time",
+                        "ckd_gfr",
+                        KidneyTABLE.caseLevel.High);
+                }
+            };
+            ViewFirstInit(view);
         }
+
+        private void ViewFirstInit(PlotView v)
+        {
+            v.Model = CreatePlotModel(
+    "รายงานค่าเบาหวาน",
+    new DiabetesTABLE().GetJavaList<DiabetesTABLE>($"SELECT * FROM DiabetesTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)} ORDER BY FBS_TIME",
+    new DiabetesTABLE().Column),
+    "fbs_time",
+    "fbs_fbs",
+    DiabetesTABLE.caseLevel.High);
+        }
+
         private PlotModel CreatePlotModel(string title, JavaList<IDictionary<string, object>> dataset, string key_time, string key_value, int exceedValue = 150)
         {
             var size = Resources.GetDimension(Resource.Dimension.text_size);
@@ -139,7 +153,7 @@ namespace HappyHealthyCSharp
                     Stroke = OxyColors.Transparent,
                     FontSize = Resources.GetDimension(Resource.Dimension.text_size)
                 };
-                
+
                 plotModel.Annotations.Add(textAnnotations);
             }
             #region Conclusion-Initial
@@ -150,7 +164,7 @@ namespace HappyHealthyCSharp
             if (maxValue > exceedValue)
             {
                 dataSeries.Color = OxyColors.Red;
-                dataSeries.Fill = OxyColor.FromArgb((byte)255,(byte)255,(byte)135,(byte)132);
+                dataSeries.Fill = OxyColor.FromArgb((byte)255, (byte)255, (byte)135, (byte)132);
                 reportStatus.SetTextColor(Android.Graphics.Color.Red);
                 reportStatus.Text = "สถานะ : ผิดปกติ กรุณาพบแพทย์เพื่อรับคำแนะนำเพิ่มเติม";
             }

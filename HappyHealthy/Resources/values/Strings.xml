@@ -16,7 +16,11 @@
         <item>@string/nav_item_friends</item>
         <item>@string/nav_item_notifications</item>
     </string-array>
-
+  <string-array name="report_label">
+    <item>รายงานโรคเบาหวาน</item>
+    <item>รายงานโรคความดัน</item>
+    <item>รายงานโรคไต</item>
+  </string-array>
   <string name="ckd_prompt" color="#3a3a3a">เลือกกราฟ</string>
   <string-array name="ckd_array">
     <item>ไต</item>
