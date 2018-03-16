@@ -6,18 +6,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.jiraporn.nut.happyhealthy.Develop"
-    android:background="@color/bg">
+    android:background="#dfe4ea">
     <LinearLayout
         android:id="@+id/container_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
         <include
             android:id="@+id/toolbar"
             layout="@layout/toolbardevelop" />
     </LinearLayout>
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -28,10 +26,7 @@
         android:layout_gravity="center_horizontal"
         android:textSize="20sp"
         android:textStyle="normal|bold"
-        android:textColor="@color/fontwhite" />
-
-
-
+        android:textColor="#3a3a3a" />
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="40dp"
@@ -40,7 +35,6 @@
         android:layout_marginLeft="3dp"
         android:layout_marginTop="7dp"
         android:onClick="ClickDevelop" />
-
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -49,16 +43,13 @@
         android:layout_below="@+id/container_toolbar"
         android:layout_marginTop="50dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@drawable/my_box_pre">
-
+        android:layout_marginRight="10dp">
         <ImageView
             android:layout_width="match_parent"
             android:src="@drawable/logormutsb"
             android:layout_marginTop="5dp"
             android:id="@+id/imageView77"
             android:layout_height="wrap_content" />
-
         <TextView
             android:text="มหาวิทยาลัยเทคโนโลยีราชมงคลสุวรรณภูมิ "
             android:layout_width="match_parent"
@@ -68,9 +59,8 @@
             android:foregroundGravity="center_vertical|center_horizontal|center"
             android:gravity="center_vertical|center_horizontal|center"
             android:layout_marginTop="12dp"
-            android:textColor="@color/font"
+            android:textColor="#3a3a3a"
             android:textStyle="normal|bold" />
-
         <TextView
             android:text="คณะวิทยาศาสตร์และเทคโนโลยี"
             android:layout_width="match_parent"
@@ -80,9 +70,8 @@
             android:foregroundGravity="center_vertical|center_horizontal|center"
             android:gravity="center_vertical|center_horizontal|center"
             android:textSize="13sp"
-            android:textColor="@color/font"
+            android:textColor="#3a3a3a"
             android:textStyle="normal|bold" />
-
         <TextView
             android:text="สาขาวิชาวิทยาการคอมพิวเตอร์"
             android:layout_width="match_parent"
@@ -92,9 +81,8 @@
             android:foregroundGravity="center_vertical|center_horizontal|center"
             android:gravity="center_vertical|center_horizontal|center"
             android:textSize="13sp"
-            android:textColor="@color/font"
+            android:textColor="#3a3a3a"
             android:textStyle="normal|bold" />
-
         <TextView
             android:text="นาย วสุพล ศิระสวัสดิ์"
             android:layout_width="match_parent"
@@ -104,8 +92,7 @@
             android:foregroundGravity="center_vertical|center_horizontal|center"
             android:gravity="center_vertical|center_horizontal|center"
             android:textSize="12sp"
-            android:textColor="@color/font" />
-
+            android:textColor="#3a3a3a" />
         <TextView
             android:text="E-Mail: jame.hub@hotmail.com"
             android:layout_width="match_parent"
@@ -115,8 +102,7 @@
             android:foregroundGravity="center_vertical|center_horizontal|center"
             android:gravity="center_vertical|center_horizontal|center"
             android:textSize="12sp"
-            android:textColor="@color/font" />
-
+            android:textColor="#3a3a3a" />
         <TextView
             android:text="นาย ชาญวุฒิ บุญเอียด"
             android:layout_width="match_parent"
@@ -126,9 +112,7 @@
             android:gravity="center_vertical|center_horizontal|center"
             android:textSize="12sp"
             android:id="@+id/textView43"
-
-            android:textColor="@color/font" />
-
+            android:textColor="#3a3a3a" />
         <TextView
             android:text="E-Mail: deszolate@gmail.com"
             android:layout_width="match_parent"
@@ -139,9 +123,8 @@
             android:gravity="center_vertical|center_horizontal|center"
             android:textSize="12sp"
             android:layout_marginBottom="20dp"
-            android:textColor="@color/font" />
+            android:textColor="#3a3a3a" />
     </LinearLayout>
-
     <TextView
         android:text="พัฒนาโดย"
         android:layout_width="match_parent"
@@ -155,6 +138,5 @@
         android:layout_below="@+id/container_toolbar"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:textColor="@color/font" />
-
+        android:textColor="#3a3a3a" />
 </RelativeLayout>
