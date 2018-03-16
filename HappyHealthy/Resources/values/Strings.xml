@@ -17,6 +17,12 @@
         <item>@string/nav_item_notifications</item>
     </string-array>
 
+  <string name="ckd_prompt" color="#3a3a3a">เลือกกราฟ</string>
+  <string-array name="ckd_array">
+    <item>ไต</item>
+    <item>เบาหวาน</item>
+    <item>ความดัน</item>
+  </string-array>
     <string name="title_messages">Messages</string>
     <string name="title_friends">Friends</string>
     <string name="title_home">Home</string>
