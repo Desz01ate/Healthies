@@ -21,7 +21,6 @@
             android:layout_marginTop="0.0dp"
             android:layout_marginLeft="3dp"
             android:layout_alignParentLeft="true"
-            android:onClick="ClickBackHisKidHome"
             android:layout_gravity="center_vertical" />
         <TextView
             android:layout_width="290.0dp"
@@ -40,7 +39,6 @@
             android:layout_height="35dp"
             android:id="@+id/imageview_button_add_doc"
             android:src="@drawable/buttonadd"
-            android:onClick="ClickAddKid"
             android:layout_marginTop="0.0dp"
             android:layout_marginRight="0.0dp"
             android:layout_gravity="center_vertical"

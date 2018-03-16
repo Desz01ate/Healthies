@@ -39,18 +39,26 @@ namespace HappyHealthyCSharp
             SetTheme(Resource.Style.Base_Theme_AppCompat_Light);
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_add_doc);
+            var header = FindViewById<TextView>(Resource.Id.textView_header_name_doc);
+            header.Text = "บันทึกการนัดพบแพทย์";
+            var addhiding = FindViewById<ImageView>(Resource.Id.imageview_button_add_doc);
+            addhiding.Visibility = ViewStates.Gone;
             var camerabtt = FindViewById<ImageView>(Resource.Id.imageView_button_save_pic_doc);
-            var backbtt = FindViewById<ImageView>(Resource.Id.imageView_button_back_doc);
+            camerabtt.Visibility = ViewStates.Gone;
+            var backbtt = FindViewById<ImageView>(Resource.Id.imageViewbackdoc);
             //var deletebtt = FindViewById<ImageView>(Resource.Id.imageView_button_delete_doc);
             docAttendDate = FindViewById<TextView>(Resource.Id.choosedate_doc);
             docRegisTime = FindViewById<TextView>(Resource.Id.chooseregtime_doc);
+            docRegisTime.Visibility = ViewStates.Gone;
             docAppointmentTime = FindViewById<TextView>(Resource.Id.chooseappttime_doc);
+            docAppointmentTime.Visibility = ViewStates.Gone;
             et_docName = FindViewById<EditText>(Resource.Id.da_name);
             et_deptName = FindViewById<EditText>(Resource.Id.da_dept);
             et_place = FindViewById<EditText>(Resource.Id.da_place);
             et_hospital = FindViewById<EditText>(Resource.Id.da_hospital);
             et_comment = FindViewById<EditText>(Resource.Id.da_comment);
             docAttendPicture = FindViewById<ImageView>(Resource.Id.imageView_show_image);
+            docAttendPicture.Visibility = ViewStates.Gone;
             var saveButton = FindViewById<ImageView>(Resource.Id.imageView_button_save_doc);
             //code goes below
             var flagObjectJson = Intent.GetStringExtra("targetObject") ?? string.Empty;
@@ -192,7 +200,7 @@ namespace HappyHealthyCSharp
             var year = Convert.ToInt32(docObject.da_date.ToString("yyyy"));
             var month = Convert.ToInt32(docObject.da_date.ToString("MM"));
             var date = Convert.ToInt32(docObject.da_date.ToString("dd"));
-            var eventValues = CalendarHelper.GetEventContentValues(4, et_hospital.Text, et_comment.Text, year, month-1, date-1, 10, 11, true);
+            var eventValues = CalendarHelper.GetEventContentValues(4, et_hospital.Text, et_comment.Text, year, month-1, date-1, 10, 11);
             System.Console.WriteLine(CalendarContract.Events.ContentUri.ToString() + eventValues.ToString());
             var uri = ContentResolver.Insert(CalendarContract.Events.ContentUri, eventValues);
             docObject.da_calendar_uri = uri.ToString();

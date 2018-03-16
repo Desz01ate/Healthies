@@ -38,8 +38,13 @@ namespace HappyHealthyCSharp
             SetTheme(Resource.Style.Base_Theme_AppCompat_Light);
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_add_pill);
+            var header = FindViewById<TextView>(Resource.Id.textView_header_name_pill);
+            header.Text = "บันทึกข้อมูลการทานยา";
+            var addhiding = FindViewById<ImageView>(Resource.Id.imageViewAddPill);
+            addhiding.Visibility = ViewStates.Gone;
             var camerabtt = FindViewById<ImageView>(Resource.Id.imageView_button_camera);
-            var backbtt = FindViewById<ImageView>(Resource.Id.imageView_button_back_pill);
+            camerabtt.Visibility = ViewStates.Gone;
+            var backbtt = FindViewById<ImageView>(Resource.Id.imageViewbackpill);
             medName = FindViewById<EditText>(Resource.Id.ma_name);
             medDesc = FindViewById<EditText>(Resource.Id.ma_desc);
             medImage = FindViewById<ImageView>(Resource.Id.imageView_show_image);

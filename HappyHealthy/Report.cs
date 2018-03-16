@@ -31,41 +31,41 @@ namespace HappyHealthyCSharp
             SetContentView(Resource.Layout.activity_report);
             reportStatus = FindViewById<TextView>(Resource.Id.reportStatus);
             PlotView view = FindViewById<PlotView>(Resource.Id.plot_view);
-            var fbs = FindViewById<RadioButton>(Resource.Id.report_fbs);
-            var ckd = FindViewById<RadioButton>(Resource.Id.report_ckd);
-            var bp = FindViewById<RadioButton>(Resource.Id.report_bp);
-            fbs.Click += delegate
-            {
-                view.Model = CreatePlotModel(
-                    "รายงานค่าเบาหวาน",
-                    new DiabetesTABLE().GetJavaList<DiabetesTABLE>($"SELECT * FROM DiabetesTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)} ORDER BY FBS_TIME",
-                    new DiabetesTABLE().Column),
-                    "fbs_time",
-                    "fbs_fbs",
-                    DiabetesTABLE.caseLevel.High);
-            };
-            ckd.Click += delegate
-            {
-                view.Model = CreatePlotModel(
-                    "รายงานค่าโรคไต",
-                    new KidneyTABLE().GetJavaList<KidneyTABLE>($@"SELECT * FROM KidneyTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)} ORDER BY CKD_TIME",
-                    new KidneyTABLE().Column),
-                    "ckd_time",
-                    "ckd_gfr",
-                    KidneyTABLE.caseLevel.High);
-            };
-            bp.Click += delegate
-            {
-                view.Model = CreatePlotModel(
-                    "รายงานค่าความดัน",
-                    new PressureTABLE().GetJavaList<PressureTABLE>($@"SELECT * FROM PressureTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)} ORDER BY BP_TIME",
-                    new PressureTABLE().Column),
-                    "bp_time",
-                    "bp_hr",
-                    PressureTABLE.caseLevel.uHigh);
-            };
-            fbs.Checked = true;
-            fbs.CallOnClick();
+            //var fbs = FindViewById<RadioButton>(Resource.Id.report_fbs);
+            //var ckd = FindViewById<RadioButton>(Resource.Id.report_ckd);
+            //var bp = FindViewById<RadioButton>(Resource.Id.report_bp);
+            //fbs.Click += delegate
+            //{
+            //    view.Model = CreatePlotModel(
+            //        "รายงานค่าเบาหวาน",
+            //        new DiabetesTABLE().GetJavaList<DiabetesTABLE>($"SELECT * FROM DiabetesTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)} ORDER BY FBS_TIME",
+            //        new DiabetesTABLE().Column),
+            //        "fbs_time",
+            //        "fbs_fbs",
+            //        DiabetesTABLE.caseLevel.High);
+            //};
+            //ckd.Click += delegate
+            //{
+            //    view.Model = CreatePlotModel(
+            //        "รายงานค่าโรคไต",
+            //        new KidneyTABLE().GetJavaList<KidneyTABLE>($@"SELECT * FROM KidneyTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)} ORDER BY CKD_TIME",
+            //        new KidneyTABLE().Column),
+            //        "ckd_time",
+            //        "ckd_gfr",
+            //        KidneyTABLE.caseLevel.High);
+            //};
+            //bp.Click += delegate
+            //{
+            //    view.Model = CreatePlotModel(
+            //        "รายงานค่าความดัน",
+            //        new PressureTABLE().GetJavaList<PressureTABLE>($@"SELECT * FROM PressureTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)} ORDER BY BP_TIME",
+            //        new PressureTABLE().Column),
+            //        "bp_time",
+            //        "bp_hr",
+            //        PressureTABLE.caseLevel.uHigh);
+            //};
+            //fbs.Checked = true;
+            //fbs.CallOnClick();
         }
         private PlotModel CreatePlotModel(string title, JavaList<IDictionary<string, object>> dataset, string key_time, string key_value, int exceedValue = 150)
         {
