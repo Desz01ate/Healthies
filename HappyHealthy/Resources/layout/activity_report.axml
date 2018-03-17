@@ -10,10 +10,13 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <TextView
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dip"
-            android:text="@string/ckd_prompt" />
+            android:textSize="16dp"
+            android:textColor="#3a3a3a"
+            android:text="เลือกกราฟ"
+            android:layout_marginLeft="10.0dp" />
         <Spinner
             android:id="@+id/spinner"
             android:layout_width="fill_parent"
