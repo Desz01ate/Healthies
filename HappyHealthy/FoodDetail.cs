@@ -47,8 +47,8 @@ namespace HappyHealthyCSharp
             SetTheme(Resource.Style.Base_Theme_AppCompat_Light);
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_food_detail);
-            var addhiding = FindViewById<ImageView>(Resource.Id.imageViewFoodAdd);
-            addhiding.Visibility = ViewStates.Gone;
+            //var addhiding = FindViewById<ImageView>(Resource.Id.imageViewFoodAdd);
+            //addhiding.Visibility = ViewStates.Gone;
             var img_back = FindViewById<ImageView>(Resource.Id.imageViewFoodBackState);
             img_back.Click += delegate {
                 //StartActivity(new Intent(this, typeof(Food_Type_1)));

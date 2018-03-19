@@ -42,13 +42,13 @@ namespace HappyHealthyCSharp
             header.Text = "บันทึกการทานยา";
             var addhiding = FindViewById<ImageView>(Resource.Id.imageViewAddPill);
             addhiding.Visibility = ViewStates.Gone;
-            var camerabtt = FindViewById<ImageView>(Resource.Id.imageView_button_camera);
-            camerabtt.Visibility = ViewStates.Gone;
+            //var camerabtt = FindViewById<ImageView>(Resource.Id.imageView_button_camera);
+            //camerabtt.Visibility = ViewStates.Gone;
             var backbtt = FindViewById<ImageView>(Resource.Id.imageViewbackpill);
             medName = FindViewById<EditText>(Resource.Id.ma_name);
             medDesc = FindViewById<EditText>(Resource.Id.ma_desc);
-            medImage = FindViewById<ImageView>(Resource.Id.imageView_show_image);
-            medImage.Visibility = ViewStates.Gone;
+            //medImage = FindViewById<ImageView>(Resource.Id.imageView_show_image);
+            //medImage.Visibility = ViewStates.Gone;
             breakfast = FindViewById<CheckBox>(Resource.Id.CheckBox_button_breakfast);
             lunch = FindViewById<CheckBox>(Resource.Id.CheckBox_button_lunch);
             dinner = FindViewById<CheckBox>(Resource.Id.CheckBox_button_dinner);
@@ -82,7 +82,7 @@ namespace HappyHealthyCSharp
             if (IsAppToTakePicturesAvailable())
             {
                 CreateDirForPictures();
-                camerabtt.Click += cameraClickEvent;
+                //camerabtt.Click += cameraClickEvent;
                 //System.Console.WriteLine(IsAppToTakePicturesAvailable());
             }
             before.Click += EnableTimeText;

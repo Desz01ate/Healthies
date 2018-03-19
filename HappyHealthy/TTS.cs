@@ -12,6 +12,7 @@ using Android.Widget;
 using Java.Util;
 using Android.Speech.Tts;
 using Java.IO;
+using System.Threading.Tasks;
 
 namespace HappyHealthyCSharp
 {
@@ -38,6 +39,38 @@ namespace HappyHealthyCSharp
                 myTTS = new TTS(c);
             }
             return myTTS;
+        }
+        public async Task SpeakAsync(string message)
+        {
+            this.message = message;
+            if (tts == null || !isRunning)
+            {
+                speakCount = 0;
+                if (enginePackageName != null && !string.IsNullOrEmpty(enginePackageName))
+                {
+                    tts = new TextToSpeech(context, this, enginePackageName);
+                }
+                else
+                {
+                    tts = new TextToSpeech(context, this);
+                }
+                if (Build.VERSION.SdkInt >= BuildVersionCodes.IceCreamSandwichMr1)
+                {
+                    tts.SetOnUtteranceProgressListener(this);
+                }
+                else
+                {
+                    tts.SetOnUtteranceCompletedListener(this);
+                }
+                tts.SetPitch(1f);
+                tts.SetSpeechRate(0.9f);
+                isRunning = true;
+            }
+            else
+            {
+                startSpeak();
+            }
+            await Task.CompletedTask;
         }
         public void Speak(string message)
         {
