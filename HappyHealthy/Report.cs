@@ -43,65 +43,22 @@ namespace HappyHealthyCSharp
                 {
                     secondAdapter = ArrayAdapter.CreateFromResource(this, Resource.Array.diabetes, Android.Resource.Layout.SimpleSpinnerItem);
                     secondSpinner.Adapter = secondAdapter;
-
                 }
                 else if (mainSpinner.SelectedItemPosition == 1)
                 {
                     secondAdapter = ArrayAdapter.CreateFromResource(this, Resource.Array.pressure, Android.Resource.Layout.SimpleSpinnerItem);
                     secondSpinner.Adapter = secondAdapter;
-
-                    /*
-                view.Model = CreatePlotModelLS(
-                    "รายงานค่าความดัน"
-                    ,new PressureTABLE().GetJavaList<PressureTABLE>($@"SELECT * FROM PressureTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)} ORDER BY BP_TIME",
-                    new PressureTABLE().Column)
-                    , "bp_time"
-                    , new List<string>() {
-                        //"ckd_id",
-                        "bp_time",
-                        "bp_up",
-                        "bp_lo",
-                        "bp_hr",
-                    }
-                    , new List<int>() { 150, 150, 150, 150, 150, 150, 150, 150 }
-                    , new List<OxyColor>() { OxyColors.Red, OxyColors.Green, OxyColors.Blue, OxyColors.Yellow, OxyColors.Violet, OxyColors.Turquoise, OxyColors.SkyBlue, OxyColors.Pink });
-           */
                 }
                 else if (mainSpinner.SelectedItemPosition == 2)
                 {
                     secondAdapter = ArrayAdapter.CreateFromResource(this, Resource.Array.kidney, Android.Resource.Layout.SimpleSpinnerItem);
                     secondSpinner.Adapter = secondAdapter;
-                    /*
-                view.Model = CreatePlotModelLS(
-                    "รายงานค่าโรคไต"
-                    , new KidneyTABLE().GetJavaList<KidneyTABLE>($@"SELECT * FROM KidneyTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)} ORDER BY CKD_TIME"
-                    , new KidneyTABLE().Column)
-                    , "ckd_time"
-                    , new List<string>() {
-                        //"ckd_id",
-                        "ckd_time",
-                        //"ckd_time_string",
-                        "ckd_gfr",
-                        //"ckd_gfr_level",
-                        "ckd_creatinine",
-                        "ckd_bun",
-                        "ckd_sodium",
-                        "ckd_potassium",
-                        "ckd_albumin_blood",
-                        "ckd_albumin_urine",
-                        "ckd_phosphorus_blood"
-                    }
-                    , new List<int>() { 150, 150, 150, 150, 150, 150, 150, 150 }
-                    , new List<OxyColor>() { OxyColors.Red, OxyColors.Green, OxyColors.Blue, OxyColors.Yellow, OxyColors.Violet, OxyColors.Turquoise, OxyColors.SkyBlue, OxyColors.Pink });
-*/
                 }
             };
             secondSpinner.ItemSelected += delegate
             {
                 if (mainSpinner.SelectedItemPosition == 0)
                 {
-                    //secondAdapter = ArrayAdapter.CreateFromResource(this, Resource.Array.diabetes, Android.Resource.Layout.SimpleSpinnerItem);
-                    //secondSpinner.Adapter = secondAdapter;
                     string key = "fbs_fbs";
                     if (secondSpinner.SelectedItemPosition == 0)
                         key = "fbs_fbs";
@@ -115,8 +72,6 @@ namespace HappyHealthyCSharp
                 }
                 else if (mainSpinner.SelectedItemPosition == 1)
                 {
-                    //secondAdapter = ArrayAdapter.CreateFromResource(this, Resource.Array.pressure, Android.Resource.Layout.SimpleSpinnerItem);
-                    //secondSpinner.Adapter = secondAdapter;
                     string key = "bp_up";
                     if (secondSpinner.SelectedItemPosition == 0)
                         key = "bp_up";
@@ -131,27 +86,9 @@ namespace HappyHealthyCSharp
                         "bp_time",
                         key,
                         PressureTABLE.caseLevel.uHigh);
-                    /*
-                view.Model = CreatePlotModelLS(
-                    "รายงานค่าความดัน"
-                    ,new PressureTABLE().GetJavaList<PressureTABLE>($@"SELECT * FROM PressureTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)} ORDER BY BP_TIME",
-                    new PressureTABLE().Column)
-                    , "bp_time"
-                    , new List<string>() {
-                        //"ckd_id",
-                        "bp_time",
-                        "bp_up",
-                        "bp_lo",
-                        "bp_hr",
-                    }
-                    , new List<int>() { 150, 150, 150, 150, 150, 150, 150, 150 }
-                    , new List<OxyColor>() { OxyColors.Red, OxyColors.Green, OxyColors.Blue, OxyColors.Yellow, OxyColors.Violet, OxyColors.Turquoise, OxyColors.SkyBlue, OxyColors.Pink });
-           */
                 }
                 else if (mainSpinner.SelectedItemPosition == 2)
                 {
-                    //secondAdapter = ArrayAdapter.CreateFromResource(this, Resource.Array.kidney, Android.Resource.Layout.SimpleSpinnerItem);
-                    //secondSpinner.Adapter = secondAdapter;
                     string key = "ckd_gfr";
                     if (secondSpinner.SelectedItemPosition == 0)
                         key = "ckd_gfr";
@@ -176,30 +113,6 @@ namespace HappyHealthyCSharp
                         "ckd_time",
                         key,
                         KidneyTABLE.caseLevel.High);
-
-                    /*
-                view.Model = CreatePlotModelLS(
-                    "รายงานค่าโรคไต"
-                    , new KidneyTABLE().GetJavaList<KidneyTABLE>($@"SELECT * FROM KidneyTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)} ORDER BY CKD_TIME"
-                    , new KidneyTABLE().Column)
-                    , "ckd_time"
-                    , new List<string>() {
-                        //"ckd_id",
-                        "ckd_time",
-                        //"ckd_time_string",
-                        "ckd_gfr",
-                        //"ckd_gfr_level",
-                        "ckd_creatinine",
-                        "ckd_bun",
-                        "ckd_sodium",
-                        "ckd_potassium",
-                        "ckd_albumin_blood",
-                        "ckd_albumin_urine",
-                        "ckd_phosphorus_blood"
-                    }
-                    , new List<int>() { 150, 150, 150, 150, 150, 150, 150, 150 }
-                    , new List<OxyColor>() { OxyColors.Red, OxyColors.Green, OxyColors.Blue, OxyColors.Yellow, OxyColors.Violet, OxyColors.Turquoise, OxyColors.SkyBlue, OxyColors.Pink });
-*/
                 }
             };
             ViewFirstInit(view);
@@ -305,123 +218,6 @@ namespace HappyHealthyCSharp
             }
             #endregion  
             plotModel.Series.Add(dataSeries);
-            return plotModel;
-        }
-        private PlotModel CreatePlotModelForKidney(string title, int exceedValue = 150)
-        {
-            var colors = new List<OxyColor>() { OxyColors.Red, OxyColors.Green, OxyColors.Blue, OxyColors.Yellow, OxyColors.Violet, OxyColors.Turquoise, OxyColors.SkyBlue, OxyColors.Pink };
-            List<string> columns = new List<string>() {
-            //"ckd_id",
-            "ckd_time",
-            //"ckd_time_string",
-            "ckd_gfr",
-            //"ckd_gfr_level",
-            "ckd_creatinine",
-            "ckd_bun",
-            "ckd_sodium",
-            "ckd_potassium",
-            "ckd_albumin_blood",
-            "ckd_albumin_urine",
-            "ckd_phosphorus_blood"
-        };
-            var dataset = new JavaList<IDictionary<string, object>>();
-            var conn = new SQLiteConnection(Extension.sqliteDBPath);
-            var queryResult = conn.Query<KidneyTABLE>($@"SELECT * FROM KidneyTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)} ORDER BY CKD_TIME");
-            queryResult.ForEach(dataRow =>
-            {
-                var data = new JavaDictionary<string, object>();
-                columns.ForEach(attribute =>
-                {
-                    data.Add(attribute, dataRow.GetType().GetProperty(attribute).PropertyType == typeof(DateTime) ? ((DateTime)dataRow.GetType().GetProperty(attribute).GetValue(dataRow)).ToLocalTime() : dataRow.GetType().GetProperty(attribute).GetValue(dataRow));
-                });
-                dataset.Add(data);
-            }); //a little obfuscate code, try solve it for a little challenge :P
-            conn.Close();
-            var size = Resources.GetDimension(Resource.Dimension.text_size);
-            var datalength = dataset.Count();
-            var plotModel = new PlotModel
-            {
-                Title = title,
-                TitleFontSize = Resources.GetDimension(Resource.Dimension.text_size)
-            };
-            object LastDateOnDataset = DateTime.Now;
-            var maxValue = 0.0;
-            var minValue = 0.0;
-            if (datalength > 0)
-            {
-                dataset.Last().TryGetValue("ckd_time", out LastDateOnDataset);
-            }
-            var startDate = DateTime.Parse(LastDateOnDataset.ToString()).AddDays(-15);
-            var endDate = DateTime.Parse(LastDateOnDataset.ToString()).AddDays(5);
-            var minDate = DateTimeAxis.ToDouble(startDate);
-            var maxDate = DateTimeAxis.ToDouble(endDate);
-            var x = new DateTimeAxis
-            {
-                Position = AxisPosition.Bottom,
-                Minimum = minDate,
-                Maximum = maxDate,
-                MajorStep = 10,
-                StringFormat = "d-MMM",
-                FontSize = size
-            };
-            var y = new LinearAxis
-            {
-                Position = AxisPosition.Left,
-                Maximum = maxValue,
-                Minimum = minValue,
-                FontSize = size
-            };
-            y.IsPanEnabled = false;
-            y.IsZoomEnabled = false;
-            plotModel.Axes.Add(x);
-            plotModel.Axes.Add(y);
-            List<AreaSeries> dataSeriesList = new List<AreaSeries>();
-            int index = 0;
-            foreach (var col in columns)
-            {
-                if (col == "ckd_time")
-                    continue;
-                var dataSeries = new AreaSeries
-                {
-                    MarkerType = MarkerType.Circle,
-                    MarkerSize = 4,
-                    MarkerStroke = OxyColors.White,
-                    StrokeThickness = 10,
-                    Color = colors[index++],
-                    MarkerFill = OxyColors.Red,
-                    Fill = OxyColors.LightGreen,
-                };
-                for (var i = 0; i < datalength; i++)
-                {
-                    dataset[i].TryGetValue("ckd_time", out object Time);
-                    dataset[i].TryGetValue(col, out object Value);
-                    var dCandidateValue = Convert.ToDouble(Value);
-                    if (dCandidateValue > maxValue) //determine new max-min for each row
-                        maxValue = dCandidateValue;
-                    if (dCandidateValue < minValue)
-                        minValue = dCandidateValue;
-                    DateTime.TryParse(Time.ToString(), out DateTime dateResult);
-                    double value = Convert.ToDouble(Value.ToString());
-                    dataSeries.Points.Add(new DataPoint(DateTimeAxis.ToDouble(dateResult), value));
-                    //dataSeries.Points2.Add(new DataPoint(DateTimeAxis.ToDouble(dateResult), 0)); //to hook the fill area down to the X-axis
-                    var textAnnotations = new TextAnnotation()
-                    {
-                        TextPosition = new DataPoint(
-                            dataSeries.Points.Last().X - 0.5, //make it a little western-north over the datapoint
-                            dataSeries.Points.Last().Y + 1.5),
-                        Text = value.ToString(),
-                        Stroke = OxyColors.Transparent,
-                        FontSize = Resources.GetDimension(Resource.Dimension.text_size)
-                    };
-
-                    plotModel.Annotations.Add(textAnnotations);
-                }
-                dataSeriesList.Add(dataSeries);
-            };
-            foreach (var ds in dataSeriesList)
-            {
-                plotModel.Series.Add(ds);
-            }
             return plotModel;
         }
         private PlotModel CreatePlotModelLS(string title, JavaList<IDictionary<string, object>> dataset, string key_time, List<string> columns, List<int> exceedValues, List<OxyColor> colors)
