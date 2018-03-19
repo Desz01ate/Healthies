@@ -12,21 +12,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <include
-            android:id="@+id/toolbar"
-            layout="@layout/toolbardevelop" />
+      <include
+          android:id="@+id/toolbar"
+          layout="@layout/toolbarpill_history" />
     </LinearLayout>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ผู้พัฒนาระบบ"
-        android:id="@+id/textView22"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
-        android:layout_gravity="center_horizontal"
-        android:textSize="20sp"
-        android:textStyle="normal|bold"
-        android:textColor="#3a3a3a" />
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="40dp"

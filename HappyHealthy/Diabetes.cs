@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using System.Threading.Tasks;
 using System.Threading;
 using Android.Speech.Tts;
+using Android.Media;
 
 namespace HappyHealthyCSharp
 {
@@ -27,15 +28,20 @@ namespace HappyHealthyCSharp
         Java.Util.Locale lang;
         ImageView imageView;
         TTS t2sEngine;
-        EditText currentControl;
-        private bool isRecording;
+        Intent voiceIntent;
+        private bool isRecording,isVoiceRunning;
         private readonly int VOICE = 10;
         //Edit below
         EditText BloodValue;
         ImageView micButton, saveButton, deleteButton;
-        
+
         DiabetesTABLE diaObject = null;
         Dictionary<string, string> dataNLPList;
+
+        private EditText currentControl;
+        private static AutoResetEvent autoEvent = new AutoResetEvent(false);
+
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             SetTheme(Resource.Style.Base_Theme_AppCompat_Light);
@@ -49,8 +55,13 @@ namespace HappyHealthyCSharp
             var addhiding = FindViewById<ImageView>(Resource.Id.ClickAddDia);
             addhiding.Visibility = ViewStates.Gone;
             var backBtt = FindViewById<ImageView>(Resource.Id.imageView38);
-            backBtt.Click += delegate { Finish(); };
-           //deleteButton = FindViewById<ImageView>(Resource.Id.imageView_button_delete_diabetes);
+            backBtt.Click += delegate {
+                if (!isVoiceRunning)
+                    Finish();
+                else
+                    Toast.MakeText(this, "กรุณาบันทึกค่าทั้งหมดให้เสร็จสิ้นก่อนทำปิดหน้าต่างบันทึกข้อมูล", ToastLength.Short);
+            };
+            //deleteButton = FindViewById<ImageView>(Resource.Id.imageView_button_delete_diabetes);
             // Create your application here
             var flagObjectJson = Intent.GetStringExtra("targetObject") ?? string.Empty;
             diaObject = string.IsNullOrEmpty(flagObjectJson) ? new DiabetesTABLE() { fbs_fbs = Extension.flagValue } : JsonConvert.DeserializeObject<DiabetesTABLE>(flagObjectJson);
@@ -74,6 +85,7 @@ namespace HappyHealthyCSharp
                 Extension.CreateDialogue(this, "ไม่พบไมโครโฟนบนระบบของคุณ").Show();
             }
             else
+            {
                 micButton.Click += delegate
                 {
                     isRecording = !isRecording;
@@ -82,29 +94,42 @@ namespace HappyHealthyCSharp
                         AutomationTalker();
                     }
                 };
+                if (Extension.getPreference("autosound", false, this))
+                {
+                    AutomationTalker();
+                }
+            }
             t2sEngine = new TTS(this);
         }
-
-        private void StartMicrophone(string speakValue)
+        private async Task<bool> StartMicrophoneAsync(string speakValue,int soundRawResource)
         {
             try
             {
-                var voiceIntent = new Intent(RecognizerIntent.ActionRecognizeSpeech);
-                voiceIntent.PutExtra(RecognizerIntent.ExtraLanguageModel, RecognizerIntent.LanguageModelFreeForm);
-                voiceIntent.PutExtra(RecognizerIntent.ExtraPrompt, "Speak Now!");
-                voiceIntent.PutExtra(RecognizerIntent.ExtraSpeechInputCompleteSilenceLengthMillis, 1500);
-                voiceIntent.PutExtra(RecognizerIntent.ExtraSpeechInputPossiblyCompleteSilenceLengthMillis, 1500);
-                voiceIntent.PutExtra(RecognizerIntent.ExtraSpeechInputMinimumLengthMillis, 15000);
-                voiceIntent.PutExtra(RecognizerIntent.ExtraMaxResults, 1);
-                voiceIntent.PutExtra(RecognizerIntent.ExtraLanguage, Java.Util.Locale.Default);
-                //t2sEngine.Speak(speakValue);
-                //Thread.Sleep(1000);
-                StartActivityForResult(voiceIntent, VOICE);
+                //await t2sEngine.SpeakAsync($@"กรุณาบอกระดับค่า{speakValue}");
+                MediaPlayer mPlayer = MediaPlayer.Create(this, soundRawResource);
+                mPlayer.Start();
+                mPlayer.Completion += delegate
+                {
+                    voiceIntent = new Intent(RecognizerIntent.ActionRecognizeSpeech);
+                    voiceIntent.PutExtra(RecognizerIntent.ExtraLanguageModel, RecognizerIntent.LanguageModelFreeForm);
+                    voiceIntent.PutExtra(RecognizerIntent.ExtraPrompt, $@"กรุณาบอกระดับค่า{speakValue}");
+                    voiceIntent.PutExtra(RecognizerIntent.ExtraLanguage, "th-TH");
+                    voiceIntent.PutExtra(RecognizerIntent.ExtraSpeechInputCompleteSilenceLengthMillis, 1500);
+                    voiceIntent.PutExtra(RecognizerIntent.ExtraSpeechInputPossiblyCompleteSilenceLengthMillis, 1500);
+                    voiceIntent.PutExtra(RecognizerIntent.ExtraSpeechInputMinimumLengthMillis, 50000);//15000);
+                    voiceIntent.PutExtra(RecognizerIntent.ExtraMaxResults, 1);
+                    //voiceIntent.PutExtra(RecognizerIntent.ExtraLanguage, Java.Util.Locale.Default);
+                    //Thread.Sleep(1000);
+                    StartActivityForResult(voiceIntent, VOICE);
+                };
+                await Task.Run(() => autoEvent.WaitOne(new TimeSpan(0, 2, 0)));
             }
             catch
             {
                 Extension.CreateDialogue(this, "อุปกรณ์ของคุณไม่รองรับการสั่งการด้วยเสียง").Show();
+                return false;
             }
+            return true;
         }
 
         private void DeleteValue(object sender, EventArgs e)
@@ -140,15 +165,16 @@ namespace HappyHealthyCSharp
             diaObject.TrySyncWithMySQL(this);
             this.Finish();
         }
-        private void AutomationTalker()
+        private async Task AutomationTalker()
         {
+            isVoiceRunning = true;
             currentControl = BloodValue;
-            
-            StartMicrophone("กรุณาบอกค่าน้ำตาล");
-
+            await StartMicrophoneAsync("น้ำตาล",Resource.Raw.bloodSugar);
+            isVoiceRunning = false;
         }
         protected override void OnActivityResult(int requestCode, Result resultVal, Intent data)
         {
+            base.OnActivityResult(requestCode, resultVal, data);
             if (requestCode == VOICE)
             {
                 if (resultVal == Result.Ok)
@@ -157,45 +183,21 @@ namespace HappyHealthyCSharp
                     if (matches.Count != 0)
                     {
                         string textInput = matches[0];
-                        //var textInputList = textInput.Split().ToList();
-                        //dataNLPList = Extension.CreateDictionaryPair(textInputList);
-                        dataNLPList = Extension.CreateDictionaryPair(textInput);
-                        Extension.MapDictToControls(new[] { "น้ำตาล" }, new[] { BloodValue }, dataNLPList);
-                        Toast.MakeText(this, textInput, ToastLength.Long).Show();
+                        if (int.TryParse(textInput, out int numericData))
+                        {
+                            currentControl.Text = numericData.ToString();
+                        }
+                        else
+                        {
+                            currentControl.Text = "0";
+                        }
+
                     }
                     else
                         Toast.MakeText(this, "Unrecognized value", ToastLength.Short);
                 }
             }
-            base.OnActivityResult(requestCode, resultVal, data);
-            /*
-            if (requestCode == VOICE)
-            {
-                if (resultVal == Result.Ok)
-                {
-                    var matches = data.GetStringArrayListExtra(RecognizerIntent.ExtraResults);
-                    if (matches.Count != 0)
-                    {
-                        
-                        Extension.CreateDialogue2(
-                            this
-                            , $@"ค่าน้ำตาลที่ต้องการบันทึกคือ {matches[0]}?"
-                            , Android.Graphics.Color.White, Android.Graphics.Color.LightGreen
-                            , Android.Graphics.Color.White, Android.Graphics.Color.Red
-                            , Extension.adFontSize
-                            , delegate
-                            {
-                                currentControl.Text = matches[0];
-                            }
-                            , delegate { }
-                            , "\u2713"
-                            , "X"
-                        );
-                    }
-                }
-            }
-            base.OnActivityResult(requestCode, resultVal, data);
-            */
+            autoEvent.Set();
         }
 
 

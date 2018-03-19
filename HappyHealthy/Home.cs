@@ -17,7 +17,7 @@ using System.Threading;
 
 namespace HappyHealthyCSharp
 {
-    [Activity(Theme = "@style/MyMaterialTheme.Base")]
+    [Activity(Theme = "@style/MyMaterialTheme.Base", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
     class Home : Activity
     {
         TextView labelTest;

@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using Android.Speech.Tts;
 using Android.Speech;
+using Android.Media;
 
 namespace HappyHealthyCSharp
 {
@@ -26,7 +27,6 @@ namespace HappyHealthyCSharp
         Java.Util.Locale lang;
         ImageView imageView;
         TTS t2sEngine;
-        EditText currentControl;
         private bool isRecording;
         private readonly int VOICE = 10;
         //Edit Below
@@ -41,6 +41,10 @@ namespace HappyHealthyCSharp
         EditText field_phosphorus_blood;
         ImageView saveButton, deleteButton;
         ImageView micButton;
+        private bool isVoiceRunning;
+        private EditText currentControl;
+        private static AutoResetEvent autoEvent = new AutoResetEvent(false);
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             SetTheme(Resource.Style.Base_Theme_AppCompat_Light);
@@ -51,7 +55,12 @@ namespace HappyHealthyCSharp
             var addhiding = FindViewById<ImageView>(Resource.Id.imageView41);
             addhiding.Visibility = ViewStates.Gone;
             var back = FindViewById<ImageView>(Resource.Id.imageView38);
-            back.Click += delegate { Finish(); };
+            back.Click += delegate {
+                if (!isVoiceRunning)
+                    Finish();
+                else
+                    Toast.MakeText(this, "กรุณาบันทึกค่าทั้งหมดให้เสร็จสิ้นก่อนทำปิดหน้าต่างบันทึกข้อมูล", ToastLength.Short);
+            };
             field_gfr = FindViewById<EditText>(Resource.Id.ckd_gfr);
             field_creatinine = FindViewById<EditText>(Resource.Id.ckd_creatinine);
             field_bun = FindViewById<EditText>(Resource.Id.ckd_bun);
@@ -86,15 +95,72 @@ namespace HappyHealthyCSharp
                 Extension.CreateDialogue(this, "ไม่พบไมโครโฟนบนระบบของคุณ").Show();
             }
             else
+            {
                 micButton.Click += delegate
                 {
                     isRecording = !isRecording;
                     if (isRecording)
                     {
-                        StartMicrophone();
+                        //StartMicrophone();
+                        AutomationTalker();
                     }
                 };
+                if (Extension.getPreference("autosound", false, this))
+                    AutomationTalker();
+            }
             t2sEngine = new TTS(this);
+        }
+
+        private async Task AutomationTalker()
+        {
+            isVoiceRunning = true;
+            currentControl = field_gfr;
+            await StartMicrophoneAsync(" GFR", Resource.Raw.gfr);
+            currentControl = field_creatinine;
+            await StartMicrophoneAsync(" Creatinine", Resource.Raw.creatinine);
+            currentControl = field_bun;
+            await StartMicrophoneAsync(" BUN", Resource.Raw.bun);
+            currentControl = field_sodium;
+            await StartMicrophoneAsync(" Sodium", Resource.Raw.sodium);
+            currentControl = field_potassium;
+            await StartMicrophoneAsync(" Potassium", Resource.Raw.potasssium);
+            currentControl = field_phosphorus_blood;
+            await StartMicrophoneAsync(" Phosphorus", Resource.Raw.phosphorus);
+            currentControl = field_albumin_blood;
+            await StartMicrophoneAsync(" Albumin ในเลือด", Resource.Raw.albuminblood);
+            currentControl = field_albumin_urine;
+            await StartMicrophoneAsync(" Albumin ในปัสสาวะ", Resource.Raw.albuminuria);
+            isVoiceRunning = false;
+        }
+        private async Task<bool> StartMicrophoneAsync(string speakValue, int soundRawResource)
+        {
+            try
+            {
+                //await t2sEngine.SpeakAsync($@"กรุณาบอกระดับค่า{speakValue}");
+                MediaPlayer mPlayer = MediaPlayer.Create(this, soundRawResource);
+                mPlayer.Start();
+                mPlayer.Completion += delegate
+                {
+                    var voiceIntent = new Intent(RecognizerIntent.ActionRecognizeSpeech);
+                    voiceIntent.PutExtra(RecognizerIntent.ExtraLanguageModel, RecognizerIntent.LanguageModelFreeForm);
+                    voiceIntent.PutExtra(RecognizerIntent.ExtraPrompt, $@"กรุณาบอกระดับค่า{speakValue}");
+                    voiceIntent.PutExtra(RecognizerIntent.ExtraLanguage, "th-TH");
+                    voiceIntent.PutExtra(RecognizerIntent.ExtraSpeechInputCompleteSilenceLengthMillis, 1500);
+                    voiceIntent.PutExtra(RecognizerIntent.ExtraSpeechInputPossiblyCompleteSilenceLengthMillis, 1500);
+                    voiceIntent.PutExtra(RecognizerIntent.ExtraSpeechInputMinimumLengthMillis, 50000);//15000);
+                    voiceIntent.PutExtra(RecognizerIntent.ExtraMaxResults, 1);
+                    //voiceIntent.PutExtra(RecognizerIntent.ExtraLanguage, Java.Util.Locale.Default);
+                    //Thread.Sleep(1000);
+                    StartActivityForResult(voiceIntent, VOICE);
+                };
+                await Task.Run(() => autoEvent.WaitOne(new TimeSpan(0, 2, 0)));
+            }
+            catch
+            {
+                Extension.CreateDialogue(this, "อุปกรณ์ของคุณไม่รองรับการสั่งการด้วยเสียง").Show();
+                return false;
+            }
+            return true;
         }
         private void StartMicrophone()
         {
@@ -209,6 +275,7 @@ namespace HappyHealthyCSharp
 
         protected override void OnActivityResult(int requestCode, Result resultVal, Intent data)
         {
+            base.OnActivityResult(requestCode, resultVal, data);
             if (requestCode == VOICE)
             {
                 if (resultVal == Result.Ok)
@@ -217,47 +284,21 @@ namespace HappyHealthyCSharp
                     if (matches.Count != 0)
                     {
                         string textInput = matches[0];
-                        var textInputList = textInput.Split().ToList();
-                        var dataNLPList = new Dictionary<string, string>();
-                        for (var i = 0; i < textInputList.Count; i += 2)
+                        if (int.TryParse(textInput, out int numericData))
                         {
-                            try
-                            {
-                                dataNLPList.Add(textInputList[i].ToUpper(), textInputList[i + 1]);
-                                Console.WriteLine(textInputList[i].ToUpper());
-                            }
-                            catch
-                            {
-
-                            }
+                            currentControl.Text = numericData.ToString();
                         }
-                        Extension.MapDictToControls(new[] {
-                            "GFR","จีเอฟอาร์",
-                            "Creatinine","ครีอาตินิน",
-                            "BUN","บัน","บียูเอ็น",
-                            "Sodium","โซเดียม",
-                            "Potassium","โพแทสเซียม",
-                            "Phosphorus","ฟอสฟอรัส",
-                            "เลือด",
-                            "ปัสสาวะ"
-                        }, new[] {
-                            field_gfr,field_gfr,
-                            field_creatinine,field_creatinine,
-                            field_bun,field_bun,
-                            field_sodium,field_sodium,
-                            field_potassium,field_potassium,
-                            field_phosphorus_blood,field_phosphorus_blood,
-                            field_albumin_blood,
-                            field_albumin_urine
-                        }, dataNLPList);
+                        else
+                        {
+                            currentControl.Text = "0";
+                        }
 
                     }
                     else
-                        Toast.MakeText(this, "ไม่สามารถทำงานด้วยเสียงได้ในขณะนี้", ToastLength.Short);
+                        Toast.MakeText(this, "Unrecognized value", ToastLength.Short);
                 }
             }
-            base.OnActivityResult(requestCode, resultVal, data);
+            autoEvent.Set();
         }
     }
-
 }

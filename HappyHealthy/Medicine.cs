@@ -71,8 +71,10 @@ namespace HappyHealthyCSharp
                 InitialForUpdateEvent();
                 saveButton.Click += UpdateValue;
                 //deleteButton.Click += DeleteValue;
+                /*
                 App._file = new File(medObject.ma_pic);
                 LoadImage();
+                */
             }
             //end
             backbtt.Click += delegate

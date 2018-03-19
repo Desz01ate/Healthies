@@ -68,9 +68,9 @@ namespace HappyHealthyCSharp
             }
             else
             {
-                startSpeak();
+                await StartSpeakAsync();
             }
-            await Task.CompletedTask;
+            await Task.Delay(3000);
         }
         public void Speak(string message)
         {
@@ -99,10 +99,27 @@ namespace HappyHealthyCSharp
             }
             else
             {
-                startSpeak();
+                StartSpeak();
             }
         }
-        private void startSpeak()
+        private async Task StartSpeakAsync()
+        {
+            speakCount++;
+            if (locale != null)
+            {
+                tts.SetLanguage(locale);
+            }
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.Lollipop)
+            {
+                tts.Speak(message, QueueMode.Flush, null, "");
+            }
+            else
+            {
+                tts.Speak(message, QueueMode.Flush, null);
+            }
+            await Task.CompletedTask;
+        }
+        private void StartSpeak()
         {
             speakCount++;
             if(locale != null)
@@ -135,7 +152,7 @@ namespace HappyHealthyCSharp
         {
             if(status == OperationResult.Success)
             {
-                startSpeak();
+                StartSpeak();
             }
         }
         public void OnUtteranceCompleted(string utteranceId)
