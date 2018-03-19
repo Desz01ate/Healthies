@@ -15,7 +15,6 @@ namespace HappyHealthyCSharp
         protected override void OnCreate(Bundle bundle)
         {
             SetTheme(Resource.Style.Base_Theme_AppCompat_Light);
-            
             base.OnCreate(bundle);
             CreateTab(typeof(Home), "Home", "", Resource.Drawable.ic_home2);
             CreateTab(typeof(Report), "Report", "", Resource.Drawable.ic_report2);
