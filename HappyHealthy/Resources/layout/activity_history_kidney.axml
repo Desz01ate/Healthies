@@ -4,23 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.jiraporn.nut.happyhealthy.History_Kidney"
-    android:background="#66f7e3bb">
-  <LinearLayout
-      android:id="@+id/container_toolbar"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:orientation="vertical">
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbarkidney_history" />
-  </LinearLayout>
-  <ListView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:id="@android:id/list"
-      android:layout_alignParentTop="true"
-      android:layout_alignParentLeft="true"
-      android:layout_alignParentStart="true"
-      android:layout_marginTop="55dp"
-      android:background="#e8e8e8" />
+    android:background="#dfe4ea">
+    <LinearLayout
+        android:id="@+id/container_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbarkidney_history" />
+    </LinearLayout>
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@android:id/list"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="55dp"
+        android:background="#dfe4ea" />
 </RelativeLayout>

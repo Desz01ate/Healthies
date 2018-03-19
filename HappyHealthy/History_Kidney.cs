@@ -26,6 +26,10 @@ namespace HappyHealthyCSharp
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_history_kidney);
             //ListView = FindViewById<ListView>(Resource.Id.listView);
+            var back = FindViewById<ImageView>(Resource.Id.imageView38);
+            back.Click += delegate { Finish(); };
+            var add = FindViewById<ImageView>(Resource.Id.imageView41);
+            add.Click += delegate { StartActivity(new Intent(this, typeof(Kidney))); };
             kidneyTable = new KidneyTABLE();
             ListView.ItemClick += onItemClick;
 

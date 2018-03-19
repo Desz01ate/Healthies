@@ -7,12 +7,12 @@
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="#66f7e3bb">
+        android:background="#dfe4ea">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Happy Healthy"
-            android:textColor="#e86868"
+            android:textColor="#3a3a3a"
             android:id="@+id/textView18"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="15dp"
@@ -104,6 +104,6 @@
             android:onClick="ClickDevelop"
             android:layout_marginTop="15dp"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="15dp"/>
+            android:layout_marginRight="15dp" />
     </RelativeLayout>
 </ScrollView>

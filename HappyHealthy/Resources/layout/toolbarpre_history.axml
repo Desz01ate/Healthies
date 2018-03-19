@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="?attr/actionBarSize"
-    android:background="#e86868"
+    android:background="#29297c"
     local:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
     local:popupTheme="@style/ThemeOverlay.AppCompat.Light">
     <LinearLayout
@@ -21,7 +21,6 @@
             android:layout_marginTop="0.0dp"
             android:layout_marginLeft="3dp"
             android:layout_alignParentLeft="true"
-            android:onClick="ClickBackHisPreHome"
             android:layout_gravity="center_vertical" />
         <TextView
             android:layout_width="290.0dp"
@@ -40,7 +39,6 @@
             android:layout_height="35dp"
             android:id="@+id/imageView41"
             android:src="@drawable/buttonadd"
-            android:onClick="ClickAddPre"
             android:layout_marginTop="0.0dp"
             android:layout_marginRight="0.0dp"
             android:layout_gravity="center_vertical"

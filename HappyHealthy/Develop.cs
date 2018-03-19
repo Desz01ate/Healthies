@@ -20,6 +20,14 @@ namespace HappyHealthyCSharp
             SetTheme(Resource.Style.Base_Theme_AppCompat_Light);
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_develop);
+            var back = FindViewById<ImageView>(Resource.Id.imageViewbackpill);
+            back.Click += delegate {
+                Finish();
+            };
+            var header = FindViewById<TextView>(Resource.Id.textView_header_name_pill);
+            header.Text = "ผู้พัฒนา";
+            var addhiding = FindViewById<ImageView>(Resource.Id.imageViewAddPill);
+            addhiding.Visibility = ViewStates.Gone;
             // Create your application here
         }
     }

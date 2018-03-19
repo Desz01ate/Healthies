@@ -1,23 +1,52 @@
 <resources>
-    <string name="app_name">Happy Healthy</string>
-    <string name="action_settings">Settings</string>
-    <string name="action_search">Search</string>
-    <string name="drawer_open">Open</string>
-    <string name="drawer_close">Close</string>
+  <string name="app_name">Happy Healthy</string>
+  <string name="action_settings">Settings</string>
+  <string name="action_search">Search</string>
+  <string name="drawer_open">Open</string>
+  <string name="drawer_close">Close</string>
 
 
-    <string name="nav_item_home">Home</string>
-    <string name="nav_item_friends">Friends</string>
-    <string name="nav_item_notifications">Messages</string>
+  <string name="nav_item_home">Home</string>
+  <string name="nav_item_friends">Friends</string>
+  <string name="nav_item_notifications">Messages</string>
 
-    <!-- navigation drawer item labels  -->
-    <string-array name="nav_drawer_labels">
-        <item>@string/nav_item_home</item>
-        <item>@string/nav_item_friends</item>
-        <item>@string/nav_item_notifications</item>
-    </string-array>
-
-    <string name="title_messages">Messages</string>
-    <string name="title_friends">Friends</string>
-    <string name="title_home">Home</string>
+  <!-- navigation drawer item labels  -->
+  <string-array name="nav_drawer_labels">
+    <item>@string/nav_item_home</item>
+    <item>@string/nav_item_friends</item>
+    <item>@string/nav_item_notifications</item>
+  </string-array>
+  <string-array name="report_label">
+    <item>รายงานโรคเบาหวาน</item>
+    <item>รายงานโรคความดัน</item>
+    <item>รายงานโรคไต</item>
+  </string-array>
+  <string name="ckd_prompt" color="#3a3a3a">เลือกกราฟ</string>
+  <string name="ckd_field" color="#3a3a3a">เลือกค่าที่ต้องการดูรายงาน</string>
+  <string-array name="ckd_array">
+    <item>ไต</item>
+    <item>เบาหวาน</item>
+    <item>ความดัน</item>
+  </string-array>
+  <string-array name="diabetes">
+    <item>ระดับน้ำตาลในเลือด</item>
+  </string-array>
+  <string-array name="kidney">
+    <item>GFR</item>
+    <item>Creatinine</item>
+    <item>BUN</item>
+    <item>Sodium</item>
+    <item>Potassium</item>
+    <item>Phosphorus</item>
+    <item>Albumin ในเลือด</item>
+    <item>Albumin ในปัสสาวะ</item>
+  </string-array>
+  <string-array name="pressure">
+    <item>ความดันตัวบน</item>
+    <item>ความดันตัวล่าง</item>
+    <item>อัตราการเต้นของหัวใจ</item>
+  </string-array>
+  <string name="title_messages">Messages</string>
+  <string name="title_friends">Friends</string>
+  <string name="title_home">Home</string>
 </resources>

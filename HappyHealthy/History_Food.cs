@@ -29,8 +29,8 @@ namespace HappyHealthyCSharp
             SetContentView(Resource.Layout.activity_food__type_1);
             btn_search = FindViewById<Button>(Resource.Id.bFoodSearch);
             txt_search = FindViewById<EditText>(Resource.Id.tv_Sfood);
-            var img_back = FindViewById<ImageView>(Resource.Id.imageViewfoodDelete);
-            var addBtt = FindViewById<ImageView>(Resource.Id.imageViewfoodAdd);
+            var img_back = FindViewById<ImageView>(Resource.Id.imageViewFoodBackState);
+            var addBtt = FindViewById<ImageView>(Resource.Id.imageViewFoodAdd);
             addBtt.Click += delegate {
                 StartActivity(new Intent(this, typeof(Add_Food)));
             };

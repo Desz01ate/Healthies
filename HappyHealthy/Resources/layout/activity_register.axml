@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#66f7e3bb">
+    android:background="#dfe4ea">
     <LinearLayout
         android:id="@+id/container_toolbar"
         android:layout_width="match_parent"
@@ -21,7 +21,6 @@
         android:layout_marginTop="105dp"
         android:weightSum="1"
         android:id="@+id/linearLayoutRegis"
-        android:background="@drawable/my_login"
         android:layout_height="wrap_content">
         <LinearLayout
             android:orientation="horizontal"
@@ -108,7 +107,7 @@
                     android:layout_height="35dp"
                     android:text="ชาย"
                     android:id="@+id/register_radio_male"
-                    android:textColor="#5d5d5d"
+                    android:textColor="#3a3a3a"
                     android:layout_weight="1"
                     android:checked="false"
                     android:textSize="15dp"
@@ -123,7 +122,7 @@
                     android:layout_height="35dp"
                     android:text="หญิง"
                     android:id="@+id/register_radio_female"
-                    android:textColor="#5d5d5d"
+                    android:textColor="#3a3a3a"
                     android:layout_weight="1"
                     android:textSize="15dp"
                     android:textStyle="bold"
@@ -155,7 +154,7 @@
                 android:textSize="15dp"
                 android:textStyle="bold"
                 android:gravity="center_vertical|center_horizontal"
-                android:textColor="#59564a"
+                android:textColor="#3a3a3a"
                 android:layout_marginLeft="10.0dp" />
         </LinearLayout>
         <ImageView

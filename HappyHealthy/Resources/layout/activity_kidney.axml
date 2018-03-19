@@ -4,7 +4,7 @@
     android:layout_height="fill_parent"
     android:orientation="vertical"
     android:weightSum="1"
-    android:background="#66f7e3bb">
+    android:background="#dfe4ea">
     <LinearLayout
         android:id="@+id/container_toolbar"
         android:layout_width="match_parent"
@@ -12,13 +12,12 @@
         android:orientation="vertical">
         <include
             android:id="@+id/toolbar"
-            layout="@layout/toolbarkidney" />
+            layout="@layout/toolbarkidney_history" />
     </LinearLayout>
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/my_bg_kidney"
         android:id="@+id/Layout_background_kidney"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="115dp">
@@ -37,7 +36,7 @@
                 android:id="@+id/textView_detail_gfr"
                 android:layout_centerHorizontal="true"
                 android:textSize="14dp"
-                android:textColor="#ffffff"
+                android:textColor="#3a3a3a"
                 android:gravity="center_vertical"
                 android:layout_marginTop="0.0dp"
                 android:layout_marginBottom="0.0dp"
@@ -80,7 +79,7 @@
                 android:layout_centerHorizontal="true"
                 android:textSize="14dp"
                 android:textStyle="bold"
-                android:textColor="#ffffff"
+                android:textColor="#3a3a3a"
                 android:gravity="center_vertical"
                 android:layout_marginTop="0.0dp"
                 android:layout_marginBottom="0.0dp"
@@ -116,7 +115,7 @@
                 android:layout_centerHorizontal="true"
                 android:textSize="14dp"
                 android:textStyle="bold"
-                android:textColor="#ffffff"
+                android:textColor="#3a3a3a"
                 android:gravity="center_vertical"
                 android:layout_marginTop="0.0dp"
                 android:layout_marginBottom="0.0dp"
@@ -152,7 +151,7 @@
                 android:layout_centerHorizontal="true"
                 android:textSize="14dp"
                 android:textStyle="bold"
-                android:textColor="#ffffff"
+                android:textColor="#3a3a3a"
                 android:gravity="center_vertical"
                 android:layout_marginTop="0.0dp"
                 android:layout_marginBottom="0.0dp"
@@ -188,7 +187,7 @@
                 android:layout_centerHorizontal="true"
                 android:textSize="14dp"
                 android:textStyle="bold"
-                android:textColor="#ffffff"
+                android:textColor="#3a3a3a"
                 android:gravity="center_vertical"
                 android:layout_marginTop="0.0dp"
                 android:layout_marginBottom="0.0dp"
@@ -224,7 +223,7 @@
                 android:layout_centerHorizontal="true"
                 android:textSize="14dp"
                 android:textStyle="bold"
-                android:textColor="#ffffff"
+                android:textColor="#3a3a3a"
                 android:gravity="center_vertical"
                 android:layout_marginTop="0.0dp"
                 android:layout_marginBottom="0.0dp"
@@ -261,7 +260,7 @@
                 android:layout_centerHorizontal="true"
                 android:textSize="14dp"
                 android:textStyle="bold"
-                android:textColor="#ffffff"
+                android:textColor="#3a3a3a"
                 android:gravity="center_vertical"
                 android:layout_marginTop="0.0dp"
                 android:layout_marginBottom="0.0dp"
@@ -299,7 +298,7 @@
                 android:layout_centerHorizontal="true"
                 android:textSize="14dp"
                 android:textStyle="bold"
-                android:textColor="#ffffff"
+                android:textColor="#3a3a3a"
                 android:gravity="center_vertical"
                 android:layout_marginTop="0.0dp"
                 android:layout_marginBottom="0.0dp"

@@ -20,6 +20,7 @@ namespace HappyHealthyCSharp
     {
         EditText name, age, sex;
         TextView breakfast, lunch, dinner, sleep;
+        CheckBox autoSound;
         UserTABLE user = new UserTABLE();
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -32,6 +33,7 @@ namespace HappyHealthyCSharp
             lunch = FindViewById<TextView>(Resource.Id.ud_lu_time);
             dinner = FindViewById<TextView>(Resource.Id.ud_dn_time);
             sleep = FindViewById<TextView>(Resource.Id.ud_sl_time);
+            autoSound = FindViewById<CheckBox>(Resource.Id.CheckBox_auto_save);
             var logoutBtn = FindViewById<ImageView>(Resource.Id.logout);
             user = user.Select<UserTABLE>($@"SELECT * FROM UserTABLE WHERE UD_ID = '{Extension.getPreference("ud_id", 0, this)}'")[0];
             logoutBtn.Click += delegate
@@ -40,17 +42,27 @@ namespace HappyHealthyCSharp
                 StartActivity(new Intent(this, typeof(Login)));
                 this.Finish();
             };
+            autoSound.CheckedChange += delegate {
+                Extension.setPreference("autosound", autoSound.Checked, this);
+            };
             InitializeUserData();
             var updateButton = FindViewById<ImageView>(Resource.Id.save_button_user);
             updateButton.Click += UpdateUserInfo;
             name.TextChanged += delegate {
                 user.ud_name = name.Text;
-                user.Update();
+                //user.Update();
             };
             breakfast.Click += SetTime;
             lunch.Click += SetTime;
             dinner.Click += SetTime;
             sleep.Click += SetTime;
+            autoSound.Checked = Extension.getPreference("autosound", false, this);
+            string rec = Android.Content.PM.PackageManager.FeatureMicrophone;
+            if (rec != "android.hardware.microphone")
+            {
+                // no microphone, no recording. Disable the button and output an alert
+                autoSound.Enabled = false;
+            }
             FindViewById<TextView>(Resource.Id.savedatauser).Visibility = ViewStates.Gone;//just hiding without remove it from the xml, please kindly delete this if you willing to delete this control from xml
         }
 
@@ -69,7 +81,7 @@ namespace HappyHealthyCSharp
                     user.ud_dn_time = time;
                 else if (id == Resource.Id.ud_sl_time)
                     user.ud_sl_time = time;
-                user.Update();
+                //user.Update();
             });
             tpickerFragment.Show(FragmentManager, TimePickerFragment.TAG);
         }
@@ -78,10 +90,10 @@ namespace HappyHealthyCSharp
         {
             //UserTABLE.UpdateUserToSQL(txtName.Text, txtSex.Text[0], txtIdenNo.Text,null, null, this);
             //var user = new UserTABLE().Select<UserTABLE>($@"SELECT * FROM UserTABLE WHERE UD_ID = '{Extension.getPreference("ud_id", 0, this)}'")[0];
-            //user.ud_name = name.Text;
+            user.ud_name = name.Text;
             //user.ud_iden_number = txtIdenNo.Text;
-            //user.ud_gender = sex.Text;
-            //user.Update();
+            user.ud_gender = sex.Text;
+            user.Update();
             Extension.CreateDialogue(this, "บันทึกการตั้งค่าผู้ใช้เรียบร้อยแล้ว").Show();
         }
 

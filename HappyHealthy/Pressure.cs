@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 using System.Threading.Tasks;
 using System.Threading;
 using Android.Speech;
+using Android.Media;
 
 namespace HappyHealthyCSharp
 {
@@ -24,9 +25,13 @@ namespace HappyHealthyCSharp
         private EditText BPUp;
         private EditText HeartRate;
         PressureTABLE pressureObject;
-        private bool isRecording;
+        private bool isRecording, isVoiceRunning;
         private readonly int VOICE = 10;
         Dictionary<string, string> dataNLPList;
+
+        private EditText currentControl;
+        private static AutoResetEvent autoEvent = new AutoResetEvent(false);
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             SetTheme(Resource.Style.Base_Theme_AppCompat_Light);
@@ -37,7 +42,17 @@ namespace HappyHealthyCSharp
             BPUp = FindViewById<EditText>(Resource.Id.P_costPressureTop);
             HeartRate = FindViewById<EditText>(Resource.Id.P_HeartRate);
             var saveButton = FindViewById<ImageView>(Resource.Id.imageView_button_save_pressure);
-            //var deleteButton = FindViewById<ImageView>(Resource.Id.imageView_button_delete_pressure);
+            var header = FindViewById<TextView>(Resource.Id.textView_header_name_pressure);
+            header.Text = "บันทึกค่าความดัน";
+            var addhiding = FindViewById<ImageView>(Resource.Id.imageView41);
+            addhiding.Visibility = ViewStates.Gone;
+            var back = FindViewById<ImageView>(Resource.Id.imageView38);
+            back.Click +=delegate {
+                if (!isVoiceRunning)
+                    Finish();
+                else
+                    Toast.MakeText(this, "กรุณาบันทึกค่าทั้งหมดให้เสร็จสิ้นก่อนทำปิดหน้าต่างบันทึกข้อมูล", ToastLength.Short);
+            };
             var micButton = FindViewById<ImageView>(Resource.Id.ic_microphone_pressure);
             //code goes below
             var flagObjectJson = Intent.GetStringExtra("targetObject") ?? string.Empty;
@@ -61,14 +76,63 @@ namespace HappyHealthyCSharp
                 Extension.CreateDialogue(this, "ไม่พบไมโครโฟนบนระบบของคุณ").Show();
             }
             else
+            {
                 micButton.Click += delegate
                 {
                     isRecording = !isRecording;
                     if (isRecording)
                     {
-                        StartMicrophone("");
+                        // StartMicrophone("");
+                        AutomationTalker();
                     }
                 };
+                if (Extension.getPreference("autosound", false, this))
+                    AutomationTalker();
+            }
+        }
+
+        private async Task AutomationTalker()
+        {
+            isVoiceRunning = true;
+            currentControl = BPUp;
+            await StartMicrophoneAsync("ความดันตัวบน", Resource.Raw.pressureUp);
+            currentControl = BPLow;
+            await StartMicrophoneAsync("ความดันตัวล่าง", Resource.Raw.pressureDown);
+            currentControl = HeartRate;
+            await StartMicrophoneAsync("อัตราการเต้นของหัวใจ", Resource.Raw.heartRate);
+            isVoiceRunning = false;
+        }
+
+
+        private async Task<bool> StartMicrophoneAsync(string speakValue, int soundRawResource)
+        {
+            try
+            {
+                //await t2sEngine.SpeakAsync($@"กรุณาบอกระดับค่า{speakValue}");
+                MediaPlayer mPlayer = MediaPlayer.Create(this, soundRawResource);
+                mPlayer.Start();
+                mPlayer.Completion += delegate
+                {
+                    var voiceIntent = new Intent(RecognizerIntent.ActionRecognizeSpeech);
+                    voiceIntent.PutExtra(RecognizerIntent.ExtraLanguageModel, RecognizerIntent.LanguageModelFreeForm);
+                    voiceIntent.PutExtra(RecognizerIntent.ExtraPrompt, $@"กรุณาบอกระดับค่า{speakValue}");
+                    voiceIntent.PutExtra(RecognizerIntent.ExtraLanguage, "th-TH");
+                    voiceIntent.PutExtra(RecognizerIntent.ExtraSpeechInputCompleteSilenceLengthMillis, 1500);
+                    voiceIntent.PutExtra(RecognizerIntent.ExtraSpeechInputPossiblyCompleteSilenceLengthMillis, 1500);
+                    voiceIntent.PutExtra(RecognizerIntent.ExtraSpeechInputMinimumLengthMillis, 50000);//15000);
+                    voiceIntent.PutExtra(RecognizerIntent.ExtraMaxResults, 1);
+                    //voiceIntent.PutExtra(RecognizerIntent.ExtraLanguage, Java.Util.Locale.Default);
+                    //Thread.Sleep(1000);
+                    StartActivityForResult(voiceIntent, VOICE);
+                };
+                await Task.Run(() => autoEvent.WaitOne(new TimeSpan(0, 2, 0)));
+            }
+            catch
+            {
+                Extension.CreateDialogue(this, "อุปกรณ์ของคุณไม่รองรับการสั่งการด้วยเสียง").Show();
+                return false;
+            }
+            return true;
         }
         private void StartMicrophone(string speakValue)
         {
@@ -93,6 +157,7 @@ namespace HappyHealthyCSharp
         }
         protected override void OnActivityResult(int requestCode, Result resultVal, Intent data)
         {
+            base.OnActivityResult(requestCode, resultVal, data);
             if (requestCode == VOICE)
             {
                 if (resultVal == Result.Ok)
@@ -101,38 +166,22 @@ namespace HappyHealthyCSharp
                     if (matches.Count != 0)
                     {
                         string textInput = matches[0];
-                        var textInputList = textInput.Split().ToList();
-                        dataNLPList = new Dictionary<string, string>();
-                        for (var i = 0; i < textInputList.Count; i += 2)
+                        if (int.TryParse(textInput, out int numericData))
                         {
-                            try
-                            {
-                                dataNLPList.Add(textInputList[i].ToUpper(), textInputList[i + 1]);
-                            }
-                            catch
-                            {
-
-                            }
+                            currentControl.Text = numericData.ToString();
                         }
-                        Extension.MapDictToControls(
-                        new[] {
-                            "บน",
-                            "ล่าง",
-                            "หัวใจ","เต้น"
-                        }, 
-                        new[] {
-                            BPUp,
-                            BPLow,
-                            HeartRate,HeartRate
-                        }, dataNLPList);
+                        else
+                        {
+                            currentControl.Text = "0";
+                        }
+
                     }
                     else
                         Toast.MakeText(this, "Unrecognized value", ToastLength.Short);
                 }
             }
-            base.OnActivityResult(requestCode, resultVal, data);
+            autoEvent.Set();
         }
-
         private void DeleteValue(object sender, EventArgs e)
         {
             /*

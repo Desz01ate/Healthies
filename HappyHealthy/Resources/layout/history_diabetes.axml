@@ -28,6 +28,6 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="25dp"
             android:hint="DD-MM-YYYY  HH:MM"
-            android:textColor="#979797" />
+            android:textColor="#3a3a3a" />
     </LinearLayout>
 </RelativeLayout>

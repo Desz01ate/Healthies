@@ -31,30 +31,32 @@ namespace HappyHealthyCSharp
         MedicineTABLE medObject;
         CheckBox breakfast, lunch, dinner, sleep;
         RadioButton before, after;
-        EditText beforeText, afterText;
+        EditText timeText, afterText;
         string filePath;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             SetTheme(Resource.Style.Base_Theme_AppCompat_Light);
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_add_pill);
-            var camerabtt = FindViewById<ImageView>(Resource.Id.imageView_button_camera);
-            camerabtt.Visibility = ViewStates.Gone;
-            var backbtt = FindViewById<ImageView>(Resource.Id.imageView_button_back_pill);
+            var header = FindViewById<TextView>(Resource.Id.textView_header_name_pill);
+            header.Text = "บันทึกการทานยา";
+            var addhiding = FindViewById<ImageView>(Resource.Id.imageViewAddPill);
+            addhiding.Visibility = ViewStates.Gone;
+            //var camerabtt = FindViewById<ImageView>(Resource.Id.imageView_button_camera);
+            //camerabtt.Visibility = ViewStates.Gone;
+            var backbtt = FindViewById<ImageView>(Resource.Id.imageViewbackpill);
             medName = FindViewById<EditText>(Resource.Id.ma_name);
             medDesc = FindViewById<EditText>(Resource.Id.ma_desc);
-            medImage = FindViewById<ImageView>(Resource.Id.imageView_show_image);
-            medImage.Visibility = ViewStates.Gone;
+            //medImage = FindViewById<ImageView>(Resource.Id.imageView_show_image);
+            //medImage.Visibility = ViewStates.Gone;
             breakfast = FindViewById<CheckBox>(Resource.Id.CheckBox_button_breakfast);
             lunch = FindViewById<CheckBox>(Resource.Id.CheckBox_button_lunch);
             dinner = FindViewById<CheckBox>(Resource.Id.CheckBox_button_dinner);
             sleep = FindViewById<CheckBox>(Resource.Id.CheckBox_button_af_sleep);
             before = FindViewById<RadioButton>(Resource.Id.Radio_button_bf_food);
             after = FindViewById<RadioButton>(Resource.Id.Radio_button_af_food);
-            beforeText = FindViewById<EditText>(Resource.Id.edit_bf_food);
-            afterText = FindViewById<EditText>(Resource.Id.edit_af_food);
-            beforeText.Enabled = false;
-            afterText.Enabled = false;
+            timeText = FindViewById<EditText>(Resource.Id.edit_af_food);
+            timeText.Enabled = false;
             var saveButton = FindViewById<ImageView>(Resource.Id.imageView_button_save_pill);
             //var deleteButton = FindViewById<ImageView>(Resource.Id.imageView_button_delete_pill);
             //code goes below
@@ -69,8 +71,10 @@ namespace HappyHealthyCSharp
                 InitialForUpdateEvent();
                 saveButton.Click += UpdateValue;
                 //deleteButton.Click += DeleteValue;
+                /*
                 App._file = new File(medObject.ma_pic);
                 LoadImage();
+                */
             }
             //end
             backbtt.Click += delegate
@@ -80,23 +84,20 @@ namespace HappyHealthyCSharp
             if (IsAppToTakePicturesAvailable())
             {
                 CreateDirForPictures();
-                camerabtt.Click += cameraClickEvent;
+                //camerabtt.Click += cameraClickEvent;
                 //System.Console.WriteLine(IsAppToTakePicturesAvailable());
             }
-            before.Click += delegate {
-                afterText.Text = string.Empty;
-                afterText.Enabled = false;
-                beforeText.Enabled = true;
-                after.Checked = false;
-            };
-            after.Click += delegate
-            {
-                beforeText.Text = string.Empty;
-                beforeText.Enabled = false;
-                afterText.Enabled = true;
-                before.Checked = false;
-            };
+            before.Click += EnableTimeText;
+            after.Click += EnableTimeText;
             // Create your application here
+        }
+
+        private void EnableTimeText(object sender, EventArgs e)
+        {
+            if(timeText.Enabled == false)
+            {
+                timeText.Enabled = true;
+            }
         }
 
         public void DeleteValue(object sender, EventArgs e)
@@ -132,7 +133,7 @@ namespace HappyHealthyCSharp
             lunch.Checked = medObject.ma_lu;
             dinner.Checked = medObject.ma_dn;
             dinner.Checked = medObject.ma_sl;
-            beforeText.Text = medObject.ma_before_or_after_minute.ToString();
+            timeText.Text = medObject.ma_before_or_after_minute.ToString();
             //Waiting for image initialize
         }
 
@@ -144,7 +145,7 @@ namespace HappyHealthyCSharp
             medObject.ma_lu = lunch.Checked;
             medObject.ma_dn = dinner.Checked;
             medObject.ma_sl = dinner.Checked;
-            medObject.ma_before_or_after_minute = Convert.ToInt32(beforeText.Text);
+            medObject.ma_before_or_after_minute = Convert.ToInt32(timeText.Text);
             medObject.ma_pic = App._file != null ? App._file.AbsolutePath : medObject.ma_pic;
             medObject.ud_id = Extension.getPreference("ud_id", 0, this);
             medObject.Update();
@@ -154,7 +155,7 @@ namespace HappyHealthyCSharp
         public void SaveValue(object sender, EventArgs e)
         {
             if (!Extension.TextFieldValidate(new List<object>() {
-                medName,beforeText
+                medName,timeText
             }) || !Extension.CheckBoxValidate(new List<object>() {
                 breakfast,lunch,dinner,sleep
             }))
@@ -175,7 +176,7 @@ namespace HappyHealthyCSharp
             medObject.ud_id = Extension.getPreference("ud_id", 0, this);
             medObject.Insert();
             var idHeader = medObject.ma_id.ToString();
-            var beforeAfterDecision = before.Checked ? Convert.ToInt32(beforeText.Text) : Convert.ToInt32(afterText.Text);
+            var beforeAfterDecision = Convert.ToInt32(timeText.Text);//before.Checked ? Convert.ToInt32(timeText.Text) : Convert.ToInt32(afterText.Text);
             var user = new UserTABLE().Select<UserTABLE>($@"SELECT * FROM UserTABLE WHERE UD_ID = '{medObject.ud_id}'")[0];
             DateTime time;
             if (breakfast.Checked)

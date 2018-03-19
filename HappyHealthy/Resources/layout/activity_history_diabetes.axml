@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.jiraporn.nut.happyhealthy.History_Diabetes"
-    android:background="#66f7e3bb">
+    android:background="#dfe4ea">
     <LinearLayout
         android:id="@+id/container_toolbar"
         android:layout_width="match_parent"

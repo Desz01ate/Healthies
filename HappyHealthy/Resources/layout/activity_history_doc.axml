@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-                android:background="#66f7e3bb"
+    android:background="#dfe4ea"
     tools:context="com.jiraporn.nut.happyhealthy.History_Food">
     <LinearLayout
         android:id="@+id/container_toolbar"
