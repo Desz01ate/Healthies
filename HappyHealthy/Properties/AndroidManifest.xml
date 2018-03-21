@@ -6,7 +6,7 @@
 	<uses-permission android:name="android.permission.CAMERA" />
 	<uses-permission android:name="android.permission.VIBRATE" />
 	<uses-permission android:name="android.permission.WAKE_LOCK" />
-	<application android:label="HappyHealthyCSharp" android:icon="@drawable/Icon" android:largeHeap="true">
+	<application android:label="I Need Healing!" android:largeHeap="true" android:icon="@drawable/Icon">
 		<receiver android:name=".AlarmReceiver"></receiver>
 	</application>
 	<user-permission android:name="com.android.alarm.permission.SET_ALARM" />

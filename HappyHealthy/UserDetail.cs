@@ -104,11 +104,11 @@ namespace HappyHealthyCSharp
             age.Text = (DateTime.Now.Year - user.ud_birthdate.Year).ToString();
             name.Text = user.ud_name;
             //txtIdenNo.Text = user.ud_iden_number;
-            sex.Text = Convert.ToString(Extension.StringValidation(user.ud_gender));
-            breakfast.Text = user.ud_bf_time.ToString("hh:mm tt");
-            lunch.Text = user.ud_lu_time.ToString("hh:mm tt");
-            dinner.Text = user.ud_dn_time.ToString("hh:mm tt");
-            sleep.Text = user.ud_sl_time.ToString("hh:mm tt");
+            sex.Text = Convert.ToString(Extension.StringValidation(user.ud_gender)) == "M"?"ชาย":"หญิง";
+            breakfast.Text = user.ud_bf_time.TimeValidate()?user.ud_bf_time.ToString("hh:mm tt"):"คลิกที่นี่เพื่อตั้งเวลา";
+            lunch.Text = user.ud_lu_time.TimeValidate()?user.ud_lu_time.ToString("hh:mm tt") : "คลิกที่นี่เพื่อตั้งเวลา";
+            dinner.Text = user.ud_dn_time.TimeValidate()?user.ud_dn_time.ToString("hh:mm tt") : "คลิกที่นี่เพื่อตั้งเวลา";
+            sleep.Text = user.ud_sl_time.TimeValidate()?user.ud_sl_time.ToString("hh:mm tt") : "คลิกที่นี่เพื่อตั้งเวลา";
         }
     }
 }

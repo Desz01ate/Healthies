@@ -17,7 +17,7 @@ using System.Threading;
 
 namespace HappyHealthyCSharp
 {
-    [Activity(Label = "Login", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
+    [Activity(ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
     public class Login : Activity
     {
         private static Context _loginContext;
@@ -40,8 +40,9 @@ namespace HappyHealthyCSharp
             var login = FindViewById<ImageView>(Resource.Id.loginBtt);
             var register = FindViewById<TextView>(Resource.Id.textViewRegis);
             var forgot = FindViewById<TextView>(Resource.Id.textViewForget);
-            id.Text = "kunvutloveza@hotmail.com";
-            pw.Text = "123456";
+            forgot.Visibility = ViewStates.Invisible;
+            //id.Text = "kunvutloveza@hotmail.com";
+            //pw.Text = "123456";
             ProgressDialog progressDialog = new ProgressDialog(this);
             login.Click += async delegate
             {

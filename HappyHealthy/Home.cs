@@ -114,6 +114,8 @@ namespace HappyHealthyCSharp
 
         public async void ClickFood(object sender, EventArgs e)
         {
+            Extension.CreateDialogue(this, "ระบบยังไม่เปิดให้บริการ").Show();
+            return;
             ProgressDialog progressDialog = null;
             try
             {
@@ -173,11 +175,10 @@ namespace HappyHealthyCSharp
             var user = new UserTABLE().Select<UserTABLE>($@"SELECT * FROM UserTABLE WHERE UD_ID = '{Extension.getPreference("ud_id", 0, this)}'")[0];
             if (!user.ud_bf_time.TimeValidate() || !user.ud_lu_time.TimeValidate() || !user.ud_dn_time.TimeValidate() || !user.ud_sl_time.TimeValidate())
             {
-                Extension.CreateDialogue(this, "กรุณาตั้งค่าเวลาทานอาหาร และเวลาเข้านอน ก่อนใช้งานการบันทึกแจ้งเตือนทานยา", delegate {
-                    var act = (MainActivity)this.Parent;
-                    var th = act.TabHost;
-                    th.SetCurrentTabByTag("User");
-                }).Show();
+                Extension.CreateDialogue(this, "กรุณาตั้งค่าเวลาทานอาหาร และเวลาเข้านอน ก่อนใช้งานการบันทึกแจ้งเตือนทานยา").Show();
+                var act = (MainActivity)this.Parent;
+                var th = act.TabHost;
+                th.SetCurrentTabByTag("User");
             }
             else
             {

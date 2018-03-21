@@ -123,11 +123,13 @@ namespace HappyHealthyCSharp
         {
             if (string.IsNullOrEmpty(email.Text) || string.IsNullOrEmpty(pw.Text) || string.IsNullOrEmpty(name.Text) || string.IsNullOrEmpty(insertDate))
             {
-                Toast.MakeText(this, "Please fill all the required fields.", ToastLength.Long).Show();
+                Extension.CreateDialogue(this, "กรุณากรอกค่าในช่องกรอกข้อมูลให้ครบทุกค่า (อีเมลล์,รหัสผ่าน,ชื่อผู้ใช้,เพศ และ วันเกิด)").Show();
+                //Toast.MakeText(this, "กรุณากรอกค่า", ToastLength.Long).Show();
                 return false;
             }
-            if (!email.Text.IsValidEmailFormat()) { 
-                Toast.MakeText(this, "Please fill the email in a valid form.", ToastLength.Long).Show();
+            if (!email.Text.IsValidEmailFormat())
+            {
+                Extension.CreateDialogue(this, "กรุณากรอกข้อมูลอีเมลล์ที่ใช้จริง").Show();
                 return false;
             }
             return true;

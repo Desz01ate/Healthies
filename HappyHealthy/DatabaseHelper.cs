@@ -43,29 +43,6 @@ namespace HappyHealthyCSharp
         }
         virtual public JavaList<IDictionary<string, object>> GetJavaList<T>(string queryCustomized, List<string> columnTag) where T : new()
         {
-            #region MySQL
-            /*
-            var sqlconn = new MySqlConnection(GlobalFunction.remoteAccess);
-            sqlconn.Open();
-            var fbsList = new JavaList<IDictionary<string, object>>();
-            var query = queryCustomized;
-            var tickets = new DataSet();
-            var adapter = new MySqlDataAdapter(query, sqlconn);
-            adapter.Fill(tickets, "FBS");
-            foreach(DataRow x in tickets.Tables["FBS"].Rows)
-            {
-                var fbs = new JavaDictionary<string, object>();
-                fbs.Add("fbs_id", GlobalFunction.StringValidation(x[0].ToString()));
-                fbs.Add("fbs_time", GlobalFunction.StringValidation(x[1].ToString()));
-                Console.WriteLine(GlobalFunction.StringValidation(((DateTime)x[1]).ToThaiLocale().ToString()));
-                fbs.Add("fbs_fbs", GlobalFunction.StringValidation(x[2].ToString()));
-                fbs.Add("fbs_fbs_lvl", GlobalFunction.StringValidation(x[3].ToString()));
-                fbs.Add("ud_id", GlobalFunction.StringValidation(x[4].ToString()));
-                fbsList.Add(fbs);
-            }
-            sqlconn.Close();
-            */
-            #endregion
             var dataList = new JavaList<IDictionary<string, object>>();
             var conn = new SQLiteConnection(Extension.sqliteDBPath);
             var queryResult = conn.Query<T>(queryCustomized);
@@ -238,7 +215,7 @@ namespace HappyHealthyCSharp
                 DataSet kidneyData = null;
                 DataSet pressureData = null;
                 var ws = new HHCSService.HHCSService();
-
+                    
                 await System.Threading.Tasks.Task.Run(delegate {
                     userData = ws.GetData(Service.GetInstance.WebServiceAuthentication, "UserTABLE");
                     diabetesData = ws.GetData(Service.GetInstance.WebServiceAuthentication, "DiabetesTABLE");
