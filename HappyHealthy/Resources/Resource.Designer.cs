@@ -4554,6 +4554,9 @@ namespace HappyHealthyCSharp
 			// aapt resource value: 0x7f06000c
 			public const int sodium = 2131099660;
 			
+			// aapt resource value: 0x7f06000d
+			public const int sumBloodSugar = 2131099661;
+			
 			static Raw()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();

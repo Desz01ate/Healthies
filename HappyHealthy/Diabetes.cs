@@ -173,6 +173,9 @@ namespace HappyHealthyCSharp
             currentControl = BloodValue;
             if(Determine(currentControl))
                 await StartMicrophoneAsync("น้ำตาล",Resource.Raw.bloodSugar);
+            currentControl =  SumBloodValue;
+            if (Determine(currentControl))
+                await StartMicrophoneAsync("น้ำตาลสะสม", Resource.Raw.sumBloodSugar);
             isVoiceRunning = false;
         }
 
