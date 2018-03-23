@@ -41,9 +41,10 @@ namespace HappyHealthyCSharp
         EditText field_phosphorus_blood;
         ImageView saveButton, deleteButton;
         ImageView micButton;
-        private bool isVoiceRunning;
+        private bool LetsVoiceRunning;
         private EditText currentControl;
         private static AutoResetEvent autoEvent = new AutoResetEvent(false);
+        private bool onSaveState;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -56,10 +57,8 @@ namespace HappyHealthyCSharp
             addhiding.Visibility = ViewStates.Gone;
             var back = FindViewById<ImageView>(Resource.Id.imageView38);
             back.Click += delegate {
-                if (!isVoiceRunning)
-                    Finish();
-                else
-                    Toast.MakeText(this, "กรุณาบันทึกค่าทั้งหมดให้เสร็จสิ้นก่อนทำปิดหน้าต่างบันทึกข้อมูล", ToastLength.Short);
+                LetsVoiceRunning = false;
+                Finish();
             };
             field_gfr = FindViewById<EditText>(Resource.Id.ckd_gfr);
             field_creatinine = FindViewById<EditText>(Resource.Id.ckd_creatinine);
@@ -75,18 +74,7 @@ namespace HappyHealthyCSharp
             //code goes below
             var flagObjectJson = Intent.GetStringExtra("targetObject") ?? string.Empty;
             kidneyObject = string.IsNullOrEmpty(flagObjectJson) ? new KidneyTABLE() { ckd_gfr = Extension.flagValue } : JsonConvert.DeserializeObject<KidneyTABLE>(flagObjectJson);
-            if (kidneyObject.ckd_gfr == Extension.flagValue)
-            {
-                //deleteButton.Visibility = ViewStates.Invisible;
-                saveButton.Click += SaveValue;
-            }
-            else
-            {
-                InitialValueForUpdateEvent();
-                saveButton.Click += UpdateValue;
-                //deleteButton.Click += DeleteValue;
 
-            }
             //end
             string rec = Android.Content.PM.PackageManager.FeatureMicrophone;
             if (rec != "android.hardware.microphone")
@@ -105,32 +93,58 @@ namespace HappyHealthyCSharp
                         AutomationTalker();
                     }
                 };
-                if (Extension.getPreference("autosound", false, this))
-                    AutomationTalker();
+
             }
+            if (kidneyObject.ckd_gfr == Extension.flagValue)
+            {
+                //deleteButton.Visibility = ViewStates.Invisible;
+                saveButton.Click += SaveValue;
+                onSaveState = true;
+            }
+            else
+            {
+                InitialValueForUpdateEvent();
+                saveButton.Click += UpdateValue;
+                //deleteButton.Click += DeleteValue;
+
+            }
+            if (Extension.getPreference("autosound", false, this) && onSaveState)
+                AutomationTalker();
             t2sEngine = new TTS(this);
         }
 
         private async Task AutomationTalker()
         {
-            isVoiceRunning = true;
+            LetsVoiceRunning = true;
             currentControl = field_gfr;
-            await StartMicrophoneAsync(" GFR", Resource.Raw.gfr);
+            if(AllowToRun(currentControl))
+                await StartMicrophoneAsync(" GFR", Resource.Raw.gfr);
             currentControl = field_creatinine;
-            await StartMicrophoneAsync(" Creatinine", Resource.Raw.creatinine);
+            if (AllowToRun(currentControl))
+                await StartMicrophoneAsync(" Creatinine", Resource.Raw.creatinine);
             currentControl = field_bun;
-            await StartMicrophoneAsync(" BUN", Resource.Raw.bun);
+            if (AllowToRun(currentControl))
+                await StartMicrophoneAsync(" BUN", Resource.Raw.bun);
             currentControl = field_sodium;
-            await StartMicrophoneAsync(" Sodium", Resource.Raw.sodium);
+            if (AllowToRun(currentControl))
+                await StartMicrophoneAsync(" Sodium", Resource.Raw.sodium);
             currentControl = field_potassium;
-            await StartMicrophoneAsync(" Potassium", Resource.Raw.potasssium);
+            if (AllowToRun(currentControl))
+                await StartMicrophoneAsync(" Potassium", Resource.Raw.potasssium);
             currentControl = field_phosphorus_blood;
-            await StartMicrophoneAsync(" Phosphorus", Resource.Raw.phosphorus);
+            if (AllowToRun(currentControl))
+                await StartMicrophoneAsync(" Phosphorus", Resource.Raw.phosphorus);
             currentControl = field_albumin_blood;
-            await StartMicrophoneAsync(" Albumin ในเลือด", Resource.Raw.albuminblood);
+            if (AllowToRun(currentControl))
+                await StartMicrophoneAsync(" Albumin ในเลือด", Resource.Raw.albuminblood);
             currentControl = field_albumin_urine;
-            await StartMicrophoneAsync(" Albumin ในปัสสาวะ", Resource.Raw.albuminuria);
-            isVoiceRunning = false;
+            if (AllowToRun(currentControl))
+                await StartMicrophoneAsync(" Albumin ในปัสสาวะ", Resource.Raw.albuminuria);
+            LetsVoiceRunning = false;
+        }
+        private bool AllowToRun(EditText currentControl)
+        {
+            return currentControl.Text == string.Empty && LetsVoiceRunning;
         }
         private async Task<bool> StartMicrophoneAsync(string speakValue, int soundRawResource)
         {

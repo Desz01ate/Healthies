@@ -25,12 +25,13 @@ namespace HappyHealthyCSharp
         private EditText BPUp;
         private EditText HeartRate;
         PressureTABLE pressureObject;
-        private bool isRecording, isVoiceRunning;
+        private bool isRecording, LetsVoiceRunning;
         private readonly int VOICE = 10;
         Dictionary<string, string> dataNLPList;
 
         private EditText currentControl;
         private static AutoResetEvent autoEvent = new AutoResetEvent(false);
+        private bool onSaveState;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -48,26 +49,13 @@ namespace HappyHealthyCSharp
             addhiding.Visibility = ViewStates.Gone;
             var back = FindViewById<ImageView>(Resource.Id.imageView38);
             back.Click +=delegate {
-                if (!isVoiceRunning)
-                    Finish();
-                else
-                    Toast.MakeText(this, "กรุณาบันทึกค่าทั้งหมดให้เสร็จสิ้นก่อนทำปิดหน้าต่างบันทึกข้อมูล", ToastLength.Short);
+                LetsVoiceRunning = false;
+                Finish();
             };
             var micButton = FindViewById<ImageView>(Resource.Id.ic_microphone_pressure);
             //code goes below
             var flagObjectJson = Intent.GetStringExtra("targetObject") ?? string.Empty;
             pressureObject = string.IsNullOrEmpty(flagObjectJson) ? new PressureTABLE() { bp_hr = Extension.flagValue } : JsonConvert.DeserializeObject<PressureTABLE>(flagObjectJson);
-            if (pressureObject.bp_hr == Extension.flagValue)
-            {
-                //deleteButton.Visibility = ViewStates.Invisible;
-                saveButton.Click += SaveValue;
-            }
-            else
-            {
-                InitialValueForUpdateEvent();
-                saveButton.Click += UpdateValue;
-                //deleteButton.Click += DeleteValue;
-            }
             //end
             string rec = Android.Content.PM.PackageManager.FeatureMicrophone;
             if (rec != "android.hardware.microphone")
@@ -86,23 +74,42 @@ namespace HappyHealthyCSharp
                         AutomationTalker();
                     }
                 };
-                if (Extension.getPreference("autosound", false, this))
-                    AutomationTalker();
             }
+            if (pressureObject.bp_hr == Extension.flagValue)
+            {
+                //deleteButton.Visibility = ViewStates.Invisible;
+                saveButton.Click += SaveValue;
+                onSaveState = true;
+            }
+            else
+            {
+                InitialValueForUpdateEvent();
+                saveButton.Click += UpdateValue;
+                //deleteButton.Click += DeleteValue;
+            }
+            if (Extension.getPreference("autosound", false, this) && onSaveState)
+                AutomationTalker();
         }
 
         private async Task AutomationTalker()
         {
-            isVoiceRunning = true;
+            LetsVoiceRunning = true;
             currentControl = BPUp;
-            await StartMicrophoneAsync("ความดันตัวบน", Resource.Raw.pressureUp);
+            if (AllowToRun(currentControl))
+                await StartMicrophoneAsync("ความดันตัวบน", Resource.Raw.pressureUp);
             currentControl = BPLow;
-            await StartMicrophoneAsync("ความดันตัวล่าง", Resource.Raw.pressureDown);
+            if (AllowToRun(currentControl))
+                await StartMicrophoneAsync("ความดันตัวล่าง", Resource.Raw.pressureDown);
             currentControl = HeartRate;
-            await StartMicrophoneAsync("อัตราการเต้นของหัวใจ", Resource.Raw.heartRate);
-            isVoiceRunning = false;
+            if (AllowToRun(currentControl))
+                await StartMicrophoneAsync("อัตราการเต้นของหัวใจ", Resource.Raw.heartRate);
+            LetsVoiceRunning = false;
         }
 
+        private bool AllowToRun(EditText currentControl)
+        {
+            return currentControl.Text == string.Empty && LetsVoiceRunning;
+        }
 
         private async Task<bool> StartMicrophoneAsync(string speakValue, int soundRawResource)
         {

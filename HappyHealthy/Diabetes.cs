@@ -29,7 +29,7 @@ namespace HappyHealthyCSharp
         ImageView imageView;
         TTS t2sEngine;
         Intent voiceIntent;
-        private bool isRecording,isVoiceRunning;
+        private bool isRecording,LetsVoiceRunning;
         private readonly int VOICE = 10;
         //Edit below
         EditText BloodValue;
@@ -40,7 +40,7 @@ namespace HappyHealthyCSharp
 
         private EditText currentControl;
         private static AutoResetEvent autoEvent = new AutoResetEvent(false);
-
+        private bool onSaveState;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -56,26 +56,13 @@ namespace HappyHealthyCSharp
             addhiding.Visibility = ViewStates.Gone;
             var backBtt = FindViewById<ImageView>(Resource.Id.imageView38);
             backBtt.Click += delegate {
-                if (!isVoiceRunning)
-                    Finish();
-                else
-                    Toast.MakeText(this, "กรุณาบันทึกค่าทั้งหมดให้เสร็จสิ้นก่อนทำปิดหน้าต่างบันทึกข้อมูล", ToastLength.Short);
+                LetsVoiceRunning = false;
+                Finish();
             };
             //deleteButton = FindViewById<ImageView>(Resource.Id.imageView_button_delete_diabetes);
             // Create your application here
             var flagObjectJson = Intent.GetStringExtra("targetObject") ?? string.Empty;
             diaObject = string.IsNullOrEmpty(flagObjectJson) ? new DiabetesTABLE() { fbs_fbs = Extension.flagValue } : JsonConvert.DeserializeObject<DiabetesTABLE>(flagObjectJson);
-            if (diaObject.fbs_fbs == Extension.flagValue)
-            {
-                //deleteButton.Visibility = ViewStates.Invisible;
-                saveButton.Click += SaveValue;
-            }
-            else
-            {
-                InitialValueForUpdateEvent();
-                saveButton.Click += UpdateValue;
-                //deleteButton.Click += DeleteValue;
-            }
             //end
 
             string rec = Android.Content.PM.PackageManager.FeatureMicrophone;
@@ -94,11 +81,21 @@ namespace HappyHealthyCSharp
                         AutomationTalker();
                     }
                 };
-                if (Extension.getPreference("autosound", false, this))
-                {
-                    AutomationTalker();
-                }
             }
+            if (diaObject.fbs_fbs == Extension.flagValue)
+            {
+                //deleteButton.Visibility = ViewStates.Invisible;
+                saveButton.Click += SaveValue;
+                onSaveState = true;
+            }
+            else
+            {
+                InitialValueForUpdateEvent();
+                saveButton.Click += UpdateValue;
+                //deleteButton.Click += DeleteValue;
+            }
+            if (Extension.getPreference("autosound", false, this) && onSaveState)
+                AutomationTalker();
             t2sEngine = new TTS(this);
         }
         private async Task<bool> StartMicrophoneAsync(string speakValue,int soundRawResource)
@@ -167,11 +164,18 @@ namespace HappyHealthyCSharp
         }
         private async Task AutomationTalker()
         {
-            isVoiceRunning = true;
+            LetsVoiceRunning = true;
             currentControl = BloodValue;
-            await StartMicrophoneAsync("น้ำตาล",Resource.Raw.bloodSugar);
-            isVoiceRunning = false;
+            if(AllowToRun(currentControl))
+                await StartMicrophoneAsync("น้ำตาล",Resource.Raw.bloodSugar);
+            LetsVoiceRunning = false;
         }
+
+        private bool AllowToRun(EditText currentControl)
+        {
+            return currentControl.Text == string.Empty && LetsVoiceRunning;
+        }
+
         protected override void OnActivityResult(int requestCode, Result resultVal, Intent data)
         {
             base.OnActivityResult(requestCode, resultVal, data);
