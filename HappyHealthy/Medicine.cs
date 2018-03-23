@@ -25,7 +25,8 @@ namespace HappyHealthyCSharp
             public static File _dir;
             public static Bitmap bitmap;
         }
-        ImageView medImage;
+        ImageView medImage, saveButton;
+        TextView header;
         EditText medName;
         EditText medDesc;
         MedicineTABLE medObject;
@@ -38,7 +39,7 @@ namespace HappyHealthyCSharp
             SetTheme(Resource.Style.Base_Theme_AppCompat_Light);
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_add_pill);
-            var header = FindViewById<TextView>(Resource.Id.textView_header_name_pill);
+            header = FindViewById<TextView>(Resource.Id.textView_header_name_pill);
             header.Text = "บันทึกการทานยา";
             var addhiding = FindViewById<ImageView>(Resource.Id.imageViewAddPill);
             addhiding.Visibility = ViewStates.Gone;
@@ -57,7 +58,7 @@ namespace HappyHealthyCSharp
             after = FindViewById<RadioButton>(Resource.Id.Radio_button_af_food);
             timeText = FindViewById<EditText>(Resource.Id.edit_af_food);
             timeText.Enabled = false;
-            var saveButton = FindViewById<ImageView>(Resource.Id.imageView_button_save_pill);
+            saveButton = FindViewById<ImageView>(Resource.Id.imageView_button_save_pill);
             //var deleteButton = FindViewById<ImageView>(Resource.Id.imageView_button_delete_pill);
             //code goes below
             var flagObjectJson = Intent.GetStringExtra("targetObject") ?? string.Empty;
@@ -127,13 +128,27 @@ namespace HappyHealthyCSharp
 
         public void InitialForUpdateEvent()
         {
+            header.Text = $@"บันทึกการทานยา{medObject.ma_name} (สำหรับดู)";
             medName.Text = medObject.ma_name;
             medDesc.Text = medObject.ma_desc;
             breakfast.Checked = medObject.ma_bf;
             lunch.Checked = medObject.ma_lu;
             dinner.Checked = medObject.ma_dn;
-            dinner.Checked = medObject.ma_sl;
+            sleep.Checked = medObject.ma_sl;
+            if (medObject.ma_before_or_after)
+                before.Checked = true;
+            else
+                after.Checked = true;
             timeText.Text = medObject.ma_before_or_after_minute.ToString();
+
+            //We will not allow this page to be editable on some field
+            breakfast.Enabled = false;
+            lunch.Enabled = false;
+            dinner.Enabled = false;
+            sleep.Enabled = false;
+            before.Enabled = false;
+            after.Enabled = false;
+            timeText.Enabled = false;
             //Waiting for image initialize
         }
 
@@ -141,13 +156,13 @@ namespace HappyHealthyCSharp
         {
             medObject.ma_name = medName.Text;
             medObject.ma_desc = medDesc.Text;
-            medObject.ma_bf = breakfast.Checked;
-            medObject.ma_lu = lunch.Checked;
-            medObject.ma_dn = dinner.Checked;
-            medObject.ma_sl = dinner.Checked;
-            medObject.ma_before_or_after_minute = Convert.ToInt32(timeText.Text);
-            medObject.ma_pic = App._file != null ? App._file.AbsolutePath : medObject.ma_pic;
-            medObject.ud_id = Extension.getPreference("ud_id", 0, this);
+            //medObject.ma_bf = breakfast.Checked;
+            //medObject.ma_lu = lunch.Checked;
+            //medObject.ma_dn = dinner.Checked;
+            //medObject.ma_sl = dinner.Checked;
+            //medObject.ma_before_or_after_minute = Convert.ToInt32(timeText.Text);
+            //medObject.ma_pic = App._file != null ? App._file.AbsolutePath : medObject.ma_pic;
+            //medObject.ud_id = Extension.getPreference("ud_id", 0, this);
             medObject.Update();
             Finish();
         }
@@ -203,6 +218,7 @@ namespace HappyHealthyCSharp
             medObject.ma_lu = lunch.Checked;
             medObject.ma_dn = dinner.Checked;
             medObject.ma_sl = sleep.Checked;
+            medObject.ma_before_or_after = before.Checked ? true : false;
             medObject.ma_before_or_after_minute = beforeAfterDecision;
             medObject.Update();
             /*

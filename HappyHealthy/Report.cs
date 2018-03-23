@@ -62,13 +62,15 @@ namespace HappyHealthyCSharp
                     string key = "fbs_fbs";
                     if (secondSpinner.SelectedItemPosition == 0)
                         key = "fbs_fbs";
+                    else if (secondSpinner.SelectedItemPosition == 1)
+                        key = "fbs_fbs_sum";
                     view.Model = CreatePlotModel(
                         "รายงานค่าเบาหวาน",
                         new DiabetesTABLE().GetJavaList<DiabetesTABLE>($"SELECT * FROM DiabetesTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)} ORDER BY FBS_TIME",
                         new DiabetesTABLE().Column),
                         "fbs_time",
                         key,
-                        DiabetesTABLE.caseLevel.High);
+                        key == "fbs_fbs"?DiabetesTABLE.caseLevel.High:7);
                 }
                 else if (mainSpinner.SelectedItemPosition == 1)
                 {

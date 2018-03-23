@@ -27,6 +27,7 @@ namespace HappyHealthyCSharp
             "fbs_time_string",
             "fbs_fbs",
             "fbs_fbs_lvl",
+            "fbs_fbs_sum",
             "ud_id"
         };
         public static dynamic caseLevel = new { Low = 100,Mid = 125,High = 126};
@@ -34,6 +35,7 @@ namespace HappyHealthyCSharp
         public int fbs_id { get; set; }
         public DateTime fbs_time { get; set; }
         public string fbs_time_string { get; set; }
+        public decimal fbs_fbs_sum { get; set; }
         private decimal _fbs;
         public decimal fbs_fbs
         {
@@ -82,6 +84,8 @@ namespace HappyHealthyCSharp
                         wsObject.fbs_fbs_old = row.fbs_fbs_old;
                         wsObject.fbs_fbs_lvl_new = row.fbs_fbs_lvl_new;
                         wsObject.fbs_fbs_lvl_old = row.fbs_fbs_lvl_old;
+                        wsObject.fbs_fbs_sum_new = row.fbs_fbs_sum_new;
+                        wsObject.fbs_fbs_sum_old = row.fbs_fbs_sum_old;
                         wsObject.mode = row.mode;
                         diaList.Add(wsObject);
                     });

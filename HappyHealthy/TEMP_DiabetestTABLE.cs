@@ -25,6 +25,8 @@ namespace HappyHealthyCSharp
         public int      fbs_fbs_old     { get; set; }
         public int      fbs_fbs_lvl_new { get; set; }
         public int      fbs_fbs_lvl_old { get; set; }
+        public int      fbs_fbs_sum_new { get; set; }
+        public int      fbs_fbs_sum_old { get; set; }
         public string   mode            { get; set; }
         public int ud_id { get; set; }
         public override List<string> Column => throw new NotImplementedException();

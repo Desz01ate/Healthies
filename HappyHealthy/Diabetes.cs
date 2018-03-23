@@ -29,10 +29,10 @@ namespace HappyHealthyCSharp
         ImageView imageView;
         TTS t2sEngine;
         Intent voiceIntent;
-        private bool isRecording,LetsVoiceRunning;
+        private bool isRecording,isVoiceRunning;
         private readonly int VOICE = 10;
         //Edit below
-        EditText BloodValue;
+        EditText BloodValue, SumBloodValue;
         ImageView micButton, saveButton, deleteButton;
 
         DiabetesTABLE diaObject = null;
@@ -40,7 +40,7 @@ namespace HappyHealthyCSharp
 
         private EditText currentControl;
         private static AutoResetEvent autoEvent = new AutoResetEvent(false);
-        private bool onSaveState;
+
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -48,6 +48,7 @@ namespace HappyHealthyCSharp
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_diabetes);
             BloodValue = FindViewById<EditText>(Resource.Id.sugar_value);
+            SumBloodValue = FindViewById<EditText>(Resource.Id.sugar_sum_value);
             micButton = FindViewById<ImageView>(Resource.Id.ic_microphone_diabetes);
             saveButton = FindViewById<ImageView>(Resource.Id.imageView_button_save_diabetes);
             var header = FindViewById<TextView>(Resource.Id.textView_header_name_diabetes);
@@ -56,13 +57,26 @@ namespace HappyHealthyCSharp
             addhiding.Visibility = ViewStates.Gone;
             var backBtt = FindViewById<ImageView>(Resource.Id.imageView38);
             backBtt.Click += delegate {
-                LetsVoiceRunning = false;
-                Finish();
+                if (!isVoiceRunning)
+                    Finish();
+                else
+                    Toast.MakeText(this, "กรุณาบันทึกค่าทั้งหมดให้เสร็จสิ้นก่อนทำปิดหน้าต่างบันทึกข้อมูล", ToastLength.Short);
             };
             //deleteButton = FindViewById<ImageView>(Resource.Id.imageView_button_delete_diabetes);
             // Create your application here
             var flagObjectJson = Intent.GetStringExtra("targetObject") ?? string.Empty;
             diaObject = string.IsNullOrEmpty(flagObjectJson) ? new DiabetesTABLE() { fbs_fbs = Extension.flagValue } : JsonConvert.DeserializeObject<DiabetesTABLE>(flagObjectJson);
+            if (diaObject.fbs_fbs == Extension.flagValue)
+            {
+                //deleteButton.Visibility = ViewStates.Invisible;
+                saveButton.Click += SaveValue;
+            }
+            else
+            {
+                InitialValueForUpdateEvent();
+                saveButton.Click += UpdateValue;
+                //deleteButton.Click += DeleteValue;
+            }
             //end
 
             string rec = Android.Content.PM.PackageManager.FeatureMicrophone;
@@ -81,21 +95,11 @@ namespace HappyHealthyCSharp
                         AutomationTalker();
                     }
                 };
+                if (Extension.getPreference("autosound", false, this))
+                {
+                    AutomationTalker();
+                }
             }
-            if (diaObject.fbs_fbs == Extension.flagValue)
-            {
-                //deleteButton.Visibility = ViewStates.Invisible;
-                saveButton.Click += SaveValue;
-                onSaveState = true;
-            }
-            else
-            {
-                InitialValueForUpdateEvent();
-                saveButton.Click += UpdateValue;
-                //deleteButton.Click += DeleteValue;
-            }
-            if (Extension.getPreference("autosound", false, this) && onSaveState)
-                AutomationTalker();
             t2sEngine = new TTS(this);
         }
         private async Task<bool> StartMicrophoneAsync(string speakValue,int soundRawResource)
@@ -151,6 +155,7 @@ namespace HappyHealthyCSharp
         private void InitialValueForUpdateEvent()
         {
             BloodValue.Text = diaObject.fbs_fbs.ToString();
+            SumBloodValue.Text = diaObject.fbs_fbs_sum.ToString();
         }
 
         private void UpdateValue(object sender, EventArgs e)
@@ -164,16 +169,16 @@ namespace HappyHealthyCSharp
         }
         private async Task AutomationTalker()
         {
-            LetsVoiceRunning = true;
+            isVoiceRunning = true;
             currentControl = BloodValue;
-            if(AllowToRun(currentControl))
+            if(Determine(currentControl))
                 await StartMicrophoneAsync("น้ำตาล",Resource.Raw.bloodSugar);
-            LetsVoiceRunning = false;
+            isVoiceRunning = false;
         }
 
-        private bool AllowToRun(EditText currentControl)
+        private bool Determine(EditText currentControl)
         {
-            return currentControl.Text == string.Empty && LetsVoiceRunning;
+            return currentControl.Text != string.Empty && isVoiceRunning;
         }
 
         protected override void OnActivityResult(int requestCode, Result resultVal, Intent data)
@@ -209,7 +214,7 @@ namespace HappyHealthyCSharp
         public void SaveValue(object sender, EventArgs e)
         {
             if (!Extension.TextFieldValidate(new List<object>() {
-                BloodValue
+                BloodValue,SumBloodValue
             }))
             {
                 Toast.MakeText(this, "กรุณากรอกค่าให้ครบ ก่อนทำการบันทึก", ToastLength.Short).Show();
@@ -225,6 +230,7 @@ namespace HappyHealthyCSharp
                 diaTable.fbs_id = 1;
             }
             diaTable.fbs_fbs = (decimal)double.Parse(BloodValue.Text);
+            diaTable.fbs_fbs_sum = (decimal)double.Parse(SumBloodValue.Text);
             diaTable.ud_id = Extension.getPreference("ud_id", 0, this);
             diaTable.fbs_time = DateTime.Now.ToThaiLocale();
             diaTable.Insert();
