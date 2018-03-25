@@ -90,7 +90,21 @@ namespace HappyHealthyCSharp
             if (Extension.getPreference("autosound", false, this) && onSaveState)
                 AutomationTalker();
         }
-
+        protected override void OnPause()
+        {
+            base.OnPause();
+            LetsVoiceRunning = false;
+        }
+        protected override void OnStop()
+        {
+            base.OnStop();
+            LetsVoiceRunning = false;
+        }
+        public override void OnBackPressed()
+        {
+            base.OnBackPressed();
+            LetsVoiceRunning = false;
+        }
         private async Task AutomationTalker()
         {
             LetsVoiceRunning = true;

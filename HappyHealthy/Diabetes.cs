@@ -29,7 +29,7 @@ namespace HappyHealthyCSharp
         ImageView imageView;
         TTS t2sEngine;
         Intent voiceIntent;
-        private bool isRecording,isVoiceRunning;
+        private bool isRecording, LetsVoiceRunning;
         private readonly int VOICE = 10;
         //Edit below
         EditText BloodValue, SumBloodValue;
@@ -56,11 +56,10 @@ namespace HappyHealthyCSharp
             var addhiding = FindViewById<ImageView>(Resource.Id.ClickAddDia);
             addhiding.Visibility = ViewStates.Gone;
             var backBtt = FindViewById<ImageView>(Resource.Id.imageView38);
-            backBtt.Click += delegate {
-                if (!isVoiceRunning)
-                    Finish();
-                else
-                    Toast.MakeText(this, "กรุณาบันทึกค่าทั้งหมดให้เสร็จสิ้นก่อนทำปิดหน้าต่างบันทึกข้อมูล", ToastLength.Short);
+            backBtt.Click += delegate
+            {
+                Finish();
+                LetsVoiceRunning = false;
             };
             //deleteButton = FindViewById<ImageView>(Resource.Id.imageView_button_delete_diabetes);
             // Create your application here
@@ -102,7 +101,22 @@ namespace HappyHealthyCSharp
             }
             t2sEngine = new TTS(this);
         }
-        private async Task<bool> StartMicrophoneAsync(string speakValue,int soundRawResource)
+        protected override void OnPause()
+        {
+            base.OnPause();
+            LetsVoiceRunning = false;
+        }
+        protected override void OnStop()
+        {
+            base.OnStop();
+            LetsVoiceRunning = false;
+        }
+        public override void OnBackPressed()
+        {
+            base.OnBackPressed();
+            LetsVoiceRunning = false;
+        }
+        private async Task<bool> StartMicrophoneAsync(string speakValue, int soundRawResource)
         {
             try
             {
@@ -169,19 +183,19 @@ namespace HappyHealthyCSharp
         }
         private async Task AutomationTalker()
         {
-            isVoiceRunning = true;
+            LetsVoiceRunning = true;
             currentControl = BloodValue;
-            if(Determine(currentControl))
-                await StartMicrophoneAsync("น้ำตาล",Resource.Raw.bloodSugar);
-            currentControl =  SumBloodValue;
-            if (Determine(currentControl))
+            if (AllowToRun(currentControl))
+                await StartMicrophoneAsync("น้ำตาล", Resource.Raw.bloodSugar);
+            currentControl = SumBloodValue;
+            if (AllowToRun(currentControl))
                 await StartMicrophoneAsync("น้ำตาลสะสม", Resource.Raw.sumBloodSugar);
-            isVoiceRunning = false;
+            LetsVoiceRunning = false;
         }
 
-        private bool Determine(EditText currentControl)
+        private bool AllowToRun(EditText currentControl)
         {
-            return currentControl.Text != string.Empty && isVoiceRunning;
+            return currentControl.Text == string.Empty && LetsVoiceRunning;
         }
 
         protected override void OnActivityResult(int requestCode, Result resultVal, Intent data)

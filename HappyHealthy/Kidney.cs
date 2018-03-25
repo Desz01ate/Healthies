@@ -142,6 +142,21 @@ namespace HappyHealthyCSharp
                 await StartMicrophoneAsync(" Albumin ในปัสสาวะ", Resource.Raw.albuminuria);
             LetsVoiceRunning = false;
         }
+        protected override void OnPause()
+        {
+            base.OnPause();
+            LetsVoiceRunning = false;
+        }
+        protected override void OnStop()
+        {
+            base.OnStop();
+            LetsVoiceRunning = false;
+        }
+        public override void OnBackPressed()
+        {
+            base.OnBackPressed();
+            LetsVoiceRunning = false;
+        }
         private bool AllowToRun(EditText currentControl)
         {
             return currentControl.Text == string.Empty && LetsVoiceRunning;
