@@ -136,7 +136,6 @@
     <Compile Include="AndroidImageAdapter.cs" />
     <Compile Include="BitmapHelpers.cs" />
     <Compile Include="CalendarHelper.cs" />
-    <Compile Include="Database.cs" />
     <Compile Include="Develop.cs" />
     <Compile Include="Diabetes.cs" />
     <Compile Include="Doctor.cs" />
@@ -146,7 +145,6 @@
     <Compile Include="ILocalActivity.cs" />
     <Compile Include="Service.cs" />
     <Compile Include="SummaryDiabetesTABLE.cs" />
-    <Compile Include="EmptyDemo.cs" />
     <Compile Include="FoodExchange.cs" />
     <Compile Include="PasswordReset.cs" />
     <Compile Include="History_Medicine.cs" />
