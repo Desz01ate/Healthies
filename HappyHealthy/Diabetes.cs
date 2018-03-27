@@ -175,6 +175,7 @@ namespace HappyHealthyCSharp
         private void UpdateValue(object sender, EventArgs e)
         {
             diaObject.fbs_fbs = (decimal)double.Parse(BloodValue.Text);
+            diaObject.fbs_fbs_sum = (decimal)double.Parse(SumBloodValue.Text);
             diaObject.ud_id = Extension.getPreference("ud_id", 0, this);
             diaObject.fbs_time = DateTime.Now.ToThaiLocale();
             diaObject.Update();
