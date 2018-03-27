@@ -142,8 +142,8 @@ namespace HappyHealthyCSharp
             c.CreateTable<TEMP_DiabetesTABLE>();
             c.Execute($@"CREATE TRIGGER DiabetesTABLE_After_Insert_Trigger AFTER INSERT ON DiabetesTABLE 
                            BEGIN 
-                                INSERT INTO TEMP_DiabetesTABLE(fbs_id_pointer, fbs_time_new, fbs_fbs_new, fbs_fbs_lvl_new, MODE,ud_id) 
-                                VALUES(NEW.fbs_id, NEW.fbs_time, NEW.fbs_fbs, NEW.fbs_fbs_lvl, 'I',NEW.ud_id); 
+                                INSERT INTO TEMP_DiabetesTABLE(fbs_id_pointer, fbs_time_new, fbs_fbs_new, fbs_fbs_lvl_new,fbs_fbs_sum_new, MODE,ud_id) 
+                                VALUES(NEW.fbs_id, NEW.fbs_time, NEW.fbs_fbs, NEW.fbs_fbs_lvl,NEW.fbs_fbs_sum, 'I',NEW.ud_id); 
                                 UPDATE DiabetesTABLE 
                                 SET 
                                     fbs_time_string = DATETIME('now','7 hours')
@@ -152,13 +152,13 @@ namespace HappyHealthyCSharp
                                 END;");
             c.Execute($@"CREATE TRIGGER DiabetesTABLE_After_Update_Trigger AFTER UPDATE ON DiabetesTABLE 
                              BEGIN
-                             	INSERT INTO TEMP_DiabetesTABLE(fbs_id_pointer, fbs_time_old, fbs_fbs_old, fbs_fbs_lvl_old, fbs_time_new, fbs_fbs_new, fbs_fbs_lvl_new,fbs_time_string_new, MODE,ud_id)
-                             	VALUES(OLD.fbs_id, OLD.fbs_time, OLD.fbs_fbs, OLD.fbs_fbs_lvl, NEW.fbs_time, NEW.fbs_fbs, NEW.fbs_fbs_lvl,NEW.fbs_time_string, 'U',NEW.ud_id);
+                             	INSERT INTO TEMP_DiabetesTABLE(fbs_id_pointer, fbs_time_old, fbs_fbs_old, fbs_fbs_lvl_old, fbs_time_new, fbs_fbs_new, fbs_fbs_lvl_new,fbs_time_string_new,fbs_fbs_sum_old,fbs_fbs_sum_new,MODE,ud_id)
+                             	VALUES(OLD.fbs_id, OLD.fbs_time, OLD.fbs_fbs, OLD.fbs_fbs_lvl, NEW.fbs_time, NEW.fbs_fbs, NEW.fbs_fbs_lvl,NEW.fbs_time_string,OLD.fbs_fbs_sum,NEW.fbs_fbs_sum, 'U',NEW.ud_id);
                              END");
             c.Execute($@"CREATE TRIGGER DiabetesTABLE_After_Delete_Trigger AFTER DELETE ON DiabetesTABLE 
                             BEGIN 
-                                INSERT INTO TEMP_DiabetesTABLE(fbs_id_pointer, fbs_time_old, fbs_fbs_old, fbs_fbs_lvl_old, MODE,ud_id) 
-                                VALUES(OLD.fbs_id, OLD.fbs_time, OLD.fbs_fbs, OLD.fbs_fbs_lvl, 'D',OLD.ud_id); 
+                                INSERT INTO TEMP_DiabetesTABLE(fbs_id_pointer, fbs_time_old, fbs_fbs_old, fbs_fbs_lvl_old,fbs_fbs_sum_old, MODE,ud_id) 
+                                VALUES(OLD.fbs_id, OLD.fbs_time, OLD.fbs_fbs, OLD.fbs_fbs_lvl,OLD.fbs_fbs_sum, 'D',OLD.ud_id); 
                             END");
 
             c.CreateTable<TEMP_PressureTABLE>();
@@ -270,7 +270,8 @@ namespace HappyHealthyCSharp
                         tempDiabetes.fbs_time_string = row[1].ToString();
                         tempDiabetes.fbs_fbs = Convert.ToDecimal(row[2].ToString());
                         //tempDiabetes.fbs_fbs_lvl = Convert.ToInt32(row[3].ToString());
-                        tempDiabetes.ud_id = Convert.ToInt32(row[4].ToString());
+                        tempDiabetes.fbs_fbs_sum = Convert.ToDecimal(row[4].ToString());
+                        tempDiabetes.ud_id = Convert.ToInt32(row[5].ToString());
                         tempDiabetes.Insert();
                     }
                     foreach (DataRow row in ((DataSet)kidneyData).Tables["KidneyTABLE"].Rows)

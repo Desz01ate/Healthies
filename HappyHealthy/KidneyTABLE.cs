@@ -122,6 +122,9 @@ namespace HappyHealthyCSharp
                         , kidList.ToArray()
                         , new List<HHCSService.TEMP_PressureTABLE>().ToArray());
                     kidList.Clear();
+                    var sqliteInstance = new SQLiteConnection(Extension.sqliteDBPath);
+                    sqliteInstance.Execute($"DELETE FROM TEMP_KidneyTABLE WHERE ud_id = {Extension.getPreference("ud_id", 0, c)}");
+                    sqliteInstance.Close();
                 }
                 catch (Exception e)
                 {

@@ -31,6 +31,8 @@ namespace HappyHealthyCSharp.HHCSService {
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(object[]))]
     public partial class HHCSService : System.Web.Services.Protocols.SoapHttpClientProtocol {
         
+        private System.Threading.SendOrPostCallback InsertIOperationCompleted;
+        
         private System.Threading.SendOrPostCallback RegisterOperationCompleted;
         
         private System.Threading.SendOrPostCallback TestConnectionOperationCompleted;
@@ -51,7 +53,7 @@ namespace HappyHealthyCSharp.HHCSService {
         
         /// <remarks/>
         public HHCSService() {
-            this.Url = "http://192.168.137.1/HHCSService/HHCSService.asmx";
+            this.Url = "http://172.20.103.17/HHCSService/HHCSService.asmx";
             if ((this.IsLocalFileSystemWebService(this.Url) == true)) {
                 this.UseDefaultCredentials = true;
                 this.useDefaultCredentialsSetExplicitly = false;
@@ -86,6 +88,9 @@ namespace HappyHealthyCSharp.HHCSService {
         }
         
         /// <remarks/>
+        public event InsertICompletedEventHandler InsertICompleted;
+        
+        /// <remarks/>
         public event RegisterCompletedEventHandler RegisterCompleted;
         
         /// <remarks/>
@@ -108,6 +113,33 @@ namespace HappyHealthyCSharp.HHCSService {
         
         /// <remarks/>
         public event FoodRequestCompletedEventHandler FoodRequestCompleted;
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/InsertI", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public string InsertI() {
+            object[] results = this.Invoke("InsertI", new object[0]);
+            return ((string)(results[0]));
+        }
+        
+        /// <remarks/>
+        public void InsertIAsync() {
+            this.InsertIAsync(null);
+        }
+        
+        /// <remarks/>
+        public void InsertIAsync(object userState) {
+            if ((this.InsertIOperationCompleted == null)) {
+                this.InsertIOperationCompleted = new System.Threading.SendOrPostCallback(this.OnInsertIOperationCompleted);
+            }
+            this.InvokeAsync("InsertI", new object[0], this.InsertIOperationCompleted, userState);
+        }
+        
+        private void OnInsertIOperationCompleted(object arg) {
+            if ((this.InsertICompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.InsertICompleted(this, new InsertICompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
         
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/Register", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
@@ -910,6 +942,10 @@ namespace HappyHealthyCSharp.HHCSService {
         
         private int fbs_fbs_lvl_oldField;
         
+        private double fbs_fbs_sum_newField;
+        
+        private double fbs_fbs_sum_oldField;
+        
         private string modeField;
         
         /// <remarks/>
@@ -993,6 +1029,26 @@ namespace HappyHealthyCSharp.HHCSService {
         }
         
         /// <remarks/>
+        public double fbs_fbs_sum_new {
+            get {
+                return this.fbs_fbs_sum_newField;
+            }
+            set {
+                this.fbs_fbs_sum_newField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public double fbs_fbs_sum_old {
+            get {
+                return this.fbs_fbs_sum_oldField;
+            }
+            set {
+                this.fbs_fbs_sum_oldField = value;
+            }
+        }
+        
+        /// <remarks/>
         public string mode {
             get {
                 return this.modeField;
@@ -1032,6 +1088,32 @@ namespace HappyHealthyCSharp.HHCSService {
             }
             set {
                 this.passwordField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.2556.0")]
+    public delegate void InsertICompletedEventHandler(object sender, InsertICompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.2556.0")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class InsertICompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        internal InsertICompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        /// <remarks/>
+        public string Result {
+            get {
+                this.RaiseExceptionIfNecessary();
+                return ((string)(this.results[0]));
             }
         }
     }

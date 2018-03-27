@@ -38,9 +38,9 @@ namespace HappyHealthyCSharp
             user = user.Select<UserTABLE>($@"SELECT * FROM UserTABLE WHERE UD_ID = '{Extension.getPreference("ud_id", 0, this)}'")[0];
             logoutBtn.Click += delegate
             {
-                Extension.clearAllPreference(this);
-                StartActivity(new Intent(this, typeof(Login)));
-                this.Finish();
+                Extension.CreateDialogue2(this, "คุณต้องการออกจากระบบหรือไม่", Android.Graphics.Color.Red, Android.Graphics.Color.White,
+                    Android.Graphics.Color.White, Android.Graphics.Color.Black, 42, Logout, delegate { }, "ใช่", "ไม่ใช่");
+                //Extension.CreateDialogue(this, "คุณต้องการออกจากระบบหรือไม่", Logout, delegate { }, "ใช่", "ไม่ใช่").Show();
             };
             autoSound.CheckedChange += delegate {
                 Extension.setPreference("autosound", autoSound.Checked, this);
@@ -64,6 +64,13 @@ namespace HappyHealthyCSharp
                 autoSound.Enabled = false;
             }
             FindViewById<TextView>(Resource.Id.savedatauser).Visibility = ViewStates.Gone;//just hiding without remove it from the xml, please kindly delete this if you willing to delete this control from xml
+        }
+
+        private void Logout(object sender, DialogClickEventArgs e)
+        {
+            Extension.clearAllPreference(this);
+            StartActivity(new Intent(this, typeof(Login)));
+            this.Finish();
         }
 
         private void SetTime(object sender, EventArgs e)
@@ -104,11 +111,11 @@ namespace HappyHealthyCSharp
             age.Text = (DateTime.Now.Year - user.ud_birthdate.Year).ToString();
             name.Text = user.ud_name;
             //txtIdenNo.Text = user.ud_iden_number;
-            sex.Text = Convert.ToString(Extension.StringValidation(user.ud_gender));
-            breakfast.Text = user.ud_bf_time.ToString("hh:mm tt");
-            lunch.Text = user.ud_lu_time.ToString("hh:mm tt");
-            dinner.Text = user.ud_dn_time.ToString("hh:mm tt");
-            sleep.Text = user.ud_sl_time.ToString("hh:mm tt");
+            sex.Text = Convert.ToString(Extension.StringValidation(user.ud_gender)).ToLower() == "m"?"ชาย":"หญิง";
+            breakfast.Text = user.ud_bf_time.TimeValidate()?user.ud_bf_time.ToString("hh:mm tt"):"คลิกที่นี่เพื่อตั้งเวลา";
+            lunch.Text = user.ud_lu_time.TimeValidate()?user.ud_lu_time.ToString("hh:mm tt") : "คลิกที่นี่เพื่อตั้งเวลา";
+            dinner.Text = user.ud_dn_time.TimeValidate()?user.ud_dn_time.ToString("hh:mm tt") : "คลิกที่นี่เพื่อตั้งเวลา";
+            sleep.Text = user.ud_sl_time.TimeValidate()?user.ud_sl_time.ToString("hh:mm tt") : "คลิกที่นี่เพื่อตั้งเวลา";
         }
     }
 }
