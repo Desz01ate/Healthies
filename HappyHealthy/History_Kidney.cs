@@ -17,6 +17,7 @@ namespace HappyHealthyCSharp
     [Activity(Label = "History_Diabetes", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
     public class History_Kidney : ListActivity
     {
+        ImageView add, back;
         KidneyTABLE kidneyTable;
         JavaList<IDictionary<string, object>> kidneyList;
 
@@ -26,21 +27,31 @@ namespace HappyHealthyCSharp
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_history_kidney);
             //ListView = FindViewById<ListView>(Resource.Id.listView);
-            var back = FindViewById<ImageView>(Resource.Id.imageView38);
-            back.Click += delegate { Finish(); };
-            var add = FindViewById<ImageView>(Resource.Id.imageView41);
-            add.Click += delegate { StartActivity(new Intent(this, typeof(Kidney))); };
+            InitializeControl();
+            InitializeControlEvent();
             kidneyTable = new KidneyTABLE();
-            ListView.ItemClick += onItemClick;
-
             // Create your application here
             SetListView();
         }
+
+        private void InitializeControlEvent()
+        {
+            back.Click += delegate { Finish(); };
+            add.Click += delegate { StartActivity(new Intent(this, typeof(Kidney))); };
+            ListView.ItemClick += onItemClick;
+        }
+
+        private void InitializeControl()
+        {
+            back = FindViewById<ImageView>(Resource.Id.imageView38);
+            add = FindViewById<ImageView>(Resource.Id.imageView41);
+        }
+
         private void onItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
-            kidneyList[e.Position].TryGetValue("ckd_id", out object ckdID);
+            kidneyList[e.Position].TryGetValue("ckd_id", out dynamic ckdID);
             var kidneyObject = new KidneyTABLE();
-            kidneyObject = kidneyObject.Select<KidneyTABLE>($"SELECT * From KidneyTABLE where ckd_id = {ckdID}")[0];
+            kidneyObject = kidneyObject.SelectOne(x=>x.ckd_id == ckdID);
             Extension.CreateDialogue(this, "กรุณาเลือกรายการที่ต้องการจะดำเนินการ",
                 delegate
                 {
@@ -59,7 +70,7 @@ namespace HappyHealthyCSharp
                     , Extension.adFontSize
                     , delegate
                     {
-                        kidneyObject.Delete<KidneyTABLE>(kidneyObject.ckd_id);
+                        kidneyObject.Delete(kidneyObject.ckd_id);
                         kidneyObject.TrySyncWithMySQL(this);
                         SetListView();
                     }

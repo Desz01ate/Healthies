@@ -34,50 +34,25 @@ namespace HappyHealthyCSharp
         //Edit below
         EditText BloodValue, SumBloodValue;
         ImageView micButton, saveButton, deleteButton;
-
+        private TextView header;
         DiabetesTABLE diaObject = null;
         Dictionary<string, string> dataNLPList;
 
         private EditText currentControl;
         private static AutoResetEvent autoEvent = new AutoResetEvent(false);
-
+        private ImageView addhiding;
+        private ImageView backBtt;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             SetTheme(Resource.Style.Base_Theme_AppCompat_Light);
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_diabetes);
-            BloodValue = FindViewById<EditText>(Resource.Id.sugar_value);
-            SumBloodValue = FindViewById<EditText>(Resource.Id.sugar_sum_value);
-            micButton = FindViewById<ImageView>(Resource.Id.ic_microphone_diabetes);
-            saveButton = FindViewById<ImageView>(Resource.Id.imageView_button_save_diabetes);
-            var header = FindViewById<TextView>(Resource.Id.textView_header_name_diabetes);
-            header.Text = "บันทึกค่าเบาหวาน";
-            var addhiding = FindViewById<ImageView>(Resource.Id.ClickAddDia);
-            addhiding.Visibility = ViewStates.Gone;
-            var backBtt = FindViewById<ImageView>(Resource.Id.imageView38);
-            backBtt.Click += delegate
-            {
-                Finish();
-                LetsVoiceRunning = false;
-            };
-            //deleteButton = FindViewById<ImageView>(Resource.Id.imageView_button_delete_diabetes);
-            // Create your application here
             var flagObjectJson = Intent.GetStringExtra("targetObject") ?? string.Empty;
             diaObject = string.IsNullOrEmpty(flagObjectJson) ? new DiabetesTABLE() { fbs_fbs = Extension.flagValue } : JsonConvert.DeserializeObject<DiabetesTABLE>(flagObjectJson);
-            if (diaObject.fbs_fbs == Extension.flagValue)
-            {
-                //deleteButton.Visibility = ViewStates.Invisible;
-                saveButton.Click += SaveValue;
-            }
-            else
-            {
-                InitialValueForUpdateEvent();
-                saveButton.Click += UpdateValue;
-                //deleteButton.Click += DeleteValue;
-            }
-            //end
-
+            InitializeControl();
+            InitializeControlEvent();
+            InitializeData();
             string rec = Android.Content.PM.PackageManager.FeatureMicrophone;
             if (rec != "android.hardware.microphone")
             {
@@ -101,6 +76,42 @@ namespace HappyHealthyCSharp
             }
             t2sEngine = new TTS(this);
         }
+
+        private void InitializeData()
+        {
+            header.Text = "บันทึกค่าเบาหวาน";
+            addhiding.Visibility = ViewStates.Gone;
+        }
+
+        private void InitializeControlEvent()
+        {
+            backBtt.Click += delegate
+            {
+                Finish();
+                LetsVoiceRunning = false;
+            };
+            if (diaObject.fbs_fbs == Extension.flagValue)
+            {
+                saveButton.Click += SaveValue;
+            }
+            else
+            {
+                InitialValueForUpdateEvent();
+                saveButton.Click += UpdateValue;
+            }
+        }
+
+        private void InitializeControl()
+        {
+            BloodValue = FindViewById<EditText>(Resource.Id.sugar_value);
+            SumBloodValue = FindViewById<EditText>(Resource.Id.sugar_sum_value);
+            micButton = FindViewById<ImageView>(Resource.Id.ic_microphone_diabetes);
+            saveButton = FindViewById<ImageView>(Resource.Id.imageView_button_save_diabetes);
+            header = FindViewById<TextView>(Resource.Id.textView_header_name_diabetes);
+            addhiding = FindViewById<ImageView>(Resource.Id.ClickAddDia);
+            backBtt = FindViewById<ImageView>(Resource.Id.imageView38);
+        }
+
         protected override void OnPause()
         {
             base.OnPause();
@@ -157,7 +168,7 @@ namespace HappyHealthyCSharp
                  , Extension.adFontSize
                  , delegate
                  {
-                     diaObject.Delete<DiabetesTABLE>(diaObject.fbs_id);
+                     diaObject.Delete(diaObject.fbs_id);
                      diaObject.TrySyncWithMySQL(this);
                      Finish();
                  }
@@ -241,7 +252,9 @@ namespace HappyHealthyCSharp
             var diaTable = new DiabetesTABLE();
             try
             {
-                diaTable.fbs_id = new SQLite.SQLiteConnection(Extension.sqliteDBPath).ExecuteScalar<int>($"SELECT MAX(fbs_id)+1 FROM DiabetesTABLE");
+                
+                diaTable.fbs_id = SQLiteInstance.GetConnection.ExecuteScalar<int>($"SELECT MAX(fbs_id)+1 FROM DiabetesTABLE");
+                //diaTable.fbs_id = new SQLite.SQLiteConnection(Extension.sqliteDBPath).ExecuteScalar<int>($"SELECT MAX(fbs_id)+1 FROM DiabetesTABLE");
             }
             catch
             {

@@ -78,7 +78,8 @@ namespace HappyHealthyCSharp
         }
         private decimal _lowValue;
         [SQLite.MaxLength(3)]
-        public decimal bp_lo {
+        public decimal bp_lo
+        {
             get
             {
                 return _lowValue;
@@ -124,7 +125,7 @@ namespace HappyHealthyCSharp
                 {
                     var ws = new HHCSService.HHCSService();
                     var presList = new List<HHCSService.TEMP_PressureTABLE>();
-                    new TEMP_PressureTABLE().Select<TEMP_PressureTABLE>($"SELECT * FROM TEMP_PressureTABLE WHERE ud_id = '{Extension.getPreference("ud_id", 0, c)}'").ForEach(row =>
+                    new TEMP_PressureTABLE().SelectAll(x => x.ud_id == Extension.getPreference("ud_id", 0, c)).ForEach(row =>
                     {
                         var wsObject = new HHCSService.TEMP_PressureTABLE();
                         wsObject.bp_id_pointer = row.bp_id_pointer;
@@ -152,9 +153,9 @@ namespace HappyHealthyCSharp
                         , new List<HHCSService.TEMP_KidneyTABLE>().ToArray()
                         , presList.ToArray());
                     presList.Clear();
-                    var sqliteInstance = new SQLiteConnection(Extension.sqliteDBPath);
-                    sqliteInstance.Execute($"DELETE FROM TEMP_PressureTABLE WHERE ud_id = {Extension.getPreference("ud_id", 0, c)}");
-                    sqliteInstance.Close();
+                    //var sqliteInstance = new SQLiteConnection(Extension.sqliteDBPath);
+                    SQLiteInstance.GetConnection.Execute($"DELETE FROM TEMP_PressureTABLE WHERE ud_id = {Extension.getPreference("ud_id", 0, c)}");
+                    //sqliteInstance.Close();
                 }
                 catch (Exception e)
                 {

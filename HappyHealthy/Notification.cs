@@ -192,7 +192,8 @@ namespace HappyHealthyCSharp
             */
             var alertContent = intent.GetStringExtra("content");
             var realId = intent.GetIntExtra("mid", 0);
-            var medObject = new MedicineTABLE().Select<MedicineTABLE>($"SELECT * From MedicineTABLE where ma_id = {realId}")[0];
+            var medObject = new MedicineTABLE().SelectOne(x => x.ma_id == realId);
+            //var medObject = new MedicineTABLE().SelectAll<MedicineTABLE>($"MedicineTABLE",x=>x.ma_id == realId)[0];
             var medJson = JsonConvert.SerializeObject(medObject);
             var when = JavaSystem.CurrentTimeMillis();
 

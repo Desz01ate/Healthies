@@ -88,7 +88,7 @@ namespace HappyHealthyCSharp
                 {
                     var ws = new HHCSService.HHCSService();
                     var kidList = new List<HHCSService.TEMP_KidneyTABLE>();
-                    new TEMP_KidneyTABLE().Select<TEMP_KidneyTABLE>($"SELECT * FROM TEMP_KidneyTABLE WHERE ud_id = '{Extension.getPreference("ud_id", 0, c)}'").ForEach(row =>
+                    new TEMP_KidneyTABLE().SelectAll(x=>x.ud_id == Extension.getPreference("ud_id", 0, c)).ForEach(row =>
                     {
                         var wsObject = new HHCSService.TEMP_KidneyTABLE();
                         wsObject.ckd_id_pointer = row.ckd_id_pointer;
@@ -122,9 +122,9 @@ namespace HappyHealthyCSharp
                         , kidList.ToArray()
                         , new List<HHCSService.TEMP_PressureTABLE>().ToArray());
                     kidList.Clear();
-                    var sqliteInstance = new SQLiteConnection(Extension.sqliteDBPath);
-                    sqliteInstance.Execute($"DELETE FROM TEMP_KidneyTABLE WHERE ud_id = {Extension.getPreference("ud_id", 0, c)}");
-                    sqliteInstance.Close();
+                    //var sqliteInstance = new SQLiteConnection(Extension.sqliteDBPath);
+                    SQLiteInstance.GetConnection.Execute($"DELETE FROM TEMP_KidneyTABLE WHERE ud_id = {Extension.getPreference("ud_id", 0, c)}");
+                    //sqliteInstance.Close();
                 }
                 catch (Exception e)
                 {

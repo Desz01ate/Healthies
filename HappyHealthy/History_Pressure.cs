@@ -14,11 +14,12 @@ using Newtonsoft.Json;
 
 namespace HappyHealthyCSharp
 {
-    [Activity(Label = "History_Diabetes",ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
+    [Activity(Label = "History_Diabetes", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
     public class History_Pressure : ListActivity
     {
         ListView listView;
         PressureTABLE bpTable;
+        ImageView add, back;
         JavaList<IDictionary<string, object>> bpList;
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -26,15 +27,27 @@ namespace HappyHealthyCSharp
             SetTheme(Resource.Style.Base_Theme_AppCompat_Light);
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_history_pressure);
-            var add = FindViewById<ImageView>(Resource.Id.imageView41);
-            add.Click += delegate { StartActivity(new Intent(this, typeof(Pressure))); };
-            var back = FindViewById<ImageView>(Resource.Id.imageView38);
-            back.Click += delegate { Finish(); };
-            //ListView = FindViewById<ListView>(Resource.Id.listView);
+            InitializeControl();
+            InitializeControlEvent();
+
             bpTable = new PressureTABLE();
-            ListView.ItemClick += onItemClick;
+
             SetListView();
         }
+
+        private void InitializeControlEvent()
+        {
+            add.Click += delegate { StartActivity(new Intent(this, typeof(Pressure))); };
+            back.Click += delegate { Finish(); };
+            ListView.ItemClick += onItemClick;
+        }
+
+        private void InitializeControl()
+        {
+            add = FindViewById<ImageView>(Resource.Id.imageView41);
+            back = FindViewById<ImageView>(Resource.Id.imageView38);
+        }
+
         protected override void OnResume()
         {
             base.OnResume();
@@ -43,9 +56,10 @@ namespace HappyHealthyCSharp
         private void onItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
             //bpList[e.Position].TryGetValue("bp_up", out object bpValue);
-            bpList[e.Position].TryGetValue("bp_id", out object bpID);
+            bpList[e.Position].TryGetValue("bp_id", out dynamic bpID);
             var pressureObject = new PressureTABLE();
-            pressureObject = pressureObject.Select<PressureTABLE>($"SELECT * From PressureTABLE where bp_id = {bpID}")[0];
+            pressureObject = pressureObject.SelectOne(x => x.bp_id == bpID);
+            //pressureObject = pressureObject.SelectAll<PressureTABLE>($"PressureTABLE",x=>x.bp_id == bpID)[0];
             Extension.CreateDialogue(this, "กรุณาเลือกรายการที่ต้องการจะดำเนินการ",
                 delegate
                 {
@@ -63,7 +77,7 @@ namespace HappyHealthyCSharp
                     , Extension.adFontSize
                     , delegate
                     {
-                        pressureObject.Delete<PressureTABLE>(pressureObject.bp_id);
+                        pressureObject.Delete(pressureObject.bp_id);
                         pressureObject.TrySyncWithMySQL(this);
                         SetListView();
                     }
@@ -74,7 +88,7 @@ namespace HappyHealthyCSharp
         }
         public void SetListView()
         {
-            bpList = bpTable.GetJavaList<PressureTABLE>($"SELECT * FROM PressureTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)} ORDER BY BP_TIME",bpTable.Column);
+            bpList = bpTable.GetJavaList<PressureTABLE>($"SELECT * FROM PressureTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)} ORDER BY BP_TIME", bpTable.Column);
             //bpList = bpTable.getPressureList($"SELECT * FROM PressureTABLE WHERE UD_ID = {GlobalFunction.getPreference("ud_id", "", this)} ORDER BY BP_TIME");
             ListAdapter = new SimpleAdapter(this, bpList, Resource.Layout.history_diabetes, new string[] { "bp_time" }, new int[] { Resource.Id.date }); //"D_DateTime",date
             ListView.Adapter = ListAdapter;

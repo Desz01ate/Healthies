@@ -39,8 +39,9 @@ namespace HappyHealthyCSharp
         EditText field_albumin_blood;
         EditText field_albumin_urine;
         EditText field_phosphorus_blood;
-        ImageView saveButton, deleteButton;
+        ImageView saveButton, addhiding, back;
         ImageView micButton;
+        TextView header;
         private bool LetsVoiceRunning;
         private EditText currentControl;
         private static AutoResetEvent autoEvent = new AutoResetEvent(false);
@@ -51,35 +52,15 @@ namespace HappyHealthyCSharp
             SetTheme(Resource.Style.Base_Theme_AppCompat_Light);
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_kidney);
-            var header = FindViewById<TextView>(Resource.Id.textView_header_name_kidey);
-            header.Text = "บันทึกค่าไต";
-            var addhiding = FindViewById<ImageView>(Resource.Id.imageView41);
-            addhiding.Visibility = ViewStates.Gone;
-            var back = FindViewById<ImageView>(Resource.Id.imageView38);
-            back.Click += delegate {
-                LetsVoiceRunning = false;
-                Finish();
-            };
-            field_gfr = FindViewById<EditText>(Resource.Id.ckd_gfr);
-            field_creatinine = FindViewById<EditText>(Resource.Id.ckd_creatinine);
-            field_bun = FindViewById<EditText>(Resource.Id.ckd_bun);
-            field_sodium = FindViewById<EditText>(Resource.Id.ckd_sodium);
-            field_potassium = FindViewById<EditText>(Resource.Id.ckd_potassium);
-            field_albumin_blood = FindViewById<EditText>(Resource.Id.ckd_albumin_blood);
-            field_albumin_urine = FindViewById<EditText>(Resource.Id.ckd_albumin_urine);
-            field_phosphorus_blood = FindViewById<EditText>(Resource.Id.ckd_phosphorus_blood);
-            saveButton = FindViewById<ImageView>(Resource.Id.imageView_button_save_kidney);
-            //deleteButton = FindViewById<ImageView>(Resource.Id.imageView_button_delete_kidney);
-            micButton = FindViewById<ImageView>(Resource.Id.ic_microphone_diabetes);
-            //code goes below
             var flagObjectJson = Intent.GetStringExtra("targetObject") ?? string.Empty;
             kidneyObject = string.IsNullOrEmpty(flagObjectJson) ? new KidneyTABLE() { ckd_gfr = Extension.flagValue } : JsonConvert.DeserializeObject<KidneyTABLE>(flagObjectJson);
+            InitializeControl();
+            InitializeControlEvent();
+            InitializeData();
 
-            //end
             string rec = Android.Content.PM.PackageManager.FeatureMicrophone;
             if (rec != "android.hardware.microphone")
             {
-                // no microphone, no recording. Disable the button and output an alert
                 Extension.CreateDialogue(this, "ไม่พบไมโครโฟนบนระบบของคุณ").Show();
             }
             else
@@ -95,9 +76,21 @@ namespace HappyHealthyCSharp
                 };
 
             }
+            if (Extension.getPreference("autosound", false, this) && onSaveState)
+                AutomationTalker();
+            t2sEngine = new TTS(this);
+        }
+
+        private void InitializeData()
+        {
+            addhiding.Visibility = ViewStates.Gone;
+            header.Text = "บันทึกค่าไต";
+        }
+
+        private void InitializeControlEvent()
+        {
             if (kidneyObject.ckd_gfr == Extension.flagValue)
             {
-                //deleteButton.Visibility = ViewStates.Invisible;
                 saveButton.Click += SaveValue;
                 onSaveState = true;
             }
@@ -105,12 +98,29 @@ namespace HappyHealthyCSharp
             {
                 InitialValueForUpdateEvent();
                 saveButton.Click += UpdateValue;
-                //deleteButton.Click += DeleteValue;
-
             }
-            if (Extension.getPreference("autosound", false, this) && onSaveState)
-                AutomationTalker();
-            t2sEngine = new TTS(this);
+            back.Click += delegate
+            {
+                LetsVoiceRunning = false;
+                Finish();
+            };
+        }
+
+        private void InitializeControl()
+        {
+            field_gfr = FindViewById<EditText>(Resource.Id.ckd_gfr);
+            field_creatinine = FindViewById<EditText>(Resource.Id.ckd_creatinine);
+            field_bun = FindViewById<EditText>(Resource.Id.ckd_bun);
+            field_sodium = FindViewById<EditText>(Resource.Id.ckd_sodium);
+            field_potassium = FindViewById<EditText>(Resource.Id.ckd_potassium);
+            field_albumin_blood = FindViewById<EditText>(Resource.Id.ckd_albumin_blood);
+            field_albumin_urine = FindViewById<EditText>(Resource.Id.ckd_albumin_urine);
+            field_phosphorus_blood = FindViewById<EditText>(Resource.Id.ckd_phosphorus_blood);
+            saveButton = FindViewById<ImageView>(Resource.Id.imageView_button_save_kidney);
+            micButton = FindViewById<ImageView>(Resource.Id.ic_microphone_diabetes);
+            header = FindViewById<TextView>(Resource.Id.textView_header_name_kidey);
+            addhiding = FindViewById<ImageView>(Resource.Id.imageView41);
+            back = FindViewById<ImageView>(Resource.Id.imageView38);
         }
 
         private async Task AutomationTalker()
@@ -223,7 +233,7 @@ namespace HappyHealthyCSharp
                  , Extension.adFontSize
                  , delegate
                  {
-                     kidneyObject.Delete<KidneyTABLE>(kidneyObject.ckd_id);
+                     kidneyObject.Delete(kidneyObject.ckd_id);
                      kidneyObject.TrySyncWithMySQL(this);
                      Finish();
                  }
@@ -256,7 +266,7 @@ namespace HappyHealthyCSharp
             var kidney = new KidneyTABLE();
             try
             {
-                kidney.ckd_id = new SQLite.SQLiteConnection(Extension.sqliteDBPath).ExecuteScalar<int>($"SELECT MAX(ckd_id)+1 FROM KidneyTABLE");
+                kidney.ckd_id = SQLiteInstance.GetConnection.ExecuteScalar<int>($"SELECT MAX(ckd_id)+1 FROM KidneyTABLE");
             }
             catch
             {

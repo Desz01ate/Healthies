@@ -24,6 +24,11 @@ namespace HappyHealthyCSharp
         private EditText BPLow;
         private EditText BPUp;
         private EditText HeartRate;
+        private ImageView saveButton;
+        private TextView header;
+        private ImageView addhiding;
+        private ImageView back;
+        private ImageView micButton;
         PressureTABLE pressureObject;
         private bool isRecording, LetsVoiceRunning;
         private readonly int VOICE = 10;
@@ -38,29 +43,15 @@ namespace HappyHealthyCSharp
             SetTheme(Resource.Style.Base_Theme_AppCompat_Light);
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_pressure);
-            // Create your application here
-            BPLow = FindViewById<EditText>(Resource.Id.P_costPressureDown);
-            BPUp = FindViewById<EditText>(Resource.Id.P_costPressureTop);
-            HeartRate = FindViewById<EditText>(Resource.Id.P_HeartRate);
-            var saveButton = FindViewById<ImageView>(Resource.Id.imageView_button_save_pressure);
-            var header = FindViewById<TextView>(Resource.Id.textView_header_name_pressure);
-            header.Text = "บันทึกค่าความดัน";
-            var addhiding = FindViewById<ImageView>(Resource.Id.imageView41);
-            addhiding.Visibility = ViewStates.Gone;
-            var back = FindViewById<ImageView>(Resource.Id.imageView38);
-            back.Click +=delegate {
-                LetsVoiceRunning = false;
-                Finish();
-            };
-            var micButton = FindViewById<ImageView>(Resource.Id.ic_microphone_pressure);
-            //code goes below
             var flagObjectJson = Intent.GetStringExtra("targetObject") ?? string.Empty;
             pressureObject = string.IsNullOrEmpty(flagObjectJson) ? new PressureTABLE() { bp_hr = Extension.flagValue } : JsonConvert.DeserializeObject<PressureTABLE>(flagObjectJson);
-            //end
+
+            InitializeControl();
+            InitializeControlEvent();
+            InitializeData();
             string rec = Android.Content.PM.PackageManager.FeatureMicrophone;
             if (rec != "android.hardware.microphone")
             {
-                // no microphone, no recording. Disable the button and output an alert
                 Extension.CreateDialogue(this, "ไม่พบไมโครโฟนบนระบบของคุณ").Show();
             }
             else
@@ -70,11 +61,22 @@ namespace HappyHealthyCSharp
                     isRecording = !isRecording;
                     if (isRecording)
                     {
-                        // StartMicrophone("");
                         AutomationTalker();
                     }
                 };
             }
+
+            if (Extension.getPreference("autosound", false, this) && onSaveState)
+                AutomationTalker();
+        }
+
+        private void InitializeControlEvent()
+        {
+            back.Click += delegate
+            {
+                LetsVoiceRunning = false;
+                Finish();
+            };
             if (pressureObject.bp_hr == Extension.flagValue)
             {
                 //deleteButton.Visibility = ViewStates.Invisible;
@@ -87,9 +89,26 @@ namespace HappyHealthyCSharp
                 saveButton.Click += UpdateValue;
                 //deleteButton.Click += DeleteValue;
             }
-            if (Extension.getPreference("autosound", false, this) && onSaveState)
-                AutomationTalker();
         }
+
+        private void InitializeData()
+        {
+            header.Text = "บันทึกค่าความดัน";
+            addhiding.Visibility = ViewStates.Gone;
+        }
+
+        private void InitializeControl()
+        {
+            BPLow = FindViewById<EditText>(Resource.Id.P_costPressureDown);
+            BPUp = FindViewById<EditText>(Resource.Id.P_costPressureTop);
+            HeartRate = FindViewById<EditText>(Resource.Id.P_HeartRate);
+            saveButton = FindViewById<ImageView>(Resource.Id.imageView_button_save_pressure);
+            header = FindViewById<TextView>(Resource.Id.textView_header_name_pressure);
+            addhiding = FindViewById<ImageView>(Resource.Id.imageView41);
+            back = FindViewById<ImageView>(Resource.Id.imageView38);
+            micButton = FindViewById<ImageView>(Resource.Id.ic_microphone_pressure);
+        }
+
         protected override void OnPause()
         {
             base.OnPause();
@@ -221,7 +240,7 @@ namespace HappyHealthyCSharp
                  , Extension.adFontSize
                  , delegate
                  {
-                     pressureObject.Delete<PressureTABLE>(pressureObject.bp_id);
+                     pressureObject.Delete(pressureObject.bp_id);
                      pressureObject.TrySyncWithMySQL(this);
                      Finish();
                  }
@@ -260,7 +279,7 @@ namespace HappyHealthyCSharp
             var bpTable = new PressureTABLE();
             try
             {
-                bpTable.bp_id = new SQLite.SQLiteConnection(Extension.sqliteDBPath).ExecuteScalar<int>($"SELECT MAX(bp_id)+1 FROM PressureTABLE");
+                bpTable.bp_id = SQLiteInstance.GetConnection.ExecuteScalar<int>($"SELECT MAX(bp_id)+1 FROM PressureTABLE");
             }
             catch
             {
@@ -281,6 +300,6 @@ namespace HappyHealthyCSharp
         {
             this.Finish();
         }
-       
+
     }
 }

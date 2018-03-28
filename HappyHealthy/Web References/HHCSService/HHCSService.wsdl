@@ -517,10 +517,10 @@
   </wsdl:binding>
   <wsdl:service name="HHCSService">
     <wsdl:port name="HHCSServiceSoap" binding="tns:HHCSServiceSoap">
-      <soap:address location="http://172.20.103.17/HHCSService/HHCSService.asmx" />
+      <soap:address location="http://172.16.161.153/HHCSService/HHCSService.asmx" />
     </wsdl:port>
     <wsdl:port name="HHCSServiceSoap12" binding="tns:HHCSServiceSoap12">
-      <soap12:address location="http://172.20.103.17/HHCSService/HHCSService.asmx" />
+      <soap12:address location="http://172.16.161.153/HHCSService/HHCSService.asmx" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

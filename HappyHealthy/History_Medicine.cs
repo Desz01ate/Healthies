@@ -19,24 +19,41 @@ namespace HappyHealthyCSharp
     {
         MedicineTABLE pillTable;
         JavaList<IDictionary<string, object>> medList;
+        private ImageView backbtt;
+        private ImageView addbtt;
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             SetTheme(Resource.Style.Base_Theme_AppCompat_Light);
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_history_pill);
             // Create your application here
-            var backbtt = FindViewById<ImageView>(Resource.Id.imageViewbackpill);
-            backbtt.Click += delegate {
+            InitializeControl();
+            InitializeControlEvent();
+            pillTable = new MedicineTABLE();
+            SetListView();
+        }
+
+        private void InitializeControlEvent()
+        {
+            backbtt.Click += delegate
+            {
                 this.Finish();
             };
-            var addbtt = FindViewById<ImageView>(Resource.Id.imageViewAddPill);
+
             addbtt.Click += delegate
             {
                 StartActivity(typeof(Medicine));
             };
             ListView.ItemClick += onItemClick;
-            pillTable = new MedicineTABLE();
         }
+
+        private void InitializeControl()
+        {
+            backbtt = FindViewById<ImageView>(Resource.Id.imageViewbackpill);
+            addbtt = FindViewById<ImageView>(Resource.Id.imageViewAddPill);
+        }
+
         protected override void OnResume()
         {
             base.OnResume();
@@ -44,19 +61,10 @@ namespace HappyHealthyCSharp
         }
         private void onItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
-            /*
-            //pillList[e.Position].TryGetValue("ma_name", out object pillValue);
-            pillList[e.Position].TryGetValue("ma_id", out object pillID);
-            var pillObject = new MedicineTABLE();
-            pillObject = pillObject.Select<MedicineTABLE>($"SELECT * From MedicineTABLE where ma_id = {pillID}")[0];
-            var jsonObject = JsonConvert.SerializeObject(pillObject);
-            var Intent = new Intent(this, typeof(Medicine));
-            Intent.PutExtra("targetObject", jsonObject);
-            StartActivity(Intent);
-            */
-            medList[e.Position].TryGetValue("ma_id", out object medID);
+            medList[e.Position].TryGetValue("ma_id", out dynamic medID);
             var medObject = new MedicineTABLE();
-            medObject = medObject.Select<MedicineTABLE>($"SELECT * From MedicineTABLE where ma_id = {medID}")[0];
+            medObject = medObject.SelectOne(x => x.ma_id == medID);
+            //medObject = medObject.SelectAll<MedicineTABLE>($"MedicineTABLE",x=>x.ma_id == medID)[0];
             Extension.CreateDialogue(this, "กรุณาเลือกรายการที่ต้องการจะดำเนินการ",
                 delegate
                 {
@@ -78,7 +86,7 @@ namespace HappyHealthyCSharp
                         //ContentResolver.Delete(deleteUri, null, null);
                         var time = MedicineTABLE.GetCustom;
                         CustomNotification.CancelAlarmManager(this, medObject.ma_id, medObject.ma_name, time);
-                        medObject.Delete<MedicineTABLE>(medObject.ma_id);
+                        medObject.Delete(medObject.ma_id);
                         SetListView();
                     }
                     , delegate { }

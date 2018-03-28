@@ -48,7 +48,7 @@ namespace HappyHealthyCSharp
             {
                 Extension.setPreference("ud_email", id.Text, this);
                 Extension.setPreference("ud_pass", pw.Text, this);
-                if (new UserTABLE().Select<UserTABLE>($"SELECT * FROM UserTABLE WHERE ud_email = '{id.Text}'").Count == 0)
+                if (new UserTABLE().SelectAll(x=>x.ud_email == id.Text).Count == 0)
                 {
                     progressDialog.SetProgressStyle(ProgressDialogStyle.Spinner);
                     progressDialog.SetTitle("ดาวน์โหลดข้อมูล");
@@ -80,7 +80,7 @@ namespace HappyHealthyCSharp
         {
             try
             {
-                if (AccountHelper.ComparePassword(pw, new UserTABLE().Select<UserTABLE>($"SELECT * FROM UserTABLE WHERE ud_email = '{id}'")[0].ud_pass))
+                if (AccountHelper.ComparePassword(pw, new UserTABLE().SelectOne(x=>x.ud_email == id).ud_pass))
                 {
                     Initialization(id, pw);
                     StartActivity(typeof(MainActivity));
@@ -100,12 +100,12 @@ namespace HappyHealthyCSharp
 
         public void Initialization(string id, string password)
         {
-            var conn = new SQLiteConnection(Extension.sqliteDBPath);
-            var sql = $@"select * from UserTABLE where ud_email = '{id}'";
-            var result = conn.Query<UserTABLE>(sql);
+            var conn = SQLiteInstance.GetConnection;//new SQLiteConnection(Extension.sqliteDBPath);
+            //var sql = $@"select * from UserTABLE where ud_email = '{id}'";
+            var result = new UserTABLE().SelectOne( x => x.ud_email == id);//conn.Query<UserTABLE>(sql);
             //Extension.setPreference("ud_email", id, this);
             //Extension.setPreference("ud_pass", password, this);
-            Extension.setPreference("ud_id", result[0].ud_id, this);
+            Extension.setPreference("ud_id", result.ud_id, this);
         }
         public static Context getContext()
         {

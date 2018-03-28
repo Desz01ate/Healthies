@@ -172,7 +172,7 @@ namespace HappyHealthyCSharp
         public void ClickMedicine(object sender, EventArgs e)
         {
             //GlobalFunction.createDialog(this, "Not implemented").Show();
-            var user = new UserTABLE().Select<UserTABLE>($@"SELECT * FROM UserTABLE WHERE UD_ID = '{Extension.getPreference("ud_id", 0, this)}'")[0];
+            var user = new UserTABLE().SelectOne(x=>x.ud_id == Extension.getPreference("ud_id", 0, this));
             if (!user.ud_bf_time.TimeValidate() || !user.ud_lu_time.TimeValidate() || !user.ud_dn_time.TimeValidate() || !user.ud_sl_time.TimeValidate())
             {
                 Extension.CreateDialogue(this, "กรุณาตั้งค่าเวลาทานอาหาร และเวลาเข้านอน ก่อนใช้งานการบันทึกแจ้งเตือนทานยา").Show();

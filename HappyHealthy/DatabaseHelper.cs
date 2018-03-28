@@ -20,27 +20,6 @@ namespace HappyHealthyCSharp
     {
         public abstract List<string> Column { get; }
         virtual public void TrySyncWithMySQL(Context c) { throw new NotImplementedException(); }
-        virtual public List<T> Select<T>(string query) where T : new()
-        {
-            var conn = new SQLiteConnection(Extension.sqliteDBPath);
-            var result = conn.Query<T>(query);
-            conn.Close();
-            return result;
-        }
-        virtual public bool Delete<T>(int id) where T : new()
-        {
-            try
-            {
-                var conn = new SQLiteConnection(Extension.sqliteDBPath);
-                var result = conn.Delete<T>(id);
-                conn.Close();
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
         virtual public JavaList<IDictionary<string, object>> GetJavaList<T>(string queryCustomized, List<string> columnTag) where T : new()
         {
             #region MySQL
@@ -67,7 +46,7 @@ namespace HappyHealthyCSharp
             */
             #endregion
             var dataList = new JavaList<IDictionary<string, object>>();
-            var conn = new SQLiteConnection(Extension.sqliteDBPath);
+            var conn = SQLiteInstance.GetConnection;//new SQLiteConnection(Extension.sqliteDBPath);
             var queryResult = conn.Query<T>(queryCustomized);
             queryResult.ForEach(dataRow =>
             {
@@ -78,19 +57,77 @@ namespace HappyHealthyCSharp
                 });
                 dataList.Add(data);
             }); //a little obfuscate code, try solve it for a little challenge :P
-            conn.Close();
+            //conn.Close();
             return dataList;
         }
     }
     static class DatabaseHelperExtension
     {
+        /// <summary>
+        /// This function will perform an SQL-like in LINQ manner to get the result for 1 row, no matter how much the data it got
+        /// </summary>
+        /// <typeparam name="T">Generic type of caller instance</typeparam>
+        /// <param name="baseobj">Base caller</param>
+        /// <param name="tableName">Table name that is going to query</param>
+        /// <param name="predicate">A predicate of the data, think of it as WHERE clause on SQL</param>
+        /// <returns></returns>
+        public static T SelectOne<T>(this T baseobj, Func<T, bool> predicate) where T : new()
+        {
+            var conn = SQLiteInstance.GetConnection;//new SQLiteConnection(Extension.sqliteDBPath);
+            var result = conn.Query<T>($@"SELECT * FROM {baseobj.GetType().Name}").Where(predicate).FirstOrDefault();
+            //a basic code would be like : conn.Query<T>($@"SELECT * FROM Foo").Where(x=>x.id == 1).FirstOrDefault();
+            //that is similar to : SELECT * FROM Foo WHERE id = 1
+            //please give a predicate that will return only one row.
+            //conn.Close();
+            return result;
+        }
+        /// <summary>
+        /// This function will perform an SQL-like in LINQ manner to get the result for many rows.
+        /// </summary>
+        /// <typeparam name="T">Generic type of caller instance</typeparam>
+        /// <param name="baseobj">Base caller</param>
+        /// <param name="tableName">Table name that is going to query</param>
+        /// <param name="predicate">A predicate of the data, think of it as WHERE clause on SQL</param>
+        /// <returns></returns>
+        public static List<T> SelectAll<T>(this T baseobj, Func<T, bool> predicate = null) where T : new()
+        {
+            var conn = SQLiteInstance.GetConnection;//new SQLiteConnection(Extension.sqliteDBPath);
+            var result = conn.Query<T>($@"SELECT * FROM {baseobj.GetType().Name}");
+            //a basic code would be like : conn.Query<T>($@"SELECT * FROM Foo");
+            //that is similar to : SELECT * FROM Foo;
+            //then we determine the predicate parameter if it's null or not
+            //if it's not then we filter the data with predicate or else we return the full-dataset
+            //conn.Close();
+            if (predicate == null)
+                //return SELECT * FROM Foo;
+                return result;
+            else
+                //assume that the predicate is x=>x.id >= 1 && x.id <= 10
+                //return SELECT * FROM Foo WHERE id >= 1 AND id <= 10
+                //by using this method we can easily apply the logic onto the dataset (but that can't do the complex query ofcourse)
+                return result.Where(predicate).ToList();
+        }
+        public static bool Delete<T>(this T baseobj,int id) where T : new()
+        {
+            try
+            {
+                var conn = SQLiteInstance.GetConnection;//new SQLiteConnection(Extension.sqliteDBPath);
+                var result = conn.Delete<T>(id);
+                //conn.Close();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
         public static bool Update(this DatabaseHelper data)
         {
             try
             {
-                var conn = new SQLiteConnection(Extension.sqliteDBPath);
+                var conn = SQLiteInstance.GetConnection;//new SQLiteConnection(Extension.sqliteDBPath);
                 var result = conn.Update(data);
-                conn.Close();
+                //conn.Close();
                 return true;
             }
             catch
@@ -102,9 +139,9 @@ namespace HappyHealthyCSharp
         {
             try
             {
-                var conn = new SQLiteConnection(Extension.sqliteDBPath);
+                var conn = SQLiteInstance.GetConnection;//new SQLiteConnection(Extension.sqliteDBPath);
                 var result = conn.Insert(data);
-                conn.Close();
+                //conn.Close();
                 return true;
             }
             catch (Exception e)
@@ -118,7 +155,7 @@ namespace HappyHealthyCSharp
 
             try
             {
-                var sqliteConn = new SQLiteConnection(Extension.sqliteDBPath);
+                var sqliteConn = SQLiteInstance.GetConnection;//new SQLiteConnection(Extension.sqliteDBPath);
                 sqliteConn.CreateTable<DiabetesTABLE>();
                 sqliteConn.CreateTable<DoctorTABLE>();
                 sqliteConn.CreateTable<FoodTABLE>();
@@ -128,7 +165,7 @@ namespace HappyHealthyCSharp
                 sqliteConn.CreateTable<SummaryDiabetesTABLE>();
                 sqliteConn.CreateTable<UserTABLE>();
                 CreateTriggers(sqliteConn);
-                sqliteConn.Close();
+                //sqliteConn.Close();
                 return true;
             }
             catch (Exception e)
@@ -248,7 +285,7 @@ namespace HappyHealthyCSharp
                 if (userData != null)
                 {
                     var userID = -999;
-                    var sqliteInstance = new SQLiteConnection(Extension.sqliteDBPath);
+                    var sqliteInstance = SQLiteInstance.GetConnection;//new SQLiteConnection(Extension.sqliteDBPath);
                     foreach (DataRow row in ((DataSet)userData).Tables["UserTABLE"].Rows)
                     {
                         var tempUser = new UserTABLE();
@@ -308,7 +345,7 @@ namespace HappyHealthyCSharp
                         tempPressure.Insert();
                     }
                     sqliteInstance.Execute($"DELETE FROM TEMP_DiabetesTABLE WHERE ud_id = {userID}");
-                    sqliteInstance.Execute($"DELETE FROM TEMP_KidneyTABLE WHERE ud_id = {userID}");
+                    sqliteInstance.Execute($"DELETE FROM TEMP_KidneyTABLE   WHERE ud_id = {userID}");
                     sqliteInstance.Execute($"DELETE FROM TEMP_PressureTABLE WHERE ud_id = {userID}");
                     return true;
                 }

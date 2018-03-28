@@ -136,6 +136,7 @@
     <Compile Include="AndroidImageAdapter.cs" />
     <Compile Include="BitmapHelpers.cs" />
     <Compile Include="CalendarHelper.cs" />
+    <Compile Include="DatabaseExtension.cs" />
     <Compile Include="Develop.cs" />
     <Compile Include="Diabetes.cs" />
     <Compile Include="Doctor.cs" />
@@ -144,6 +145,7 @@
     <Compile Include="IDatabaseSync.cs" />
     <Compile Include="ILocalActivity.cs" />
     <Compile Include="Service.cs" />
+    <Compile Include="SQLiteSInstance.cs" />
     <Compile Include="SummaryDiabetesTABLE.cs" />
     <Compile Include="FoodExchange.cs" />
     <Compile Include="PasswordReset.cs" />
@@ -1242,10 +1244,10 @@
     <AndroidResource Include="Resources\drawable-hdpi\buttonsavefoodex.png" />
   </ItemGroup>
   <ItemGroup>
-    <WebReferenceUrl Include="http://172.20.103.17/HHCSService/HHCSService.asmx">
+    <WebReferenceUrl Include="http://172.16.161.153/HHCSService/HHCSService.asmx">
       <UrlBehavior>Dynamic</UrlBehavior>
       <RelPath>Web References\HHCSService\</RelPath>
-      <UpdateFromURL>http://172.20.103.17/HHCSService/HHCSService.asmx</UpdateFromURL>
+      <UpdateFromURL>http://172.16.161.153/HHCSService/HHCSService.asmx</UpdateFromURL>
       <ServiceLocationURL>
       </ServiceLocationURL>
       <CachedDynamicPropName>
