@@ -86,7 +86,7 @@ namespace HappyHealthyCSharp
                         //ContentResolver.Delete(deleteUri, null, null);
                         var time = MedicineTABLE.GetCustom;
                         CustomNotification.CancelAlarmManager(this, medObject.ma_id, medObject.ma_name, time);
-                        medObject.Delete(medObject.ma_id);
+                        medObject.Delete();
                         SetListView();
                     }
                     , delegate { }
@@ -96,7 +96,7 @@ namespace HappyHealthyCSharp
         }
         public void SetListView()
         {
-            medList = pillTable.GetJavaList<MedicineTABLE>($"SELECT * FROM MedicineTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)}",new MedicineTABLE().Column);
+            medList = pillTable.SelectAll(x => x.ud_id == Extension.getPreference("ud_id", 0, this)).ToList().ToJavaList(pillTable.Column);//pillTable.GetJavaList<MedicineTABLE>($"SELECT * FROM MedicineTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)}",new MedicineTABLE().Column);
             //pillList = pillTable.getPillList($"SELECT * FROM PillTABLE WHERE UD_ID = {GlobalFunction.getPreference("ud_id", "", this)}");
             ListAdapter = new SimpleAdapter(this, medList, Resource.Layout.history_pill, new string[] { "ma_name","ma_desc" }, new int[] { Resource.Id.his_pill_name,Resource.Id.his_pill_desc }); //"D_DateTime",date
             ListView.Adapter = ListAdapter;

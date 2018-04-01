@@ -233,7 +233,7 @@ namespace HappyHealthyCSharp
                  , Extension.adFontSize
                  , delegate
                  {
-                     kidneyObject.Delete(kidneyObject.ckd_id);
+                     kidneyObject.Delete();
                      kidneyObject.TrySyncWithMySQL(this);
                      Finish();
                  }

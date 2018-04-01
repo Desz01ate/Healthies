@@ -90,17 +90,16 @@ namespace HappyHealthyCSharp
                         user.ud_pass = (string)returnData[1];
                         if (user.Insert())
                         {
+                            var conn = SQLiteInstance.GetConnection;//new SQLiteConnection(Extension.sqliteDBPath);
+                            var sql = $@"select * from UserTABLE where ud_email = '{email}'";
+                            var result = conn.Query<UserTABLE>(sql);
+                            Extension.setPreference("ud_email", email.Text, this);
+                            Extension.setPreference("ud_pass", pw.Text, this);
+                            Extension.setPreference("ud_id", user.ud_id, this);
                             Extension.CreateDialogue(this, "การลงทะเบียนเสร็จสมบูรณ์", delegate
                             {
-                                var conn = SQLiteInstance.GetConnection;//new SQLiteConnection(Extension.sqliteDBPath);
-                                var sql = $@"select * from UserTABLE where ud_email = '{email}'";
-                                var result = conn.Query<UserTABLE>(sql);
-                                Extension.setPreference("ud_email", email.Text, this);
-                                Extension.setPreference("ud_pass", pw.Text, this);
-                                Extension.setPreference("ud_id", user.ud_id, this);
                                 StartActivity(typeof(MainActivity));
                                 this.Finish();
-
                             }).Show();
                         }
                     }

@@ -164,5 +164,19 @@ namespace HappyHealthyCSharp
             });
             t.Start();
         }
+        public override bool Delete()
+        {
+            try
+            {
+                var conn = SQLiteInstance.GetConnection;//new SQLiteConnection(Extension.sqliteDBPath);
+                var result = conn.Delete<PressureTABLE>(this.bp_id);
+                //conn.Close();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }

@@ -240,7 +240,7 @@ namespace HappyHealthyCSharp
                  , Extension.adFontSize
                  , delegate
                  {
-                     pressureObject.Delete(pressureObject.bp_id);
+                     pressureObject.Delete();
                      pressureObject.TrySyncWithMySQL(this);
                      Finish();
                  }

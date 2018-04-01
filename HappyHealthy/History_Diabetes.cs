@@ -72,7 +72,7 @@ namespace HappyHealthyCSharp
                     , Extension.adFontSize
                     , delegate
                     {
-                        diaObject.Delete(diaObject.fbs_id);
+                        diaObject.Delete();
                         diaObject.TrySyncWithMySQL(this);
                         SetListView();
                     }
@@ -83,7 +83,7 @@ namespace HappyHealthyCSharp
         }
         public void SetListView()
         {
-            diabList = diaTable.GetJavaList<DiabetesTABLE>($"SELECT * FROM DiabetesTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)} ORDER BY FBS_TIME", new DiabetesTABLE().Column);
+            diabList = diaTable.SelectAll(x => x.ud_id == Extension.getPreference("ud_id", 0, this)).OrderBy(x => x.fbs_time).ToList().ToJavaList(diaTable.Column);//diaTable.GetJavaList<DiabetesTABLE>($"SELECT * FROM DiabetesTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)} ORDER BY FBS_TIME", new DiabetesTABLE().Column);
             ListAdapter = new SimpleAdapter(this, diabList, Resource.Layout.history_diabetes, new string[] { "fbs_time" }, new int[] { Resource.Id.date }); //"D_DateTime",date
             ListView.Adapter = ListAdapter;
         }

@@ -107,5 +107,20 @@ namespace HappyHealthyCSharp
             });
             t.Start();
         }
+        public override bool Delete()
+        {
+            try
+            {
+                var conn = SQLiteInstance.GetConnection;//new SQLiteConnection(Extension.sqliteDBPath);
+                var result = conn.Delete<DiabetesTABLE>(this.fbs_id);
+                //conn.Close();
+                return true;
+            }
+            catch(Exception ex)
+            {
+                Console.Write(ex.ToString());
+                return false;
+            }
+        }
     }
 }

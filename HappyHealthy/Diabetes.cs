@@ -168,7 +168,7 @@ namespace HappyHealthyCSharp
                  , Extension.adFontSize
                  , delegate
                  {
-                     diaObject.Delete(diaObject.fbs_id);
+                     diaObject.Delete();
                      diaObject.TrySyncWithMySQL(this);
                      Finish();
                  }

@@ -19,34 +19,12 @@ namespace HappyHealthyCSharp
     abstract class DatabaseHelper
     {
         public abstract List<string> Column { get; }
-        virtual public void TrySyncWithMySQL(Context c) { throw new NotImplementedException(); }
-        virtual public JavaList<IDictionary<string, object>> GetJavaList<T>(string queryCustomized, List<string> columnTag) where T : new()
+        public virtual bool Delete() { throw new NotImplementedException(); }
+        public virtual void TrySyncWithMySQL(Context c) { throw new NotImplementedException(); }
+        public virtual JavaList<IDictionary<string, object>> GetJavaList<T>(string queryCustomized, List<string> columnTag) where T : new()
         {
-            #region MySQL
-            /*
-            var sqlconn = new MySqlConnection(GlobalFunction.remoteAccess);
-            sqlconn.Open();
-            var fbsList = new JavaList<IDictionary<string, object>>();
-            var query = queryCustomized;
-            var tickets = new DataSet();
-            var adapter = new MySqlDataAdapter(query, sqlconn);
-            adapter.Fill(tickets, "FBS");
-            foreach(DataRow x in tickets.Tables["FBS"].Rows)
-            {
-                var fbs = new JavaDictionary<string, object>();
-                fbs.Add("fbs_id", GlobalFunction.StringValidation(x[0].ToString()));
-                fbs.Add("fbs_time", GlobalFunction.StringValidation(x[1].ToString()));
-                Console.WriteLine(GlobalFunction.StringValidation(((DateTime)x[1]).ToThaiLocale().ToString()));
-                fbs.Add("fbs_fbs", GlobalFunction.StringValidation(x[2].ToString()));
-                fbs.Add("fbs_fbs_lvl", GlobalFunction.StringValidation(x[3].ToString()));
-                fbs.Add("ud_id", GlobalFunction.StringValidation(x[4].ToString()));
-                fbsList.Add(fbs);
-            }
-            sqlconn.Close();
-            */
-            #endregion
             var dataList = new JavaList<IDictionary<string, object>>();
-            var conn = SQLiteInstance.GetConnection;//new SQLiteConnection(Extension.sqliteDBPath);
+            var conn = SQLiteInstance.GetConnection;
             var queryResult = conn.Query<T>(queryCustomized);
             queryResult.ForEach(dataRow =>
             {
@@ -57,7 +35,6 @@ namespace HappyHealthyCSharp
                 });
                 dataList.Add(data);
             }); //a little obfuscate code, try solve it for a little challenge :P
-            //conn.Close();
             return dataList;
         }
     }
@@ -107,6 +84,7 @@ namespace HappyHealthyCSharp
                 //by using this method we can easily apply the logic onto the dataset (but that can't do the complex query ofcourse)
                 return result.Where(predicate).ToList();
         }
+        [Obsolete("Due to this function required an id that can lead to MISDELETE value on runtime, to solve this please implement the delete function by inherit DatabaseHelper class into child class (but you can still use this function if you're not intended to implement on your own ofcourse)")]
         public static bool Delete<T>(this T baseobj,int id) where T : new()
         {
             try
@@ -247,6 +225,20 @@ namespace HappyHealthyCSharp
             c.Execute("CREATE TRIGGER SummaryDiabetesTABLE_After_Insert_Trigger AFTER INSERT ON SummaryDiabetesTABLE BEGIN insert into TEMP_SummaryDiabetesTABLE(sfbs_id_pointer, sfbs_time_new, sfbs_sfbs_new, sfbs_sfbs_lvl_new, MODE) values(NEW.bp_id, NEW.sfbs_time, NEW.sfbs_sfbs, NEW.sfbs_sfbs_lvl, 'I'); END");
             c.Execute("CREATE TRIGGER SummaryDiabetesTABLE_After_Update_Trigger AFTER UPDATE ON SummaryDiabetesTABLE BEGIN insert into TEMP_SummaryDiabetesTABLE(sfbs_id_pointer, sfbs_time_old, sfbs_sfbs_old, sfbs_sfbs_lvl_old, sfbs_time_new, sfbs_sfbs_new, sfbs_sfbs_lvl_new, MODE) values(OLD.bp_id, OLD.sfbs_time, OLD.sfbs_sfbs, OLD.sfbs_sfbs_lvl, NEW.sfbs_time, NEW.sfbs_sfbs, NEW.sfbs_sfbs_lvl, 'U'); END");
             //c.Execute("CREATE TABLE `TEMP_DiabetesTABLE` (`fbs_id_pointer` int, `fbs_time_new` bigint, `fbs_time_old` bigint, `fbs_fbs_new` float, `fbs_fbs_old` float, `fbs_fbs_lvl_new` integer, `fbs_fbs_lvl_old` integer, `MODE` varchar(255) )");
+        }
+        public static JavaList<IDictionary<string, object>> ToJavaList<T>(this List<T> dataset, List<string> columnTag) where T : new()
+        {
+            var dataList = new JavaList<IDictionary<string, object>>();
+            dataset.ForEach(dataRow =>
+            {
+                var data = new JavaDictionary<string, object>();
+                columnTag.ForEach(attribute =>
+                {
+                    data.Add(attribute, dataRow.GetType().GetProperty(attribute).PropertyType == typeof(DateTime) ? ((DateTime)dataRow.GetType().GetProperty(attribute).GetValue(dataRow)).ToLocalTime() : dataRow.GetType().GetProperty(attribute).GetValue(dataRow));
+                });
+                dataList.Add(data);
+            }); //a little obfuscate code, try solve it for a little challenge :P
+            return dataList;
         }
     }
     static class MySQLDatabaseHelper

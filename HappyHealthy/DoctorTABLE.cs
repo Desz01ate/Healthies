@@ -55,6 +55,20 @@ namespace HappyHealthyCSharp
 
             //constructor - no need for args since naming convention for instances variable mapping can be use : CB
         }
+        public override bool Delete()
+        {
+            try
+            {
+                var conn = SQLiteInstance.GetConnection;//new SQLiteConnection(Extension.sqliteDBPath);
+                var result = conn.Delete<DoctorTABLE>(this.da_id);
+                //conn.Close();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 
 }

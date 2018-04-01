@@ -30,6 +30,7 @@ namespace HappyHealthyCSharp
             base.OnCreate(savedInstanceState);
             RequestWindowFeature(WindowFeatures.NoTitle);
             SetContentView(Resource.Layout.activity_report);
+
             reportStatus = FindViewById<TextView>(Resource.Id.reportStatus);
             PlotView view = FindViewById<PlotView>(Resource.Id.plot_view);
             var mainSpinner = FindViewById<Spinner>(Resource.Id.spinner);
@@ -117,6 +118,10 @@ namespace HappyHealthyCSharp
                         KidneyTABLE.caseLevel.High);
                 }
             };
+            var firstIndex = Intent.GetIntExtra("first", 0); //can get some use from it maybe?
+            var secondIndex = Intent.GetIntExtra("second", 0);
+            mainSpinner.SetSelection(firstIndex);
+            secondSpinner.SetSelection(secondIndex);
             ViewFirstInit(view);
         }
 

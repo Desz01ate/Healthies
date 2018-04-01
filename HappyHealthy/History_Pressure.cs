@@ -77,7 +77,7 @@ namespace HappyHealthyCSharp
                     , Extension.adFontSize
                     , delegate
                     {
-                        pressureObject.Delete(pressureObject.bp_id);
+                        pressureObject.Delete();
                         pressureObject.TrySyncWithMySQL(this);
                         SetListView();
                     }
@@ -88,18 +88,10 @@ namespace HappyHealthyCSharp
         }
         public void SetListView()
         {
-            bpList = bpTable.GetJavaList<PressureTABLE>($"SELECT * FROM PressureTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)} ORDER BY BP_TIME", bpTable.Column);
+            bpList = bpTable.SelectAll(x => x.ud_id == Extension.getPreference("ud_id", 0, this)).OrderBy(x => x.bp_time).ToList().ToJavaList(bpTable.Column); //bpTable.GetJavaList<PressureTABLE>($"SELECT * FROM PressureTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)} ORDER BY BP_TIME", bpTable.Column);
             //bpList = bpTable.getPressureList($"SELECT * FROM PressureTABLE WHERE UD_ID = {GlobalFunction.getPreference("ud_id", "", this)} ORDER BY BP_TIME");
             ListAdapter = new SimpleAdapter(this, bpList, Resource.Layout.history_diabetes, new string[] { "bp_time" }, new int[] { Resource.Id.date }); //"D_DateTime",date
             ListView.Adapter = ListAdapter;
-            /* for reference on how to work with simpleadapter (it's ain't simple as its name, fuck off)
-            var data = new JavaList<IDictionary<string, object>>();
-            data.Add(new JavaDictionary<string, object> {
-                {"name","Bruce Banner" },{ "status","Bruce Banner feels like SMASHING!"}
-            });
-            var adapter = new SimpleAdapter(this, data, Android.Resource.Layout.SimpleListItem1, new[] { "name","status" }, new[] { Android.Resource.Id.Text1,Android.Resource.Id.Text2 });
-            ListView.Adapter = adapter;
-            */
         }
     }
 }

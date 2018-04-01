@@ -63,7 +63,10 @@ namespace HappyHealthyCSharp
         {
             addhiding.Visibility = ViewStates.Gone;
             header.Text = "บันทึกการนัดพบแพทย์";
-            docAttendDate.Text = "คลิกที่นี่เพื่อเลือกวันที่";
+            if (docObject.da_id == -1)
+                docAttendDate.Text = "คลิกที่นี่เพื่อเลือกวันที่";
+            else
+                docAttendDate.Text = docObject.da_date.ToString("dd/MM/yyyy");
         }
 
         private void InitializeControlEvent()
@@ -76,7 +79,6 @@ namespace HappyHealthyCSharp
             {
                 InitialForUpdateEvent();
                 saveButton.Click += UpdateValue;
-                //deletebtt.Click += DeleteValue;
             }
             backbtt.Click += delegate
             {
@@ -133,7 +135,7 @@ namespace HappyHealthyCSharp
                  {
                      var deleteUri = CalendarHelper.GetDeleteEventURI(docObject.da_calendar_uri);
                      ContentResolver.Delete(deleteUri, null, null);
-                     docObject.Delete(docObject.da_id);
+                     docObject.Delete();
                      Finish();
                  }
                  , delegate { }
