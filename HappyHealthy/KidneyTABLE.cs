@@ -80,59 +80,6 @@ namespace HappyHealthyCSharp
         {
             //constructor - no need for args since naming convention for instances variable mapping can be use : CB
         }
-        public override void TrySyncWithMySQL(Context c)
-        {
-            var t = new Thread(() =>
-            {
-                try
-                {
-                    var ws = new HHCSService.HHCSService();
-                    var kidList = new List<HHCSService.TEMP_KidneyTABLE>();
-                    new TEMP_KidneyTABLE().SelectAll(x=>x.ud_id == Extension.getPreference("ud_id", 0, c)).ForEach(row =>
-                    {
-                        var wsObject = new HHCSService.TEMP_KidneyTABLE();
-                        wsObject.ckd_id_pointer = row.ckd_id_pointer;
-                        wsObject.ckd_time_new = row.ckd_time_new;
-                        wsObject.ckd_time_old = row.ckd_time_old;
-                        wsObject.ckd_time_string_new = row.ckd_time_string_new;
-                        wsObject.ckd_gfr_new = row.ckd_gfr_new;
-                        wsObject.ckd_gfr_old = row.ckd_gfr_old;
-                        wsObject.ckd_gfr_level_new = row.ckd_gfr_level_new;
-                        wsObject.ckd_gfr_level_old = row.ckd_gfr_level_old;
-                        wsObject.ckd_creatinine_new = row.ckd_creatinine_new;
-                        wsObject.ckd_creatinine_old = row.ckd_creatinine_old;
-                        wsObject.ckd_bun_new = row.ckd_bun_new;
-                        wsObject.ckd_bun_old = row.ckd_bun_old;
-                        wsObject.ckd_sodium_new = row.ckd_sodium_new;
-                        wsObject.ckd_sodium_old = row.ckd_sodium_old;
-                        wsObject.ckd_potassium_new = row.ckd_potassium_new;
-                        wsObject.ckd_potassium_old = row.ckd_potassium_old;
-                        wsObject.ckd_albumin_blood_new = row.ckd_albumin_blood_new;
-                        wsObject.ckd_albumin_blood_old = row.ckd_albumin_blood_old;
-                        wsObject.ckd_albumin_urine_new = row.ckd_albumin_urine_new;
-                        wsObject.ckd_albumin_urine_old = row.ckd_albumin_urine_old;
-                        wsObject.ckd_phosphorus_blood_new = row.ckd_phosphorus_blood_new;
-                        wsObject.ckd_phosphorus_blood_old = row.ckd_phosphorus_blood_old;
-                        wsObject.mode = row.mode;
-                        kidList.Add(wsObject);
-                    });
-                    ws.SynchonizeData(
-                        Service.GetInstance.WebServiceAuthentication
-                        , new List<HHCSService.TEMP_DiabetesTABLE>().ToArray()
-                        , kidList.ToArray()
-                        , new List<HHCSService.TEMP_PressureTABLE>().ToArray());
-                    kidList.Clear();
-                    //var sqliteInstance = new SQLiteConnection(Extension.sqliteDBPath);
-                    SQLiteInstance.GetConnection.Execute($"DELETE FROM TEMP_KidneyTABLE WHERE ud_id = {Extension.getPreference("ud_id", 0, c)}");
-                    //sqliteInstance.Close();
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                }
-            });
-            t.Start();
-        }
         public override bool Delete()
         {
             try

@@ -26,11 +26,9 @@ namespace HappyHealthyCSharp
             SetTheme(Resource.Style.Base_Theme_AppCompat_Light);
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_history_kidney);
-            //ListView = FindViewById<ListView>(Resource.Id.listView);
             InitializeControl();
             InitializeControlEvent();
             kidneyTable = new KidneyTABLE();
-            // Create your application here
             SetListView();
         }
 
@@ -96,19 +94,9 @@ namespace HappyHealthyCSharp
         }
         public void SetListView()
         {
-            //kidneyList = kidneyTable.getKidneyList($"SELECT * FROM KidneyTABLE WHERE UD_ID = {GlobalFunction.getPreference("ud_id", "", this)}"); //must changed
-            kidneyList = kidneyTable.SelectAll(x => x.ud_id == Extension.getPreference("ud_id", 0, this)).OrderBy(x => x.ckd_time).ToJavaList();//kidneyTable.GetJavaList<KidneyTABLE>($"SELECT * FROM KidneyTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)}", new KidneyTABLE().Column); //must changed
+            kidneyList = kidneyTable.SelectAll(x => x.ud_id == Extension.getPreference("ud_id", 0, this)).OrderBy(x => x.ckd_time).ToJavaList();
             ListAdapter = new SimpleAdapter(this, kidneyList, Resource.Layout.history_kidney, new string[] { "ckd_time" }, new int[] { Resource.Id.dateKidney }); //"D_DateTime",date
             ListView.Adapter = ListAdapter;
-
-            /* for reference on how to work with simpleadapter (it's ain't simple as its name, fuck off)
-            var data = new JavaList<IDictionary<string, object>>();
-            data.Add(new JavaDictionary<string, object> {
-                {"name","Bruce Banner" },{ "status","Bruce Banner feels like SMASHING!"}
-            });/*
-            var adapter = new SimpleAdapter(this, data, Android.Resource.Layout.SimpleListItem1, new[] { "name","status" }, new[] { Android.Resource.Id.Text1,Android.Resource.Id.Text2 });
-            ListView.Adapter = adapter;
-            */
         }
     }
 }

@@ -65,7 +65,31 @@ namespace HappyHealthyCSharp
         public string   mode { get; set; }
 
         public int ud_id { get; set; }
-        public static List<string> Column => throw new NotImplementedException();
+        public static List<string> Column => new List<string>() {
+            "ckd_id_pointer",
+            "ckd_time_new",
+            "ckd_time_old",
+            "ckd_time_string_new",
+            "ckd_gfr_new",
+            "ckd_gfr_old",
+            "ckd_gfr_level_new",
+            "ckd_gfr_level_old",
+            "ckd_creatinine_new",
+            "ckd_creatinine_old",
+            "ckd_bun_new",
+            "ckd_bun_old",
+            "ckd_sodium_new",
+            "ckd_sodium_old",
+            "ckd_potassium_new",
+            "ckd_potassium_old",
+            "ckd_albumin_blood_new",
+            "ckd_albumin_blood_old",
+            "ckd_albumin_urine_new",
+            "ckd_albumin_urine_old",
+            "ckd_phosphorus_blood_new",
+            "ckd_phosphorus_blood_old",
+            "mode"
+        };
 
         public TEMP_KidneyTABLE() { }
     }

@@ -117,53 +117,6 @@ namespace HappyHealthyCSharp
         {
             //constructor - no need for args since naming convention for instances variable mapping can be use : CB
         }
-        public override void TrySyncWithMySQL(Context c)
-        {
-            var t = new Thread(() =>
-            {
-                try
-                {
-                    var ws = new HHCSService.HHCSService();
-                    var presList = new List<HHCSService.TEMP_PressureTABLE>();
-                    new TEMP_PressureTABLE().SelectAll(x => x.ud_id == Extension.getPreference("ud_id", 0, c)).ForEach(row =>
-                    {
-                        var wsObject = new HHCSService.TEMP_PressureTABLE();
-                        wsObject.bp_id_pointer = row.bp_id_pointer;
-                        wsObject.bp_time_new = row.bp_time_new;
-                        wsObject.bp_time_old = row.bp_time_old;
-                        wsObject.bp_time_string_new = row.bp_time_string_new;
-                        wsObject.bp_up_new = row.bp_up_new;
-                        wsObject.bp_up_old = row.bp_up_old;
-                        wsObject.bp_lo_new = row.bp_lo_new;
-                        wsObject.bp_lo_old = row.bp_lo_old;
-                        wsObject.bp_hr_new = row.bp_hr_new;
-                        wsObject.bp_hr_old = row.bp_hr_old;
-                        wsObject.bp_up_lvl_new = row.bp_up_lvl_new;
-                        wsObject.bp_up_lvl_old = row.bp_up_lvl_old;
-                        wsObject.bp_lo_lvl_new = row.bp_lo_lvl_new;
-                        wsObject.bp_lo_lvl_old = row.bp_lo_lvl_old;
-                        wsObject.bp_hr_lvl_new = row.bp_hr_lvl_new;
-                        wsObject.bp_hr_lvl_old = row.bp_hr_lvl_old;
-                        wsObject.mode = row.mode;
-                        presList.Add(wsObject);
-                    });
-                    ws.SynchonizeData(
-                        Service.GetInstance.WebServiceAuthentication
-                        , new List<HHCSService.TEMP_DiabetesTABLE>().ToArray()
-                        , new List<HHCSService.TEMP_KidneyTABLE>().ToArray()
-                        , presList.ToArray());
-                    presList.Clear();
-                    //var sqliteInstance = new SQLiteConnection(Extension.sqliteDBPath);
-                    SQLiteInstance.GetConnection.Execute($"DELETE FROM TEMP_PressureTABLE WHERE ud_id = {Extension.getPreference("ud_id", 0, c)}");
-                    //sqliteInstance.Close();
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                }
-            });
-            t.Start();
-        }
         public override bool Delete()
         {
             try
