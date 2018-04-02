@@ -96,7 +96,7 @@ namespace HappyHealthyCSharp
         }
         public void SetListView()
         {
-            docList = docTable.SelectAll().ToJavaList(docTable.Column);//docTable.GetJavaList<DoctorTABLE>($"SELECT * FROM DoctorTABLE", new DoctorTABLE().Column);
+            docList = docTable.SelectAll().ToJavaList();//docTable.GetJavaList<DoctorTABLE>($"SELECT * FROM DoctorTABLE", new DoctorTABLE().Column);
             //pillList = pillTable.getPillList($"SELECT * FROM PillTABLE WHERE UD_ID = {GlobalFunction.getPreference("ud_id", "", this)}");
             ListAdapter = new SimpleAdapter(this, docList, Resource.Layout.history_doc, new string[] { "da_name", "da_comment" }, new int[] { Resource.Id.his_doc_name, Resource.Id.docdetail }); //"D_DateTime",date
             ListView.Adapter = ListAdapter;

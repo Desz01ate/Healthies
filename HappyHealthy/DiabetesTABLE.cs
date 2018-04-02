@@ -20,7 +20,7 @@ namespace HappyHealthyCSharp
 {
     class DiabetesTABLE : DatabaseHelper
     {
-        public override List<string> Column => new List<string>()
+        public static List<string> Column => new List<string>()
         {
             "fbs_id",
             "fbs_time",

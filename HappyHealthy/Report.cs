@@ -67,8 +67,7 @@ namespace HappyHealthyCSharp
                         key = "fbs_fbs_sum";
                     view.Model = CreatePlotModel(
                         "รายงานค่าเบาหวาน",
-                        new DiabetesTABLE().GetJavaList<DiabetesTABLE>($"SELECT * FROM DiabetesTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)} ORDER BY FBS_TIME",
-                        new DiabetesTABLE().Column),
+                        new DiabetesTABLE().SelectAll(x => x.ud_id == Extension.getPreference("ud_id", 0, this)).OrderBy(x => x.fbs_time).ToJavaList(),//new DiabetesTABLE().GetJavaList<DiabetesTABLE>($"SELECT * FROM DiabetesTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)} ORDER BY FBS_TIME",
                         "fbs_time",
                         key,
                         key == "fbs_fbs"?DiabetesTABLE.caseLevel.High:7);
@@ -84,8 +83,7 @@ namespace HappyHealthyCSharp
                         key = "bp_hr";
                     view.Model = CreatePlotModel(
                         "รายงานค่าความดัน",
-                        new PressureTABLE().GetJavaList<PressureTABLE>($@"SELECT * FROM PressureTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)} ORDER BY BP_TIME",
-                        new PressureTABLE().Column),
+                        new PressureTABLE().SelectAll(x => x.ud_id == Extension.getPreference("ud_id", 0, this)).OrderBy(x => x.bp_time).ToJavaList(),
                         "bp_time",
                         key,
                         PressureTABLE.caseLevel.uHigh);
@@ -111,8 +109,7 @@ namespace HappyHealthyCSharp
                         key = "ckd_albumin_urine";
                     view.Model = CreatePlotModel(
                         "รายงานค่าโรคไต",
-                        new KidneyTABLE().GetJavaList<KidneyTABLE>($@"SELECT * FROM KidneyTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)} ORDER BY CKD_TIME",
-                        new KidneyTABLE().Column),
+                        new KidneyTABLE().SelectAll(x => x.ud_id == Extension.getPreference("ud_id", 0, this)).OrderBy(x => x.ckd_time).ToJavaList(),
                         "ckd_time",
                         key,
                         KidneyTABLE.caseLevel.High);
@@ -129,8 +126,7 @@ namespace HappyHealthyCSharp
         {
             v.Model = CreatePlotModel(
     "รายงานค่าเบาหวาน",
-    new DiabetesTABLE().GetJavaList<DiabetesTABLE>($"SELECT * FROM DiabetesTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)} ORDER BY FBS_TIME",
-    new DiabetesTABLE().Column),
+    new DiabetesTABLE().SelectAll(x => x.ud_id == Extension.getPreference("ud_id", 0, this)).OrderBy(x => x.fbs_time).ToJavaList(),
     "fbs_time",
     "fbs_fbs",
     DiabetesTABLE.caseLevel.High);

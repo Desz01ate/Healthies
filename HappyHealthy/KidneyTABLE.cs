@@ -19,7 +19,7 @@ namespace HappyHealthyCSharp
 {
     class KidneyTABLE : DatabaseHelper
     {
-        public override List<string> Column => new List<string>() {
+        public static List<string> Column => new List<string>() {
             "ckd_id",
             "ckd_time",
             "ckd_time_string",

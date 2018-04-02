@@ -29,7 +29,7 @@ namespace HappyHealthyCSharp
         public int      fbs_fbs_sum_old { get; set; }
         public string   mode            { get; set; }
         public int ud_id { get; set; }
-        public override List<string> Column => throw new NotImplementedException();
+        public static List<string> Column => throw new NotImplementedException();
 
         public TEMP_DiabetesTABLE() { }
     }

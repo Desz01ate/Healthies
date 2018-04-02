@@ -18,9 +18,10 @@ namespace HappyHealthyCSharp
 {
     abstract class DatabaseHelper
     {
-        public abstract List<string> Column { get; }
+        //public abstract List<string> Column { get; }
         public virtual bool Delete() { throw new NotImplementedException(); }
         public virtual void TrySyncWithMySQL(Context c) { throw new NotImplementedException(); }
+        [Obsolete("Please use ToJavaList() extension instead")]
         public virtual JavaList<IDictionary<string, object>> GetJavaList<T>(string queryCustomized, List<string> columnTag) where T : new()
         {
             var dataList = new JavaList<IDictionary<string, object>>();
@@ -226,18 +227,23 @@ namespace HappyHealthyCSharp
             c.Execute("CREATE TRIGGER SummaryDiabetesTABLE_After_Update_Trigger AFTER UPDATE ON SummaryDiabetesTABLE BEGIN insert into TEMP_SummaryDiabetesTABLE(sfbs_id_pointer, sfbs_time_old, sfbs_sfbs_old, sfbs_sfbs_lvl_old, sfbs_time_new, sfbs_sfbs_new, sfbs_sfbs_lvl_new, MODE) values(OLD.bp_id, OLD.sfbs_time, OLD.sfbs_sfbs, OLD.sfbs_sfbs_lvl, NEW.sfbs_time, NEW.sfbs_sfbs, NEW.sfbs_sfbs_lvl, 'U'); END");
             //c.Execute("CREATE TABLE `TEMP_DiabetesTABLE` (`fbs_id_pointer` int, `fbs_time_new` bigint, `fbs_time_old` bigint, `fbs_fbs_new` float, `fbs_fbs_old` float, `fbs_fbs_lvl_new` integer, `fbs_fbs_lvl_old` integer, `MODE` varchar(255) )");
         }
-        public static JavaList<IDictionary<string, object>> ToJavaList<T>(this List<T> dataset, List<string> columnTag) where T : new()
+        public static JavaList<IDictionary<string, object>> ToJavaList<T>(this IEnumerable<T> dataset) where T : new()
         {
+            var type = typeof(T);
+            var prop = type.GetProperty("Column", BindingFlags.Public | BindingFlags.Static);
+            var value = prop.GetValue(null, null);
+            var columnTag = (List<string>)value;
             var dataList = new JavaList<IDictionary<string, object>>();
-            dataset.ForEach(dataRow =>
+            foreach(var dataRow in dataset)
             {
                 var data = new JavaDictionary<string, object>();
-                columnTag.ForEach(attribute =>
+                foreach(var attribute in columnTag)
                 {
-                    data.Add(attribute, dataRow.GetType().GetProperty(attribute).PropertyType == typeof(DateTime) ? ((DateTime)dataRow.GetType().GetProperty(attribute).GetValue(dataRow)).ToLocalTime() : dataRow.GetType().GetProperty(attribute).GetValue(dataRow));
-                });
+                    var currentProp = dataRow.GetType().GetProperty(attribute);
+                    data.Add(attribute, currentProp.PropertyType == typeof(DateTime) ? ((DateTime)currentProp.GetValue(dataRow)).ToLocalTime() : currentProp.GetValue(dataRow));
+                };
                 dataList.Add(data);
-            }); //a little obfuscate code, try solve it for a little challenge :P
+            };
             return dataList;
         }
     }

@@ -97,7 +97,7 @@ namespace HappyHealthyCSharp
         public void SetListView()
         {
             //kidneyList = kidneyTable.getKidneyList($"SELECT * FROM KidneyTABLE WHERE UD_ID = {GlobalFunction.getPreference("ud_id", "", this)}"); //must changed
-            kidneyList = kidneyTable.SelectAll(x => x.ud_id == Extension.getPreference("ud_id", 0, this)).OrderBy(x => x.ckd_time).ToList().ToJavaList(kidneyTable.Column);//kidneyTable.GetJavaList<KidneyTABLE>($"SELECT * FROM KidneyTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)}", new KidneyTABLE().Column); //must changed
+            kidneyList = kidneyTable.SelectAll(x => x.ud_id == Extension.getPreference("ud_id", 0, this)).OrderBy(x => x.ckd_time).ToJavaList();//kidneyTable.GetJavaList<KidneyTABLE>($"SELECT * FROM KidneyTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)}", new KidneyTABLE().Column); //must changed
             ListAdapter = new SimpleAdapter(this, kidneyList, Resource.Layout.history_kidney, new string[] { "ckd_time" }, new int[] { Resource.Id.dateKidney }); //"D_DateTime",date
             ListView.Adapter = ListAdapter;
 

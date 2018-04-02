@@ -100,7 +100,7 @@ namespace HappyHealthyCSharp
                             {
                                 StartActivity(typeof(MainActivity));
                                 this.Finish();
-                            }).Show();
+                            }).SetCancelable(false).Show();
                         }
                     }
                     else

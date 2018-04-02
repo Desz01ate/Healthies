@@ -20,7 +20,7 @@ namespace HappyHealthyCSharp
 
     class PressureTABLE : DatabaseHelper
     {
-        public override List<string> Column => new List<string>()
+        public static List<string> Column => new List<string>()
         {
             "bp_id",
             "bp_time",

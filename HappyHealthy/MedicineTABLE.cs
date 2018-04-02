@@ -17,7 +17,7 @@ namespace HappyHealthyCSharp
 {
     class MedicineTABLE : DatabaseHelper
     {
-        public override List<string> Column => new List<string> {
+        public static List<string> Column => new List<string> {
             "ma_id",
             "ma_name",
             "ma_desc",
