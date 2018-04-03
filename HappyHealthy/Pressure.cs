@@ -241,7 +241,7 @@ namespace HappyHealthyCSharp
                  , delegate
                  {
                      pressureObject.Delete();
-                     pressureObject.TrySyncWithMySQL(this);
+                     //pressureObject.TrySyncWithMySQL(this);
                      Finish();
                  }
                  , delegate { }
@@ -262,7 +262,7 @@ namespace HappyHealthyCSharp
             pressureObject.bp_lo = Convert.ToDecimal(BPLow.Text);
             pressureObject.bp_hr = Convert.ToInt32(HeartRate.Text);
             pressureObject.Update();
-            pressureObject.TrySyncWithMySQL(this);
+            //pressureObject.TrySyncWithMySQL(this);
             Finish();
 
         }
@@ -288,10 +288,10 @@ namespace HappyHealthyCSharp
             bpTable.bp_up = Convert.ToDecimal(BPUp.Text);
             bpTable.bp_lo = Convert.ToDecimal(BPLow.Text);
             bpTable.bp_hr = Convert.ToInt32(HeartRate.Text);
-            bpTable.bp_time = DateTime.Now.ToThaiLocale();
+            bpTable.bp_time = DateTime.Now;//.ToThaiLocale();
             bpTable.ud_id = Extension.getPreference("ud_id", 0, this);
             bpTable.Insert();
-            bpTable.TrySyncWithMySQL(this);
+            //bpTable.TrySyncWithMySQL(this);
             this.Finish();
 
         }

@@ -93,7 +93,8 @@ namespace HappyHealthyCSharp
                     Date date = docCarlendar.Time;
                     var textDate = new SimpleDateFormat("MM-dd-yyyy").Format(date);
                     docObject.da_date = Convert.ToDateTime(textDate).AddDays(1);
-                    docAttendDate.Text = Convert.ToDateTime(textDate).ToThaiLocale().ToString("dd/MM/yyyy");
+                    docAttendDate.Text = Convert.ToDateTime(textDate).ToString("dd/MM/yyyy");
+                    //docAttendDate.Text = Convert.ToDateTime(textDate).ToThaiLocale().ToString("dd/MM/yyyy");
                 }, DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
                 docDatePicker.Show();
             };

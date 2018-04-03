@@ -169,7 +169,7 @@ namespace HappyHealthyCSharp
                  , delegate
                  {
                      diaObject.Delete();
-                     diaObject.TrySyncWithMySQL(this);
+                     //diaObject.TrySyncWithMySQL(this);
                      Finish();
                  }
                  , delegate { }
@@ -188,9 +188,9 @@ namespace HappyHealthyCSharp
             diaObject.fbs_fbs = (decimal)double.Parse(BloodValue.Text);
             diaObject.fbs_fbs_sum = (decimal)double.Parse(SumBloodValue.Text);
             diaObject.ud_id = Extension.getPreference("ud_id", 0, this);
-            diaObject.fbs_time = DateTime.Now.ToThaiLocale();
+            diaObject.fbs_time = DateTime.Now;//.ToThaiLocale();
             diaObject.Update();
-            diaObject.TrySyncWithMySQL(this);
+            //diaObject.TrySyncWithMySQL(this);
             this.Finish();
         }
         private async Task AutomationTalker()
@@ -263,9 +263,9 @@ namespace HappyHealthyCSharp
             diaTable.fbs_fbs = (decimal)double.Parse(BloodValue.Text);
             diaTable.fbs_fbs_sum = (decimal)double.Parse(SumBloodValue.Text);
             diaTable.ud_id = Extension.getPreference("ud_id", 0, this);
-            diaTable.fbs_time = DateTime.Now.ToThaiLocale();
+            diaTable.fbs_time = DateTime.Now;//.ToThaiLocale();
             diaTable.Insert();
-            diaTable.TrySyncWithMySQL(this);
+            //diaTable.TrySyncWithMySQL(this);
             this.Finish();
         }
 

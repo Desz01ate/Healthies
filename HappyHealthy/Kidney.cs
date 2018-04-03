@@ -234,7 +234,7 @@ namespace HappyHealthyCSharp
                  , delegate
                  {
                      kidneyObject.Delete();
-                     kidneyObject.TrySyncWithMySQL(this);
+                     //kidneyObject.TrySyncWithMySQL(this);
                      Finish();
                  }
                  , delegate { }
@@ -280,10 +280,10 @@ namespace HappyHealthyCSharp
             kidney.ckd_albumin_blood = Convert.ToDecimal(field_albumin_blood.Text);
             kidney.ckd_albumin_urine = Convert.ToDecimal(field_albumin_urine.Text);
             kidney.ckd_phosphorus_blood = Convert.ToDecimal(field_phosphorus_blood.Text);
-            kidney.ckd_time = DateTime.Now.ToThaiLocale();
+            kidney.ckd_time = DateTime.Now;//.ToThaiLocale();
             kidney.ud_id = Extension.getPreference("ud_id", 0, this);
             kidney.Insert();
-            kidney.TrySyncWithMySQL(this);
+            //kidney.TrySyncWithMySQL(this);
             this.Finish();
         }
 
@@ -302,7 +302,7 @@ namespace HappyHealthyCSharp
             kidneyObject.ckd_phosphorus_blood = Convert.ToDecimal(field_phosphorus_blood.Text);
             kidneyObject.ud_id = Extension.getPreference("ud_id", 0, this);
             kidneyObject.Update();
-            kidneyObject.TrySyncWithMySQL(this);
+            //kidneyObject.TrySyncWithMySQL(this);
             this.Finish();
         }
 

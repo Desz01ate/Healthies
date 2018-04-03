@@ -78,7 +78,7 @@ namespace HappyHealthyCSharp
                     , delegate
                     {
                         pressureObject.Delete();
-                        pressureObject.TrySyncWithMySQL(this);
+                        //pressureObject.TrySyncWithMySQL(this);
                         SetListView();
                     }
                     , delegate { }

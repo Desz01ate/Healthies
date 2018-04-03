@@ -73,7 +73,7 @@ namespace HappyHealthyCSharp
                     , delegate
                     {
                         diaObject.Delete();
-                        diaObject.TrySyncWithMySQL(this);
+                        //diaObject.TrySyncWithMySQL(this);
                         SetListView();
                     }
                     , delegate { }

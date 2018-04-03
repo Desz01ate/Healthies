@@ -69,7 +69,7 @@ namespace HappyHealthyCSharp
                     , delegate
                     {
                         kidneyObject.Delete();
-                        kidneyObject.TrySyncWithMySQL(this);
+                        //kidneyObject.TrySyncWithMySQL(this);
                         SetListView();
                     }
                     , delegate { }

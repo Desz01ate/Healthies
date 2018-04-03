@@ -31,6 +31,7 @@ namespace HappyHealthyCSharp
             //is Cache data available?
             if ((Extension.getPreference("ud_id", 0, this) != 0))
             {
+                new DiabetesTABLE().TrySyncWithMySQL(this); //try syncing the last session
                 StartActivity(typeof(MainActivity));
                 Finish();
             }
