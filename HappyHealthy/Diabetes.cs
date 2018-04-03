@@ -29,55 +29,30 @@ namespace HappyHealthyCSharp
         ImageView imageView;
         TTS t2sEngine;
         Intent voiceIntent;
-        private bool isRecording,isVoiceRunning;
+        private bool isRecording, LetsVoiceRunning;
         private readonly int VOICE = 10;
         //Edit below
-        EditText BloodValue;
+        EditText BloodValue, SumBloodValue;
         ImageView micButton, saveButton, deleteButton;
-
+        private TextView header;
         DiabetesTABLE diaObject = null;
         Dictionary<string, string> dataNLPList;
 
         private EditText currentControl;
         private static AutoResetEvent autoEvent = new AutoResetEvent(false);
-
+        private ImageView addhiding;
+        private ImageView backBtt;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             SetTheme(Resource.Style.Base_Theme_AppCompat_Light);
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_diabetes);
-            BloodValue = FindViewById<EditText>(Resource.Id.sugar_value);
-            micButton = FindViewById<ImageView>(Resource.Id.ic_microphone_diabetes);
-            saveButton = FindViewById<ImageView>(Resource.Id.imageView_button_save_diabetes);
-            var header = FindViewById<TextView>(Resource.Id.textView_header_name_diabetes);
-            header.Text = "บันทึกค่าเบาหวาน";
-            var addhiding = FindViewById<ImageView>(Resource.Id.ClickAddDia);
-            addhiding.Visibility = ViewStates.Gone;
-            var backBtt = FindViewById<ImageView>(Resource.Id.imageView38);
-            backBtt.Click += delegate {
-                if (!isVoiceRunning)
-                    Finish();
-                else
-                    Toast.MakeText(this, "กรุณาบันทึกค่าทั้งหมดให้เสร็จสิ้นก่อนทำปิดหน้าต่างบันทึกข้อมูล", ToastLength.Short);
-            };
-            //deleteButton = FindViewById<ImageView>(Resource.Id.imageView_button_delete_diabetes);
-            // Create your application here
             var flagObjectJson = Intent.GetStringExtra("targetObject") ?? string.Empty;
             diaObject = string.IsNullOrEmpty(flagObjectJson) ? new DiabetesTABLE() { fbs_fbs = Extension.flagValue } : JsonConvert.DeserializeObject<DiabetesTABLE>(flagObjectJson);
-            if (diaObject.fbs_fbs == Extension.flagValue)
-            {
-                //deleteButton.Visibility = ViewStates.Invisible;
-                saveButton.Click += SaveValue;
-            }
-            else
-            {
-                InitialValueForUpdateEvent();
-                saveButton.Click += UpdateValue;
-                //deleteButton.Click += DeleteValue;
-            }
-            //end
-
+            InitializeControl();
+            InitializeControlEvent();
+            InitializeData();
             string rec = Android.Content.PM.PackageManager.FeatureMicrophone;
             if (rec != "android.hardware.microphone")
             {
@@ -101,7 +76,58 @@ namespace HappyHealthyCSharp
             }
             t2sEngine = new TTS(this);
         }
-        private async Task<bool> StartMicrophoneAsync(string speakValue,int soundRawResource)
+
+        private void InitializeData()
+        {
+            header.Text = "บันทึกค่าเบาหวาน";
+            addhiding.Visibility = ViewStates.Gone;
+        }
+
+        private void InitializeControlEvent()
+        {
+            backBtt.Click += delegate
+            {
+                Finish();
+                LetsVoiceRunning = false;
+            };
+            if (diaObject.fbs_fbs == Extension.flagValue)
+            {
+                saveButton.Click += SaveValue;
+            }
+            else
+            {
+                InitialValueForUpdateEvent();
+                saveButton.Click += UpdateValue;
+            }
+        }
+
+        private void InitializeControl()
+        {
+            BloodValue = FindViewById<EditText>(Resource.Id.sugar_value);
+            SumBloodValue = FindViewById<EditText>(Resource.Id.sugar_sum_value);
+            micButton = FindViewById<ImageView>(Resource.Id.ic_microphone_diabetes);
+            saveButton = FindViewById<ImageView>(Resource.Id.imageView_button_save_diabetes);
+            header = FindViewById<TextView>(Resource.Id.textView_header_name_diabetes);
+            addhiding = FindViewById<ImageView>(Resource.Id.ClickAddDia);
+            backBtt = FindViewById<ImageView>(Resource.Id.imageView38);
+        }
+
+        protected override void OnPause()
+        {
+            base.OnPause();
+            LetsVoiceRunning = false;
+        }
+        protected override void OnStop()
+        {
+            base.OnStop();
+            LetsVoiceRunning = false;
+        }
+        public override void OnBackPressed()
+        {
+            base.OnBackPressed();
+            LetsVoiceRunning = false;
+        }
+        private async Task<bool> StartMicrophoneAsync(string speakValue, int soundRawResource)
         {
             try
             {
@@ -142,8 +168,8 @@ namespace HappyHealthyCSharp
                  , Extension.adFontSize
                  , delegate
                  {
-                     diaObject.Delete<DiabetesTABLE>(diaObject.fbs_id);
-                     diaObject.TrySyncWithMySQL(this);
+                     diaObject.Delete();
+                     //diaObject.TrySyncWithMySQL(this);
                      Finish();
                  }
                  , delegate { }
@@ -154,24 +180,36 @@ namespace HappyHealthyCSharp
         private void InitialValueForUpdateEvent()
         {
             BloodValue.Text = diaObject.fbs_fbs.ToString();
+            SumBloodValue.Text = diaObject.fbs_fbs_sum.ToString();
         }
 
         private void UpdateValue(object sender, EventArgs e)
         {
             diaObject.fbs_fbs = (decimal)double.Parse(BloodValue.Text);
+            diaObject.fbs_fbs_sum = (decimal)double.Parse(SumBloodValue.Text);
             diaObject.ud_id = Extension.getPreference("ud_id", 0, this);
-            diaObject.fbs_time = DateTime.Now.ToThaiLocale();
+            diaObject.fbs_time = DateTime.Now;//.ToThaiLocale();
             diaObject.Update();
-            diaObject.TrySyncWithMySQL(this);
+            //diaObject.TrySyncWithMySQL(this);
             this.Finish();
         }
         private async Task AutomationTalker()
         {
-            isVoiceRunning = true;
+            LetsVoiceRunning = true;
             currentControl = BloodValue;
-            await StartMicrophoneAsync("น้ำตาล",Resource.Raw.bloodSugar);
-            isVoiceRunning = false;
+            if (AllowToRun(currentControl))
+                await StartMicrophoneAsync("น้ำตาล", Resource.Raw.bloodSugar);
+            currentControl = SumBloodValue;
+            if (AllowToRun(currentControl))
+                await StartMicrophoneAsync("น้ำตาลสะสม", Resource.Raw.sumBloodSugar);
+            LetsVoiceRunning = false;
         }
+
+        private bool AllowToRun(EditText currentControl)
+        {
+            return currentControl.Text == string.Empty && LetsVoiceRunning;
+        }
+
         protected override void OnActivityResult(int requestCode, Result resultVal, Intent data)
         {
             base.OnActivityResult(requestCode, resultVal, data);
@@ -205,7 +243,7 @@ namespace HappyHealthyCSharp
         public void SaveValue(object sender, EventArgs e)
         {
             if (!Extension.TextFieldValidate(new List<object>() {
-                BloodValue
+                BloodValue,SumBloodValue
             }))
             {
                 Toast.MakeText(this, "กรุณากรอกค่าให้ครบ ก่อนทำการบันทึก", ToastLength.Short).Show();
@@ -214,17 +252,20 @@ namespace HappyHealthyCSharp
             var diaTable = new DiabetesTABLE();
             try
             {
-                diaTable.fbs_id = new SQLite.SQLiteConnection(Extension.sqliteDBPath).ExecuteScalar<int>($"SELECT MAX(fbs_id)+1 FROM DiabetesTABLE");
+                
+                diaTable.fbs_id = SQLiteInstance.GetConnection.ExecuteScalar<int>($"SELECT MAX(fbs_id)+1 FROM DiabetesTABLE");
+                //diaTable.fbs_id = new SQLite.SQLiteConnection(Extension.sqliteDBPath).ExecuteScalar<int>($"SELECT MAX(fbs_id)+1 FROM DiabetesTABLE");
             }
             catch
             {
                 diaTable.fbs_id = 1;
             }
             diaTable.fbs_fbs = (decimal)double.Parse(BloodValue.Text);
+            diaTable.fbs_fbs_sum = (decimal)double.Parse(SumBloodValue.Text);
             diaTable.ud_id = Extension.getPreference("ud_id", 0, this);
-            diaTable.fbs_time = DateTime.Now.ToThaiLocale();
+            diaTable.fbs_time = DateTime.Now;//.ToThaiLocale();
             diaTable.Insert();
-            diaTable.TrySyncWithMySQL(this);
+            //diaTable.TrySyncWithMySQL(this);
             this.Finish();
         }
 

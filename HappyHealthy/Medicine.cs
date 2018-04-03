@@ -25,7 +25,10 @@ namespace HappyHealthyCSharp
             public static File _dir;
             public static Bitmap bitmap;
         }
-        ImageView medImage;
+        ImageView medImage, saveButton;
+        TextView header;
+        private ImageView addhiding;
+        private ImageView backbtt;
         EditText medName;
         EditText medDesc;
         MedicineTABLE medObject;
@@ -38,30 +41,22 @@ namespace HappyHealthyCSharp
             SetTheme(Resource.Style.Base_Theme_AppCompat_Light);
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_add_pill);
-            var header = FindViewById<TextView>(Resource.Id.textView_header_name_pill);
-            header.Text = "บันทึกการทานยา";
-            var addhiding = FindViewById<ImageView>(Resource.Id.imageViewAddPill);
-            addhiding.Visibility = ViewStates.Gone;
-            //var camerabtt = FindViewById<ImageView>(Resource.Id.imageView_button_camera);
-            //camerabtt.Visibility = ViewStates.Gone;
-            var backbtt = FindViewById<ImageView>(Resource.Id.imageViewbackpill);
-            medName = FindViewById<EditText>(Resource.Id.ma_name);
-            medDesc = FindViewById<EditText>(Resource.Id.ma_desc);
-            //medImage = FindViewById<ImageView>(Resource.Id.imageView_show_image);
-            //medImage.Visibility = ViewStates.Gone;
-            breakfast = FindViewById<CheckBox>(Resource.Id.CheckBox_button_breakfast);
-            lunch = FindViewById<CheckBox>(Resource.Id.CheckBox_button_lunch);
-            dinner = FindViewById<CheckBox>(Resource.Id.CheckBox_button_dinner);
-            sleep = FindViewById<CheckBox>(Resource.Id.CheckBox_button_af_sleep);
-            before = FindViewById<RadioButton>(Resource.Id.Radio_button_bf_food);
-            after = FindViewById<RadioButton>(Resource.Id.Radio_button_af_food);
-            timeText = FindViewById<EditText>(Resource.Id.edit_af_food);
-            timeText.Enabled = false;
-            var saveButton = FindViewById<ImageView>(Resource.Id.imageView_button_save_pill);
-            //var deleteButton = FindViewById<ImageView>(Resource.Id.imageView_button_delete_pill);
-            //code goes below
             var flagObjectJson = Intent.GetStringExtra("targetObject") ?? string.Empty;
             medObject = string.IsNullOrEmpty(flagObjectJson) ? new MedicineTABLE() { ma_name = string.Empty } : JsonConvert.DeserializeObject<MedicineTABLE>(flagObjectJson);
+            InitializeControl();
+            InitializeControlEvent();
+            InitializeData();
+            before.Click += EnableTimeText;
+            after.Click += EnableTimeText;
+            // Create your application here
+            if (IsAppToTakePicturesAvailable())
+            {
+                CreateDirForPictures();
+            }
+        }
+
+        private void InitializeControlEvent()
+        {
             if (medObject.ma_name == string.Empty)
             {
                 saveButton.Click += SaveValue;
@@ -70,31 +65,40 @@ namespace HappyHealthyCSharp
             {
                 InitialForUpdateEvent();
                 saveButton.Click += UpdateValue;
-                //deleteButton.Click += DeleteValue;
-                /*
-                App._file = new File(medObject.ma_pic);
-                LoadImage();
-                */
             }
-            //end
             backbtt.Click += delegate
             {
                 this.Finish();
             };
-            if (IsAppToTakePicturesAvailable())
-            {
-                CreateDirForPictures();
-                //camerabtt.Click += cameraClickEvent;
-                //System.Console.WriteLine(IsAppToTakePicturesAvailable());
-            }
-            before.Click += EnableTimeText;
-            after.Click += EnableTimeText;
-            // Create your application here
+        }
+
+        private void InitializeData()
+        {
+            timeText.Enabled = false;
+            addhiding.Visibility = ViewStates.Gone;
+            header.Text = "บันทึกการทานยา";
+        }
+
+        private void InitializeControl()
+        {
+            header = FindViewById<TextView>(Resource.Id.textView_header_name_pill);
+            addhiding = FindViewById<ImageView>(Resource.Id.imageViewAddPill);
+            backbtt = FindViewById<ImageView>(Resource.Id.imageViewbackpill);
+            medName = FindViewById<EditText>(Resource.Id.ma_name);
+            medDesc = FindViewById<EditText>(Resource.Id.ma_desc);
+            breakfast = FindViewById<CheckBox>(Resource.Id.CheckBox_button_breakfast);
+            lunch = FindViewById<CheckBox>(Resource.Id.CheckBox_button_lunch);
+            dinner = FindViewById<CheckBox>(Resource.Id.CheckBox_button_dinner);
+            sleep = FindViewById<CheckBox>(Resource.Id.CheckBox_button_af_sleep);
+            before = FindViewById<RadioButton>(Resource.Id.Radio_button_bf_food);
+            after = FindViewById<RadioButton>(Resource.Id.Radio_button_af_food);
+            timeText = FindViewById<EditText>(Resource.Id.edit_af_food);
+            saveButton = FindViewById<ImageView>(Resource.Id.imageView_button_save_pill);
         }
 
         private void EnableTimeText(object sender, EventArgs e)
         {
-            if(timeText.Enabled == false)
+            if (timeText.Enabled == false)
             {
                 timeText.Enabled = true;
             }
@@ -127,13 +131,27 @@ namespace HappyHealthyCSharp
 
         public void InitialForUpdateEvent()
         {
+            header.Text = $@"บันทึกการทานยา{medObject.ma_name} (สำหรับดู)";
             medName.Text = medObject.ma_name;
             medDesc.Text = medObject.ma_desc;
             breakfast.Checked = medObject.ma_bf;
             lunch.Checked = medObject.ma_lu;
             dinner.Checked = medObject.ma_dn;
-            dinner.Checked = medObject.ma_sl;
+            sleep.Checked = medObject.ma_sl;
+            if (medObject.ma_before_or_after)
+                before.Checked = true;
+            else
+                after.Checked = true;
             timeText.Text = medObject.ma_before_or_after_minute.ToString();
+
+            //We will not allow this page to be editable on some field
+            breakfast.Enabled = false;
+            lunch.Enabled = false;
+            dinner.Enabled = false;
+            sleep.Enabled = false;
+            before.Enabled = false;
+            after.Enabled = false;
+            timeText.Enabled = false;
             //Waiting for image initialize
         }
 
@@ -141,13 +159,13 @@ namespace HappyHealthyCSharp
         {
             medObject.ma_name = medName.Text;
             medObject.ma_desc = medDesc.Text;
-            medObject.ma_bf = breakfast.Checked;
-            medObject.ma_lu = lunch.Checked;
-            medObject.ma_dn = dinner.Checked;
-            medObject.ma_sl = dinner.Checked;
-            medObject.ma_before_or_after_minute = Convert.ToInt32(timeText.Text);
-            medObject.ma_pic = App._file != null ? App._file.AbsolutePath : medObject.ma_pic;
-            medObject.ud_id = Extension.getPreference("ud_id", 0, this);
+            //medObject.ma_bf = breakfast.Checked;
+            //medObject.ma_lu = lunch.Checked;
+            //medObject.ma_dn = dinner.Checked;
+            //medObject.ma_sl = dinner.Checked;
+            //medObject.ma_before_or_after_minute = Convert.ToInt32(timeText.Text);
+            //medObject.ma_pic = App._file != null ? App._file.AbsolutePath : medObject.ma_pic;
+            //medObject.ud_id = Extension.getPreference("ud_id", 0, this);
             medObject.Update();
             Finish();
         }
@@ -177,7 +195,7 @@ namespace HappyHealthyCSharp
             medObject.Insert();
             var idHeader = medObject.ma_id.ToString();
             var beforeAfterDecision = Convert.ToInt32(timeText.Text);//before.Checked ? Convert.ToInt32(timeText.Text) : Convert.ToInt32(afterText.Text);
-            var user = new UserTABLE().Select<UserTABLE>($@"SELECT * FROM UserTABLE WHERE UD_ID = '{medObject.ud_id}'")[0];
+            var user = new UserTABLE().SelectOne(x => x.ud_id == medObject.ud_id);
             DateTime time;
             if (breakfast.Checked)
             {
@@ -203,6 +221,7 @@ namespace HappyHealthyCSharp
             medObject.ma_lu = lunch.Checked;
             medObject.ma_dn = dinner.Checked;
             medObject.ma_sl = sleep.Checked;
+            medObject.ma_before_or_after = before.Checked ? true : false;
             medObject.ma_before_or_after_minute = beforeAfterDecision;
             medObject.Update();
             /*

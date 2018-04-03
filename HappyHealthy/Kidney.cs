@@ -39,59 +39,28 @@ namespace HappyHealthyCSharp
         EditText field_albumin_blood;
         EditText field_albumin_urine;
         EditText field_phosphorus_blood;
-        ImageView saveButton, deleteButton;
+        ImageView saveButton, addhiding, back;
         ImageView micButton;
-        private bool isVoiceRunning;
+        TextView header;
+        private bool LetsVoiceRunning;
         private EditText currentControl;
         private static AutoResetEvent autoEvent = new AutoResetEvent(false);
+        private bool onSaveState;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             SetTheme(Resource.Style.Base_Theme_AppCompat_Light);
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_kidney);
-            var header = FindViewById<TextView>(Resource.Id.textView_header_name_kidey);
-            header.Text = "บันทึกค่าไต";
-            var addhiding = FindViewById<ImageView>(Resource.Id.imageView41);
-            addhiding.Visibility = ViewStates.Gone;
-            var back = FindViewById<ImageView>(Resource.Id.imageView38);
-            back.Click += delegate {
-                if (!isVoiceRunning)
-                    Finish();
-                else
-                    Toast.MakeText(this, "กรุณาบันทึกค่าทั้งหมดให้เสร็จสิ้นก่อนทำปิดหน้าต่างบันทึกข้อมูล", ToastLength.Short);
-            };
-            field_gfr = FindViewById<EditText>(Resource.Id.ckd_gfr);
-            field_creatinine = FindViewById<EditText>(Resource.Id.ckd_creatinine);
-            field_bun = FindViewById<EditText>(Resource.Id.ckd_bun);
-            field_sodium = FindViewById<EditText>(Resource.Id.ckd_sodium);
-            field_potassium = FindViewById<EditText>(Resource.Id.ckd_potassium);
-            field_albumin_blood = FindViewById<EditText>(Resource.Id.ckd_albumin_blood);
-            field_albumin_urine = FindViewById<EditText>(Resource.Id.ckd_albumin_urine);
-            field_phosphorus_blood = FindViewById<EditText>(Resource.Id.ckd_phosphorus_blood);
-            saveButton = FindViewById<ImageView>(Resource.Id.imageView_button_save_kidney);
-            //deleteButton = FindViewById<ImageView>(Resource.Id.imageView_button_delete_kidney);
-            micButton = FindViewById<ImageView>(Resource.Id.ic_microphone_diabetes);
-            //code goes below
             var flagObjectJson = Intent.GetStringExtra("targetObject") ?? string.Empty;
             kidneyObject = string.IsNullOrEmpty(flagObjectJson) ? new KidneyTABLE() { ckd_gfr = Extension.flagValue } : JsonConvert.DeserializeObject<KidneyTABLE>(flagObjectJson);
-            if (kidneyObject.ckd_gfr == Extension.flagValue)
-            {
-                //deleteButton.Visibility = ViewStates.Invisible;
-                saveButton.Click += SaveValue;
-            }
-            else
-            {
-                InitialValueForUpdateEvent();
-                saveButton.Click += UpdateValue;
-                //deleteButton.Click += DeleteValue;
+            InitializeControl();
+            InitializeControlEvent();
+            InitializeData();
 
-            }
-            //end
             string rec = Android.Content.PM.PackageManager.FeatureMicrophone;
             if (rec != "android.hardware.microphone")
             {
-                // no microphone, no recording. Disable the button and output an alert
                 Extension.CreateDialogue(this, "ไม่พบไมโครโฟนบนระบบของคุณ").Show();
             }
             else
@@ -105,32 +74,102 @@ namespace HappyHealthyCSharp
                         AutomationTalker();
                     }
                 };
-                if (Extension.getPreference("autosound", false, this))
-                    AutomationTalker();
+
             }
+            if (Extension.getPreference("autosound", false, this) && onSaveState)
+                AutomationTalker();
             t2sEngine = new TTS(this);
+        }
+
+        private void InitializeData()
+        {
+            addhiding.Visibility = ViewStates.Gone;
+            header.Text = "บันทึกค่าไต";
+        }
+
+        private void InitializeControlEvent()
+        {
+            if (kidneyObject.ckd_gfr == Extension.flagValue)
+            {
+                saveButton.Click += SaveValue;
+                onSaveState = true;
+            }
+            else
+            {
+                InitialValueForUpdateEvent();
+                saveButton.Click += UpdateValue;
+            }
+            back.Click += delegate
+            {
+                LetsVoiceRunning = false;
+                Finish();
+            };
+        }
+
+        private void InitializeControl()
+        {
+            field_gfr = FindViewById<EditText>(Resource.Id.ckd_gfr);
+            field_creatinine = FindViewById<EditText>(Resource.Id.ckd_creatinine);
+            field_bun = FindViewById<EditText>(Resource.Id.ckd_bun);
+            field_sodium = FindViewById<EditText>(Resource.Id.ckd_sodium);
+            field_potassium = FindViewById<EditText>(Resource.Id.ckd_potassium);
+            field_albumin_blood = FindViewById<EditText>(Resource.Id.ckd_albumin_blood);
+            field_albumin_urine = FindViewById<EditText>(Resource.Id.ckd_albumin_urine);
+            field_phosphorus_blood = FindViewById<EditText>(Resource.Id.ckd_phosphorus_blood);
+            saveButton = FindViewById<ImageView>(Resource.Id.imageView_button_save_kidney);
+            micButton = FindViewById<ImageView>(Resource.Id.ic_microphone_diabetes);
+            header = FindViewById<TextView>(Resource.Id.textView_header_name_kidey);
+            addhiding = FindViewById<ImageView>(Resource.Id.imageView41);
+            back = FindViewById<ImageView>(Resource.Id.imageView38);
         }
 
         private async Task AutomationTalker()
         {
-            isVoiceRunning = true;
+            LetsVoiceRunning = true;
             currentControl = field_gfr;
-            await StartMicrophoneAsync(" GFR", Resource.Raw.gfr);
+            if(AllowToRun(currentControl))
+                await StartMicrophoneAsync(" GFR", Resource.Raw.gfr);
             currentControl = field_creatinine;
-            await StartMicrophoneAsync(" Creatinine", Resource.Raw.creatinine);
+            if (AllowToRun(currentControl))
+                await StartMicrophoneAsync(" Creatinine", Resource.Raw.creatinine);
             currentControl = field_bun;
-            await StartMicrophoneAsync(" BUN", Resource.Raw.bun);
+            if (AllowToRun(currentControl))
+                await StartMicrophoneAsync(" BUN", Resource.Raw.bun);
             currentControl = field_sodium;
-            await StartMicrophoneAsync(" Sodium", Resource.Raw.sodium);
+            if (AllowToRun(currentControl))
+                await StartMicrophoneAsync(" Sodium", Resource.Raw.sodium);
             currentControl = field_potassium;
-            await StartMicrophoneAsync(" Potassium", Resource.Raw.potasssium);
+            if (AllowToRun(currentControl))
+                await StartMicrophoneAsync(" Potassium", Resource.Raw.potasssium);
             currentControl = field_phosphorus_blood;
-            await StartMicrophoneAsync(" Phosphorus", Resource.Raw.phosphorus);
+            if (AllowToRun(currentControl))
+                await StartMicrophoneAsync(" Phosphorus", Resource.Raw.phosphorus);
             currentControl = field_albumin_blood;
-            await StartMicrophoneAsync(" Albumin ในเลือด", Resource.Raw.albuminblood);
+            if (AllowToRun(currentControl))
+                await StartMicrophoneAsync(" Albumin ในเลือด", Resource.Raw.albuminblood);
             currentControl = field_albumin_urine;
-            await StartMicrophoneAsync(" Albumin ในปัสสาวะ", Resource.Raw.albuminuria);
-            isVoiceRunning = false;
+            if (AllowToRun(currentControl))
+                await StartMicrophoneAsync(" Albumin ในปัสสาวะ", Resource.Raw.albuminuria);
+            LetsVoiceRunning = false;
+        }
+        protected override void OnPause()
+        {
+            base.OnPause();
+            LetsVoiceRunning = false;
+        }
+        protected override void OnStop()
+        {
+            base.OnStop();
+            LetsVoiceRunning = false;
+        }
+        public override void OnBackPressed()
+        {
+            base.OnBackPressed();
+            LetsVoiceRunning = false;
+        }
+        private bool AllowToRun(EditText currentControl)
+        {
+            return currentControl.Text == string.Empty && LetsVoiceRunning;
         }
         private async Task<bool> StartMicrophoneAsync(string speakValue, int soundRawResource)
         {
@@ -194,8 +233,8 @@ namespace HappyHealthyCSharp
                  , Extension.adFontSize
                  , delegate
                  {
-                     kidneyObject.Delete<KidneyTABLE>(kidneyObject.ckd_id);
-                     kidneyObject.TrySyncWithMySQL(this);
+                     kidneyObject.Delete();
+                     //kidneyObject.TrySyncWithMySQL(this);
                      Finish();
                  }
                  , delegate { }
@@ -227,7 +266,7 @@ namespace HappyHealthyCSharp
             var kidney = new KidneyTABLE();
             try
             {
-                kidney.ckd_id = new SQLite.SQLiteConnection(Extension.sqliteDBPath).ExecuteScalar<int>($"SELECT MAX(ckd_id)+1 FROM KidneyTABLE");
+                kidney.ckd_id = SQLiteInstance.GetConnection.ExecuteScalar<int>($"SELECT MAX(ckd_id)+1 FROM KidneyTABLE");
             }
             catch
             {
@@ -241,10 +280,10 @@ namespace HappyHealthyCSharp
             kidney.ckd_albumin_blood = Convert.ToDecimal(field_albumin_blood.Text);
             kidney.ckd_albumin_urine = Convert.ToDecimal(field_albumin_urine.Text);
             kidney.ckd_phosphorus_blood = Convert.ToDecimal(field_phosphorus_blood.Text);
-            kidney.ckd_time = DateTime.Now.ToThaiLocale();
+            kidney.ckd_time = DateTime.Now;//.ToThaiLocale();
             kidney.ud_id = Extension.getPreference("ud_id", 0, this);
             kidney.Insert();
-            kidney.TrySyncWithMySQL(this);
+            //kidney.TrySyncWithMySQL(this);
             this.Finish();
         }
 
@@ -263,7 +302,7 @@ namespace HappyHealthyCSharp
             kidneyObject.ckd_phosphorus_blood = Convert.ToDecimal(field_phosphorus_blood.Text);
             kidneyObject.ud_id = Extension.getPreference("ud_id", 0, this);
             kidneyObject.Update();
-            kidneyObject.TrySyncWithMySQL(this);
+            //kidneyObject.TrySyncWithMySQL(this);
             this.Finish();
         }
 

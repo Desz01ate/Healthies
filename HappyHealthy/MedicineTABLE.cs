@@ -17,7 +17,7 @@ namespace HappyHealthyCSharp
 {
     class MedicineTABLE : DatabaseHelper
     {
-        public override List<string> Column => new List<string> {
+        public static List<string> Column => new List<string> {
             "ma_id",
             "ma_name",
             "ma_desc",
@@ -72,6 +72,20 @@ namespace HappyHealthyCSharp
         {
 
             //constructor - no need for args since naming convention for instances variable mapping can be use : CB
+        }
+        public override bool Delete()
+        {
+            try
+            {
+                var conn = SQLiteInstance.GetConnection;//new SQLiteConnection(Extension.sqliteDBPath);
+                var result = conn.Delete<MedicineTABLE>(this.ma_id);
+                //conn.Close();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 

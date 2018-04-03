@@ -30,6 +30,7 @@
   </string-array>
   <string-array name="diabetes">
     <item>ระดับน้ำตาลในเลือด</item>
+    <item>ระดับน้ำตาลสะสมในเลือด</item>
   </string-array>
   <string-array name="kidney">
     <item>GFR</item>

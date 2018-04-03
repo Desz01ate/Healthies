@@ -17,7 +17,7 @@ using System.Threading;
 
 namespace HappyHealthyCSharp
 {
-    [Activity(Label = "Login", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
+    [Activity(ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
     public class Login : Activity
     {
         private static Context _loginContext;
@@ -31,6 +31,7 @@ namespace HappyHealthyCSharp
             //is Cache data available?
             if ((Extension.getPreference("ud_id", 0, this) != 0))
             {
+                new DiabetesTABLE().TrySyncWithMySQL(this); //try syncing the last session
                 StartActivity(typeof(MainActivity));
                 Finish();
             }
@@ -40,14 +41,15 @@ namespace HappyHealthyCSharp
             var login = FindViewById<ImageView>(Resource.Id.loginBtt);
             var register = FindViewById<TextView>(Resource.Id.textViewRegis);
             var forgot = FindViewById<TextView>(Resource.Id.textViewForget);
-            id.Text = "kunvutloveza@hotmail.com";
-            pw.Text = "123456";
+            forgot.Visibility = ViewStates.Invisible;
+            //id.Text = "kunvutloveza@hotmail.com";
+            //pw.Text = "123456";
             ProgressDialog progressDialog = new ProgressDialog(this);
             login.Click += async delegate
             {
                 Extension.setPreference("ud_email", id.Text, this);
                 Extension.setPreference("ud_pass", pw.Text, this);
-                if (new UserTABLE().Select<UserTABLE>($"SELECT * FROM UserTABLE WHERE ud_email = '{id.Text}'").Count == 0)
+                if (new UserTABLE().SelectAll(x=>x.ud_email == id.Text).Count == 0)
                 {
                     progressDialog.SetProgressStyle(ProgressDialogStyle.Spinner);
                     progressDialog.SetTitle("ดาวน์โหลดข้อมูล");
@@ -79,7 +81,7 @@ namespace HappyHealthyCSharp
         {
             try
             {
-                if (AccountHelper.ComparePassword(pw, new UserTABLE().Select<UserTABLE>($"SELECT * FROM UserTABLE WHERE ud_email = '{id}'")[0].ud_pass))
+                if (AccountHelper.ComparePassword(pw, new UserTABLE().SelectOne(x=>x.ud_email == id).ud_pass))
                 {
                     Initialization(id, pw);
                     StartActivity(typeof(MainActivity));
@@ -99,12 +101,12 @@ namespace HappyHealthyCSharp
 
         public void Initialization(string id, string password)
         {
-            var conn = new SQLiteConnection(Extension.sqliteDBPath);
-            var sql = $@"select * from UserTABLE where ud_email = '{id}'";
-            var result = conn.Query<UserTABLE>(sql);
+            var conn = SQLiteInstance.GetConnection;//new SQLiteConnection(Extension.sqliteDBPath);
+            //var sql = $@"select * from UserTABLE where ud_email = '{id}'";
+            var result = new UserTABLE().SelectOne( x => x.ud_email == id);//conn.Query<UserTABLE>(sql);
             //Extension.setPreference("ud_email", id, this);
             //Extension.setPreference("ud_pass", password, this);
-            Extension.setPreference("ud_id", result[0].ud_id, this);
+            Extension.setPreference("ud_id", result.ud_id, this);
         }
         public static Context getContext()
         {

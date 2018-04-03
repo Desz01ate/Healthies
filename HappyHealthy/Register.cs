@@ -90,18 +90,17 @@ namespace HappyHealthyCSharp
                         user.ud_pass = (string)returnData[1];
                         if (user.Insert())
                         {
+                            var conn = SQLiteInstance.GetConnection;//new SQLiteConnection(Extension.sqliteDBPath);
+                            var sql = $@"select * from UserTABLE where ud_email = '{email}'";
+                            var result = conn.Query<UserTABLE>(sql);
+                            Extension.setPreference("ud_email", email.Text, this);
+                            Extension.setPreference("ud_pass", pw.Text, this);
+                            Extension.setPreference("ud_id", user.ud_id, this);
                             Extension.CreateDialogue(this, "การลงทะเบียนเสร็จสมบูรณ์", delegate
                             {
-                                var conn = new SQLiteConnection(Extension.sqliteDBPath);
-                                var sql = $@"select * from UserTABLE where ud_email = '{email}'";
-                                var result = conn.Query<UserTABLE>(sql);
-                                Extension.setPreference("ud_email", email.Text, this);
-                                Extension.setPreference("ud_pass", pw.Text, this);
-                                Extension.setPreference("ud_id", user.ud_id, this);
                                 StartActivity(typeof(MainActivity));
                                 this.Finish();
-
-                            }).Show();
+                            }).SetCancelable(false).Show();
                         }
                     }
                     else
@@ -123,11 +122,13 @@ namespace HappyHealthyCSharp
         {
             if (string.IsNullOrEmpty(email.Text) || string.IsNullOrEmpty(pw.Text) || string.IsNullOrEmpty(name.Text) || string.IsNullOrEmpty(insertDate))
             {
-                Toast.MakeText(this, "Please fill all the required fields.", ToastLength.Long).Show();
+                Extension.CreateDialogue(this, "กรุณากรอกค่าในช่องกรอกข้อมูลให้ครบทุกค่า (อีเมลล์,รหัสผ่าน,ชื่อผู้ใช้,เพศ และ วันเกิด)").Show();
+                //Toast.MakeText(this, "กรุณากรอกค่า", ToastLength.Long).Show();
                 return false;
             }
-            if (!email.Text.IsValidEmailFormat()) { 
-                Toast.MakeText(this, "Please fill the email in a valid form.", ToastLength.Long).Show();
+            if (!email.Text.IsValidEmailFormat())
+            {
+                Extension.CreateDialogue(this, "กรุณากรอกข้อมูลอีเมลล์ที่ใช้จริง").Show();
                 return false;
             }
             return true;

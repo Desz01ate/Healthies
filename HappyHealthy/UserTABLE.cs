@@ -18,7 +18,7 @@ namespace HappyHealthyCSharp
 {
     class UserTABLE : DatabaseHelper
     {
-        public override List<string> Column => throw new NotImplementedException();
+        public static List<string> Column => throw new NotImplementedException();
         [SQLite.PrimaryKey]
         public int ud_id { get; set; }
         public string ud_iden_number { get; set; }

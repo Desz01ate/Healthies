@@ -20,7 +20,7 @@ namespace HappyHealthyCSharp
 
     class PressureTABLE : DatabaseHelper
     {
-        public override List<string> Column => new List<string>()
+        public static List<string> Column => new List<string>()
         {
             "bp_id",
             "bp_time",
@@ -78,7 +78,8 @@ namespace HappyHealthyCSharp
         }
         private decimal _lowValue;
         [SQLite.MaxLength(3)]
-        public decimal bp_lo {
+        public decimal bp_lo
+        {
             get
             {
                 return _lowValue;
@@ -116,49 +117,19 @@ namespace HappyHealthyCSharp
         {
             //constructor - no need for args since naming convention for instances variable mapping can be use : CB
         }
-        public override void TrySyncWithMySQL(Context c)
+        public override bool Delete()
         {
-            var t = new Thread(() =>
+            try
             {
-                try
-                {
-                    var ws = new HHCSService.HHCSService();
-                    var presList = new List<HHCSService.TEMP_PressureTABLE>();
-                    new TEMP_PressureTABLE().Select<TEMP_PressureTABLE>($"SELECT * FROM TEMP_PressureTABLE WHERE ud_id = '{Extension.getPreference("ud_id", 0, c)}'").ForEach(row =>
-                    {
-                        var wsObject = new HHCSService.TEMP_PressureTABLE();
-                        wsObject.bp_id_pointer = row.bp_id_pointer;
-                        wsObject.bp_time_new = row.bp_time_new;
-                        wsObject.bp_time_old = row.bp_time_old;
-                        wsObject.bp_time_string_new = row.bp_time_string_new;
-                        wsObject.bp_up_new = row.bp_up_new;
-                        wsObject.bp_up_old = row.bp_up_old;
-                        wsObject.bp_lo_new = row.bp_lo_new;
-                        wsObject.bp_lo_old = row.bp_lo_old;
-                        wsObject.bp_hr_new = row.bp_hr_new;
-                        wsObject.bp_hr_old = row.bp_hr_old;
-                        wsObject.bp_up_lvl_new = row.bp_up_lvl_new;
-                        wsObject.bp_up_lvl_old = row.bp_up_lvl_old;
-                        wsObject.bp_lo_lvl_new = row.bp_lo_lvl_new;
-                        wsObject.bp_lo_lvl_old = row.bp_lo_lvl_old;
-                        wsObject.bp_hr_lvl_new = row.bp_hr_lvl_new;
-                        wsObject.bp_hr_lvl_old = row.bp_hr_lvl_old;
-                        wsObject.mode = row.mode;
-                        presList.Add(wsObject);
-                    });
-                    ws.SynchonizeData(
-                        Service.GetInstance.WebServiceAuthentication
-                        , new List<HHCSService.TEMP_DiabetesTABLE>().ToArray()
-                        , new List<HHCSService.TEMP_KidneyTABLE>().ToArray()
-                        , presList.ToArray());
-                    presList.Clear();
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                }
-            });
-            t.Start();
+                var conn = SQLiteInstance.GetConnection;//new SQLiteConnection(Extension.sqliteDBPath);
+                var result = conn.Delete<PressureTABLE>(this.bp_id);
+                //conn.Close();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

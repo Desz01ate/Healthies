@@ -57,7 +57,7 @@ namespace HappyHealthyCSharp
                         object result = null;
                         var r = new Random();
                         var newPassword = new string(Enumerable.Repeat(chars, 6).Select(s => s[r.Next(s.Length)]).ToArray());
-                        var user = new UserTABLE().Select<UserTABLE>($"SELECT * FROM UserTABLE where ud_email = '{email.Text}'").First();
+                        var user = new UserTABLE().SelectOne(x=>x.ud_email == email.Text);
                         user.ud_pass = newPassword;
                         if(Extension.SendMail("securapp.assist@gmail.com", "securapp7421", email.Text, "Hello", $@"<body><h2>Password for your account has been changed to <b>{newPassword}.<br>Use this password to login and update your password using HappyHealthy application.</b></h2><br><h2>{(string)result}</h2></body>"))
                             user.Update();

@@ -18,56 +18,78 @@ namespace HappyHealthyCSharp
 {
     abstract class DatabaseHelper
     {
-        public abstract List<string> Column { get; }
-        virtual public void TrySyncWithMySQL(Context c) { throw new NotImplementedException(); }
-        virtual public List<T> Select<T>(string query) where T : new()
-        {
-            var conn = new SQLiteConnection(Extension.sqliteDBPath);
-            var result = conn.Query<T>(query);
-            conn.Close();
-            return result;
+        private bool isSyncing = false;
+        //public abstract List<string> Column { get; }
+        public virtual bool Delete() { throw new NotImplementedException(); }
+        public virtual void TrySyncWithMySQL(Context c) {
+            var t = new Thread(() =>
+            {
+                try
+                {
+                    if (!isSyncing) //locking mechanics to make a thread-safe synchronization
+                    {
+                        isSyncing = true; //lock
+                        var ws = new HHCSService.HHCSService();
+                        var diaList = new List<HHCSService.TEMP_DiabetesTABLE>();
+                        new TEMP_DiabetesTABLE().SelectAll(x => x.ud_id == Extension.getPreference("ud_id", 0, c)).ForEach(row =>
+                        {
+                            var wsObject = new HHCSService.TEMP_DiabetesTABLE();
+                            SetValues(row, ref wsObject);
+                            diaList.Add(wsObject);
+                        });
+                        var kidneyList = new List<HHCSService.TEMP_KidneyTABLE>();
+                        new TEMP_KidneyTABLE().SelectAll(x => x.ud_id == Extension.getPreference("ud_id", 0, c)).ForEach(row => {
+                            var wsObject = new HHCSService.TEMP_KidneyTABLE();
+                            SetValues(row, ref wsObject);
+                            kidneyList.Add(wsObject);
+                        });
+                        var pressureList = new List<HHCSService.TEMP_PressureTABLE>();
+                        new TEMP_PressureTABLE().SelectAll(x => x.ud_id == Extension.getPreference("ud_id", 0, c)).ForEach(row => {
+                            var wsObject = new HHCSService.TEMP_PressureTABLE();
+                            SetValues(row, ref wsObject);
+                            pressureList.Add(wsObject);
+                        });
+                        var result = ws.SynchonizeData(
+                            Service.GetInstance.WebServiceAuthentication
+                            , diaList.ToArray()
+                            , kidneyList.ToArray()
+                            , pressureList.ToArray());
+                        diaList.Clear();
+                        kidneyList.Clear();
+                        pressureList.Clear();
+                        SQLiteInstance.GetConnection.Execute($"DELETE FROM TEMP_DiabetesTABLE WHERE ud_id = {Extension.getPreference("ud_id", 0, c)}");
+                        SQLiteInstance.GetConnection.Execute($"DELETE FROM TEMP_KidneyTABLE WHERE ud_id = {Extension.getPreference("ud_id", 0, c)}");
+                        SQLiteInstance.GetConnection.Execute($"DELETE FROM TEMP_PressureTABLE WHERE ud_id = {Extension.getPreference("ud_id", 0, c)}");
+                        isSyncing = false; //unlock
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message); //Exception mostly throw only when the server is down
+                    //or device is not able to reach the server
+                }
+            });
+            t.Start();
         }
-        virtual public bool Delete<T>(int id) where T : new()
+        private void SetValues<T1, T2>(T1 baseObject, ref T2 wsObject)
         {
-            try
+            var ctype = typeof(T1);
+            var cprop = ctype.GetProperty("Column", BindingFlags.Public | BindingFlags.Static);
+            var cvalue = cprop.GetValue(null, null);
+            var columnTag = (List<string>)cvalue;
+            foreach (var property in columnTag)
             {
-                var conn = new SQLiteConnection(Extension.sqliteDBPath);
-                var result = conn.Delete<T>(id);
-                conn.Close();
-                return true;
-            }
-            catch
-            {
-                return false;
+                var type = baseObject.GetType();
+                var prop = type.GetProperty(property);
+                var value = prop.GetValue(baseObject);
+                wsObject.GetType().GetProperty(property).SetValue(wsObject, value);
             }
         }
-        virtual public JavaList<IDictionary<string, object>> GetJavaList<T>(string queryCustomized, List<string> columnTag) where T : new()
+        [Obsolete("Please use ToJavaList() extension instead")]
+        public virtual JavaList<IDictionary<string, object>> GetJavaList<T>(string queryCustomized, List<string> columnTag) where T : new()
         {
-            #region MySQL
-            /*
-            var sqlconn = new MySqlConnection(GlobalFunction.remoteAccess);
-            sqlconn.Open();
-            var fbsList = new JavaList<IDictionary<string, object>>();
-            var query = queryCustomized;
-            var tickets = new DataSet();
-            var adapter = new MySqlDataAdapter(query, sqlconn);
-            adapter.Fill(tickets, "FBS");
-            foreach(DataRow x in tickets.Tables["FBS"].Rows)
-            {
-                var fbs = new JavaDictionary<string, object>();
-                fbs.Add("fbs_id", GlobalFunction.StringValidation(x[0].ToString()));
-                fbs.Add("fbs_time", GlobalFunction.StringValidation(x[1].ToString()));
-                Console.WriteLine(GlobalFunction.StringValidation(((DateTime)x[1]).ToThaiLocale().ToString()));
-                fbs.Add("fbs_fbs", GlobalFunction.StringValidation(x[2].ToString()));
-                fbs.Add("fbs_fbs_lvl", GlobalFunction.StringValidation(x[3].ToString()));
-                fbs.Add("ud_id", GlobalFunction.StringValidation(x[4].ToString()));
-                fbsList.Add(fbs);
-            }
-            sqlconn.Close();
-            */
-            #endregion
             var dataList = new JavaList<IDictionary<string, object>>();
-            var conn = new SQLiteConnection(Extension.sqliteDBPath);
+            var conn = SQLiteInstance.GetConnection;
             var queryResult = conn.Query<T>(queryCustomized);
             queryResult.ForEach(dataRow =>
             {
@@ -78,19 +100,77 @@ namespace HappyHealthyCSharp
                 });
                 dataList.Add(data);
             }); //a little obfuscate code, try solve it for a little challenge :P
-            conn.Close();
             return dataList;
         }
     }
     static class DatabaseHelperExtension
     {
+        /// <summary>
+        /// This function will perform an SQL-like in LINQ manner to get the result for 1 row, no matter how much the data it got
+        /// </summary>
+        /// <typeparam name="T">Generic type of caller instance</typeparam>
+        /// <param name="baseobj">Base caller</param>
+        /// <param name="tableName">Table name that is going to query</param>
+        /// <param name="predicate">A predicate of the data, think of it as WHERE clause on SQL</param>
+        /// <returns></returns>
+        public static T SelectOne<T>(this T baseobj, Func<T, bool> predicate) where T : new()
+        {
+            var conn = SQLiteInstance.GetConnection;//new SQLiteConnection(Extension.sqliteDBPath);
+            var result = conn.Query<T>($@"SELECT * FROM {baseobj.GetType().Name}").Where(predicate).FirstOrDefault();
+            //a basic code would be like : conn.Query<T>($@"SELECT * FROM Foo").Where(x=>x.id == 1).FirstOrDefault();
+            //that is similar to : SELECT * FROM Foo WHERE id = 1
+            //please give a predicate that will return only one row.
+            //conn.Close();
+            return result;
+        }
+        /// <summary>
+        /// This function will perform an SQL-like in LINQ manner to get the result for many rows.
+        /// </summary>
+        /// <typeparam name="T">Generic type of caller instance</typeparam>
+        /// <param name="baseobj">Base caller</param>
+        /// <param name="tableName">Table name that is going to query</param>
+        /// <param name="predicate">A predicate of the data, think of it as WHERE clause on SQL</param>
+        /// <returns></returns>
+        public static List<T> SelectAll<T>(this T baseobj, Func<T, bool> predicate = null) where T : new()
+        {
+            var conn = SQLiteInstance.GetConnection;//new SQLiteConnection(Extension.sqliteDBPath);
+            var result = conn.Query<T>($@"SELECT * FROM {baseobj.GetType().Name}");
+            //a basic code would be like : conn.Query<T>($@"SELECT * FROM Foo");
+            //that is similar to : SELECT * FROM Foo;
+            //then we determine the predicate parameter if it's null or not
+            //if it's not then we filter the data with predicate or else we return the full-dataset
+            //conn.Close();
+            if (predicate == null)
+                //return SELECT * FROM Foo;
+                return result;
+            else
+                //assume that the predicate is x=>x.id >= 1 && x.id <= 10
+                //return SELECT * FROM Foo WHERE id >= 1 AND id <= 10
+                //by using this method we can easily apply the logic onto the dataset (but that can't do the complex query ofcourse)
+                return result.Where(predicate).ToList();
+        }
+        [Obsolete("Due to this function required an id that can lead to MISDELETE value on runtime, to solve this please implement the delete function by inherit DatabaseHelper class into child class (but you can still use this function if you're not intended to implement on your own ofcourse)")]
+        public static bool Delete<T>(this T baseobj,int id) where T : new()
+        {
+            try
+            {
+                var conn = SQLiteInstance.GetConnection;//new SQLiteConnection(Extension.sqliteDBPath);
+                var result = conn.Delete<T>(id);
+                //conn.Close();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
         public static bool Update(this DatabaseHelper data)
         {
             try
             {
-                var conn = new SQLiteConnection(Extension.sqliteDBPath);
+                var conn = SQLiteInstance.GetConnection;//new SQLiteConnection(Extension.sqliteDBPath);
                 var result = conn.Update(data);
-                conn.Close();
+                //conn.Close();
                 return true;
             }
             catch
@@ -102,9 +182,9 @@ namespace HappyHealthyCSharp
         {
             try
             {
-                var conn = new SQLiteConnection(Extension.sqliteDBPath);
+                var conn = SQLiteInstance.GetConnection;//new SQLiteConnection(Extension.sqliteDBPath);
                 var result = conn.Insert(data);
-                conn.Close();
+                //conn.Close();
                 return true;
             }
             catch (Exception e)
@@ -118,7 +198,7 @@ namespace HappyHealthyCSharp
 
             try
             {
-                var sqliteConn = new SQLiteConnection(Extension.sqliteDBPath);
+                var sqliteConn = SQLiteInstance.GetConnection;
                 sqliteConn.CreateTable<DiabetesTABLE>();
                 sqliteConn.CreateTable<DoctorTABLE>();
                 sqliteConn.CreateTable<FoodTABLE>();
@@ -128,7 +208,6 @@ namespace HappyHealthyCSharp
                 sqliteConn.CreateTable<SummaryDiabetesTABLE>();
                 sqliteConn.CreateTable<UserTABLE>();
                 CreateTriggers(sqliteConn);
-                sqliteConn.Close();
                 return true;
             }
             catch (Exception e)
@@ -142,8 +221,8 @@ namespace HappyHealthyCSharp
             c.CreateTable<TEMP_DiabetesTABLE>();
             c.Execute($@"CREATE TRIGGER DiabetesTABLE_After_Insert_Trigger AFTER INSERT ON DiabetesTABLE 
                            BEGIN 
-                                INSERT INTO TEMP_DiabetesTABLE(fbs_id_pointer, fbs_time_new, fbs_fbs_new, fbs_fbs_lvl_new, MODE,ud_id) 
-                                VALUES(NEW.fbs_id, NEW.fbs_time, NEW.fbs_fbs, NEW.fbs_fbs_lvl, 'I',NEW.ud_id); 
+                                INSERT INTO TEMP_DiabetesTABLE(fbs_id_pointer, fbs_time_new, fbs_fbs_new, fbs_fbs_lvl_new,fbs_fbs_sum_new, MODE,ud_id) 
+                                VALUES(NEW.fbs_id, NEW.fbs_time, NEW.fbs_fbs, NEW.fbs_fbs_lvl,NEW.fbs_fbs_sum, 'I',NEW.ud_id); 
                                 UPDATE DiabetesTABLE 
                                 SET 
                                     fbs_time_string = DATETIME('now','7 hours')
@@ -152,13 +231,13 @@ namespace HappyHealthyCSharp
                                 END;");
             c.Execute($@"CREATE TRIGGER DiabetesTABLE_After_Update_Trigger AFTER UPDATE ON DiabetesTABLE 
                              BEGIN
-                             	INSERT INTO TEMP_DiabetesTABLE(fbs_id_pointer, fbs_time_old, fbs_fbs_old, fbs_fbs_lvl_old, fbs_time_new, fbs_fbs_new, fbs_fbs_lvl_new,fbs_time_string_new, MODE,ud_id)
-                             	VALUES(OLD.fbs_id, OLD.fbs_time, OLD.fbs_fbs, OLD.fbs_fbs_lvl, NEW.fbs_time, NEW.fbs_fbs, NEW.fbs_fbs_lvl,NEW.fbs_time_string, 'U',NEW.ud_id);
+                             	INSERT INTO TEMP_DiabetesTABLE(fbs_id_pointer, fbs_time_old, fbs_fbs_old, fbs_fbs_lvl_old, fbs_time_new, fbs_fbs_new, fbs_fbs_lvl_new,fbs_time_string_new,fbs_fbs_sum_old,fbs_fbs_sum_new,MODE,ud_id)
+                             	VALUES(OLD.fbs_id, OLD.fbs_time, OLD.fbs_fbs, OLD.fbs_fbs_lvl, NEW.fbs_time, NEW.fbs_fbs, NEW.fbs_fbs_lvl,NEW.fbs_time_string,OLD.fbs_fbs_sum,NEW.fbs_fbs_sum, 'U',NEW.ud_id);
                              END");
             c.Execute($@"CREATE TRIGGER DiabetesTABLE_After_Delete_Trigger AFTER DELETE ON DiabetesTABLE 
                             BEGIN 
-                                INSERT INTO TEMP_DiabetesTABLE(fbs_id_pointer, fbs_time_old, fbs_fbs_old, fbs_fbs_lvl_old, MODE,ud_id) 
-                                VALUES(OLD.fbs_id, OLD.fbs_time, OLD.fbs_fbs, OLD.fbs_fbs_lvl, 'D',OLD.ud_id); 
+                                INSERT INTO TEMP_DiabetesTABLE(fbs_id_pointer, fbs_time_old, fbs_fbs_old, fbs_fbs_lvl_old,fbs_fbs_sum_old, MODE,ud_id) 
+                                VALUES(OLD.fbs_id, OLD.fbs_time, OLD.fbs_fbs, OLD.fbs_fbs_lvl,OLD.fbs_fbs_sum, 'D',OLD.ud_id); 
                             END");
 
             c.CreateTable<TEMP_PressureTABLE>();
@@ -211,6 +290,26 @@ namespace HappyHealthyCSharp
             c.Execute("CREATE TRIGGER SummaryDiabetesTABLE_After_Update_Trigger AFTER UPDATE ON SummaryDiabetesTABLE BEGIN insert into TEMP_SummaryDiabetesTABLE(sfbs_id_pointer, sfbs_time_old, sfbs_sfbs_old, sfbs_sfbs_lvl_old, sfbs_time_new, sfbs_sfbs_new, sfbs_sfbs_lvl_new, MODE) values(OLD.bp_id, OLD.sfbs_time, OLD.sfbs_sfbs, OLD.sfbs_sfbs_lvl, NEW.sfbs_time, NEW.sfbs_sfbs, NEW.sfbs_sfbs_lvl, 'U'); END");
             //c.Execute("CREATE TABLE `TEMP_DiabetesTABLE` (`fbs_id_pointer` int, `fbs_time_new` bigint, `fbs_time_old` bigint, `fbs_fbs_new` float, `fbs_fbs_old` float, `fbs_fbs_lvl_new` integer, `fbs_fbs_lvl_old` integer, `MODE` varchar(255) )");
         }
+        public static JavaList<IDictionary<string, object>> ToJavaList<T>(this IEnumerable<T> dataset) where T : new()
+        {
+            var type = typeof(T);
+            var prop = type.GetProperty("Column", BindingFlags.Public | BindingFlags.Static);
+            var value = prop.GetValue(null, null);
+            var columnTag = (List<string>)value;
+            var dataList = new JavaList<IDictionary<string, object>>();
+            foreach(var dataRow in dataset)
+            {
+                var data = new JavaDictionary<string, object>();
+                foreach(var attribute in columnTag)
+                {
+                    var currentProp = dataRow.GetType().GetProperty(attribute);
+                    data.Add(attribute, currentProp.GetValue(dataRow));
+                    //data.Add(attribute, currentProp.PropertyType == typeof(DateTime) ? ((DateTime)currentProp.GetValue(dataRow)).ToLocalTime() : currentProp.GetValue(dataRow));
+                };
+                dataList.Add(data);
+            };
+            return dataList;
+        }
     }
     static class MySQLDatabaseHelper
     {
@@ -248,7 +347,7 @@ namespace HappyHealthyCSharp
                 if (userData != null)
                 {
                     var userID = -999;
-                    var sqliteInstance = new SQLiteConnection(Extension.sqliteDBPath);
+                    var sqliteInstance = SQLiteInstance.GetConnection;//new SQLiteConnection(Extension.sqliteDBPath);
                     foreach (DataRow row in ((DataSet)userData).Tables["UserTABLE"].Rows)
                     {
                         var tempUser = new UserTABLE();
@@ -266,18 +365,19 @@ namespace HappyHealthyCSharp
                     {
                         var tempDiabetes = new DiabetesTABLE();
                         tempDiabetes.fbs_id = Convert.ToInt32(row[0].ToString());
-                        tempDiabetes.fbs_time = ((DateTime)row[1]).ToThaiLocale();
+                        tempDiabetes.fbs_time = ((DateTime)row[1]);//.ToThaiLocale();
                         tempDiabetes.fbs_time_string = row[1].ToString();
                         tempDiabetes.fbs_fbs = Convert.ToDecimal(row[2].ToString());
                         //tempDiabetes.fbs_fbs_lvl = Convert.ToInt32(row[3].ToString());
-                        tempDiabetes.ud_id = Convert.ToInt32(row[4].ToString());
+                        tempDiabetes.fbs_fbs_sum = Convert.ToDecimal(row[4].ToString());
+                        tempDiabetes.ud_id = Convert.ToInt32(row[5].ToString());
                         tempDiabetes.Insert();
                     }
                     foreach (DataRow row in ((DataSet)kidneyData).Tables["KidneyTABLE"].Rows)
                     {
                         var tempKidney = new KidneyTABLE();
                         tempKidney.ckd_id = Convert.ToInt32(row[0].ToString());
-                        tempKidney.ckd_time = ((DateTime)row[1]).ToThaiLocale();
+                        tempKidney.ckd_time = ((DateTime)row[1]);//.ToThaiLocale();
                         tempKidney.ckd_time_string = row[1].ToString();
                         tempKidney.ckd_gfr = Convert.ToDecimal(row[2].ToString());
                         //tempKidney.ckd_gfr_level = Convert.ToInt32(row[3].ToString());
@@ -295,7 +395,7 @@ namespace HappyHealthyCSharp
                     {
                         var tempPressure = new PressureTABLE();
                         tempPressure.bp_id = Convert.ToInt32(row[0].ToString());
-                        tempPressure.bp_time = ((DateTime)row[1]).ToThaiLocale();
+                        tempPressure.bp_time = ((DateTime)row[1]);//.ToThaiLocale();
                         tempPressure.bp_time_string = row[1].ToString();
                         tempPressure.bp_up = Convert.ToDecimal(row[2].ToString());
                         tempPressure.bp_lo = Convert.ToDecimal(row[3].ToString());
@@ -307,7 +407,7 @@ namespace HappyHealthyCSharp
                         tempPressure.Insert();
                     }
                     sqliteInstance.Execute($"DELETE FROM TEMP_DiabetesTABLE WHERE ud_id = {userID}");
-                    sqliteInstance.Execute($"DELETE FROM TEMP_KidneyTABLE WHERE ud_id = {userID}");
+                    sqliteInstance.Execute($"DELETE FROM TEMP_KidneyTABLE   WHERE ud_id = {userID}");
                     sqliteInstance.Execute($"DELETE FROM TEMP_PressureTABLE WHERE ud_id = {userID}");
                     return true;
                 }

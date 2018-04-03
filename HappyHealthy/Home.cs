@@ -14,6 +14,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Net.Http;
 using System.Threading;
+using Newtonsoft.Json;
 
 namespace HappyHealthyCSharp
 {
@@ -22,6 +23,7 @@ namespace HappyHealthyCSharp
     {
         TextView labelTest;
         TextView homeHeaderText;
+        UserTABLE user = new UserTABLE();
         #region Experimental Section
         private bool isRecording;
         private readonly int VOICE = 10;
@@ -50,8 +52,47 @@ namespace HappyHealthyCSharp
             DevButton.Click += ClickDev;
             var imageView = FindViewById<ImageView>(Resource.Id.imageView4);
             imageView.Click += NotImplemented;
-
+            HomeHeaderStateChange();
             //TestSTTImplementation(imageView);
+        }
+
+        private async void HomeHeaderStateChange()
+        {
+            var r = new Random();
+            user = user.SelectOne(x => x.ud_id == Extension.getPreference("ud_id", 0, this));
+            var data = new List<string>() { $"ยินดีต้อนรับกลับมา {user.ud_name}" };
+            var action = new List<EventHandler>() { delegate { } };
+            new DoctorTABLE().SelectAll().ForEach(x => {
+                if ((x.da_date - DateTime.Now).Days < 3)
+                {
+                    data.Add($"มีนัดพบแพทย์ใน 3 วัน (คลิก)");
+                    action.Add(delegate {
+                        var jsonObject = JsonConvert.SerializeObject(x);
+                        var DoctorIntent = new Intent(this, typeof(Doctor));
+                        DoctorIntent.PutExtra("targetObject", jsonObject);
+                        StartActivity(DoctorIntent);
+                    });
+                }
+            });
+            /*
+            new DiabetesTABLE().SelectAll().ForEach(x => {
+                if(x.fbs_fbs_lvl > 1)
+                {
+                    data.Add($"พบค่าเบาหวานผิดปกติ (คลิก)");
+                    action.Add(delegate
+                    {
+
+                    });
+                }
+            });
+            */
+            while (true)
+            {
+                var index = r.Next(0, data.Count);
+                homeHeaderText.Text = data[index];
+                homeHeaderText.Click += action[index];
+                await Task.Delay(30000);
+            }
         }
 
         private void ClickDev(object sender, EventArgs e)
@@ -114,6 +155,8 @@ namespace HappyHealthyCSharp
 
         public async void ClickFood(object sender, EventArgs e)
         {
+            Extension.CreateDialogue(this, "ระบบยังไม่เปิดให้บริการ").Show();
+            return;
             ProgressDialog progressDialog = null;
             try
             {
@@ -144,11 +187,6 @@ namespace HappyHealthyCSharp
 
         public static async Task<bool> TestConnectionValidate(Context c,HHCSService.HHCSService serviceInstance)
         {
-            /*
-            var result = new TaskCompletionSource<HHCSService.TestConnectionCompletedEventArgs>();
-            serviceInstance.TestConnectionCompleted += (s, e) => TransferCompletion(result, e, () => e);
-            serviceInstance.TestConnectionAsync();
-            */
             bool result = false;
             await Task.Run(delegate {
                 result = serviceInstance.TestConnection(Service.GetInstance.WebServiceAuthentication);
@@ -169,16 +207,14 @@ namespace HappyHealthyCSharp
         }
         public void ClickMedicine(object sender, EventArgs e)
         {
-            //GlobalFunction.createDialog(this, "Not implemented").Show();
-            var user = new UserTABLE().Select<UserTABLE>($@"SELECT * FROM UserTABLE WHERE UD_ID = '{Extension.getPreference("ud_id", 0, this)}'")[0];
+            var user = new UserTABLE().SelectOne(x=>x.ud_id == Extension.getPreference("ud_id", 0, this)); 
             if (!user.ud_bf_time.TimeValidate() || !user.ud_lu_time.TimeValidate() || !user.ud_dn_time.TimeValidate() || !user.ud_sl_time.TimeValidate())
-            {
-                Extension.CreateDialogue(this, "กรุณาตั้งค่าเวลาทานอาหาร และเวลาเข้านอน ก่อนใช้งานการบันทึกแจ้งเตือนทานยา", delegate {
-                    var act = (MainActivity)this.Parent;
-                    var th = act.TabHost;
-                    th.SetCurrentTabByTag("User");
-                }).Show();
-            }
+            { //by using this technique a set-up time can't be an 0.00AM
+                Extension.CreateDialogue(this, "กรุณาตั้งค่าเวลาทานอาหาร และเวลาเข้านอน ก่อนใช้งานการบันทึกแจ้งเตือนทานยา").Show();
+                var act = (MainActivity)this.Parent;
+                var th = act.TabHost;
+                th.SetCurrentTabByTag("User");
+            } 
             else
             {
                 StartActivity(new Intent(this, typeof(History_Medicine)));
@@ -190,18 +226,6 @@ namespace HappyHealthyCSharp
         }
         public void NotImplemented(object sender, EventArgs e)
         {
-            //Extension.CreateDialogue(this, "Not Implemented").Show();
-            /*
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("http://192.168.1.7/RESTservice/");
-                var response = client.GetAsync($@"api/Encryption/{Extension.getPreference("ud_id", 0, this)}").Result;
-                if (response.IsSuccessStatusCode)
-                {
-                    Extension.CreateDialogue(this, response.Content.ReadAsStringAsync().Result).Show();
-                }
-            }
-            */
             return;
         }
     }

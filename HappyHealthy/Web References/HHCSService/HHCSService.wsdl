@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
   <wsdl:types>
     <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="InsertI">
+        <s:complexType />
+      </s:element>
+      <s:element name="InsertIResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="InsertIResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="Register">
         <s:complexType>
           <s:sequence>
@@ -137,6 +147,8 @@
           <s:element minOccurs="1" maxOccurs="1" name="fbs_fbs_old" type="s:int" />
           <s:element minOccurs="1" maxOccurs="1" name="fbs_fbs_lvl_new" type="s:int" />
           <s:element minOccurs="1" maxOccurs="1" name="fbs_fbs_lvl_old" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="fbs_fbs_sum_new" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="fbs_fbs_sum_old" type="s:double" />
           <s:element minOccurs="0" maxOccurs="1" name="mode" type="s:string" />
         </s:sequence>
       </s:complexType>
@@ -243,6 +255,12 @@
       </s:element>
     </s:schema>
   </wsdl:types>
+  <wsdl:message name="InsertISoapIn">
+    <wsdl:part name="parameters" element="tns:InsertI" />
+  </wsdl:message>
+  <wsdl:message name="InsertISoapOut">
+    <wsdl:part name="parameters" element="tns:InsertIResponse" />
+  </wsdl:message>
   <wsdl:message name="RegisterSoapIn">
     <wsdl:part name="parameters" element="tns:Register" />
   </wsdl:message>
@@ -292,6 +310,10 @@
     <wsdl:part name="parameters" element="tns:FoodRequestResponse" />
   </wsdl:message>
   <wsdl:portType name="HHCSServiceSoap">
+    <wsdl:operation name="InsertI">
+      <wsdl:input message="tns:InsertISoapIn" />
+      <wsdl:output message="tns:InsertISoapOut" />
+    </wsdl:operation>
     <wsdl:operation name="Register">
       <wsdl:input message="tns:RegisterSoapIn" />
       <wsdl:output message="tns:RegisterSoapOut" />
@@ -327,6 +349,15 @@
   </wsdl:portType>
   <wsdl:binding name="HHCSServiceSoap" type="tns:HHCSServiceSoap">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="InsertI">
+      <soap:operation soapAction="http://tempuri.org/InsertI" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="Register">
       <soap:operation soapAction="http://tempuri.org/Register" style="document" />
       <wsdl:input>
@@ -402,6 +433,15 @@
   </wsdl:binding>
   <wsdl:binding name="HHCSServiceSoap12" type="tns:HHCSServiceSoap">
     <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="InsertI">
+      <soap12:operation soapAction="http://tempuri.org/InsertI" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="Register">
       <soap12:operation soapAction="http://tempuri.org/Register" style="document" />
       <wsdl:input>
@@ -477,10 +517,10 @@
   </wsdl:binding>
   <wsdl:service name="HHCSService">
     <wsdl:port name="HHCSServiceSoap" binding="tns:HHCSServiceSoap">
-      <soap:address location="http://192.168.137.1/HHCSService/HHCSService.asmx" />
+      <soap:address location="http://hhcssdm.somee.com/HHCSService/HHCSService.asmx" />
     </wsdl:port>
     <wsdl:port name="HHCSServiceSoap12" binding="tns:HHCSServiceSoap12">
-      <soap12:address location="http://192.168.137.1/HHCSService/HHCSService.asmx" />
+      <soap12:address location="http://hhcssdm.somee.com/HHCSService/HHCSService.asmx" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

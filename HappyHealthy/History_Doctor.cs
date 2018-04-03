@@ -16,29 +16,44 @@ using Android.Database;
 
 namespace HappyHealthyCSharp
 {
-    [Activity(Label = "Doctor",ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
+    [Activity(Label = "Doctor", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
     public class History_Doctor : ListActivity
     {
         DoctorTABLE docTable;
         JavaList<IDictionary<string, object>> docList;
+        private ImageView backbtt;
+        private ImageView addbtt;
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             SetTheme(Resource.Style.Base_Theme_AppCompat_Light);
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_history_doc);
-            // Create your application here
-            var backbtt = FindViewById<ImageView>(Resource.Id.imageViewbackdoc);
-            backbtt.Click += delegate {
+            InitializeControl();
+            InitializeControlEvent();
+            docTable = new DoctorTABLE();
+        }
+
+        private void InitializeControlEvent()
+        {
+            backbtt.Click += delegate
+            {
                 this.Finish();
             };
-            var addbtt = FindViewById<ImageView>(Resource.Id.imageview_button_add_doc);
+
             addbtt.Click += delegate
             {
                 StartActivity(typeof(Doctor));
             };
             ListView.ItemClick += onItemClick;
-            docTable = new DoctorTABLE();
         }
+
+        private void InitializeControl()
+        {
+            backbtt = FindViewById<ImageView>(Resource.Id.imageViewbackdoc);
+            addbtt = FindViewById<ImageView>(Resource.Id.imageview_button_add_doc);
+        }
+
         protected override void OnResume()
         {
             base.OnResume();
@@ -46,27 +61,9 @@ namespace HappyHealthyCSharp
         }
         private void onItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
-            /*
-            //pillList[e.Position].TryGetValue("ma_name", out object pillValue);
-            docList[e.Position].TryGetValue("da_id", out object docID);
+            docList[e.Position].TryGetValue("da_id", out dynamic docID);
             var docObject = new DoctorTABLE();
-            docObject = docObject.Select<DoctorTABLE>($"SELECT * From DoctorTABLE where da_id = {docID}")[0];
-            /*
-            Extension.CreateDialogue(this, $@"The value for this one : {pillObject.ma_desc}", null, delegate
-            {
-                var jsonObject = JsonConvert.SerializeObject(pillObject);
-                var Intent = new Intent(this, typeof(Pill));
-                Intent.PutExtra("targetObject", jsonObject);
-                StartActivity(Intent);
-            }, "OK", "Edit").Show();
-            var jsonObject = JsonConvert.SerializeObject(docObject);
-            var Intent = new Intent(this, typeof(Doctor));
-            Intent.PutExtra("targetObject", jsonObject);
-            StartActivity(Intent);
-            */
-            docList[e.Position].TryGetValue("da_id", out object docID);
-            var docObject = new DoctorTABLE();
-            docObject = docObject.Select<DoctorTABLE>($"SELECT * From DoctorTABLE where da_id = {docID}")[0];
+            docObject = docObject.SelectOne(x => x.da_id == docID);
             Extension.CreateDialogue(this, "กรุณาเลือกรายการที่ต้องการจะดำเนินการ",
                 delegate
                 {
@@ -84,14 +81,12 @@ namespace HappyHealthyCSharp
                     , Extension.adFontSize
                     , delegate
                     {
-                        //var deleteUri = CalendarHelper.GetDeleteEventURI(docObject.ma_calendar_uri);
-                        //ContentResolver.Delete(deleteUri, null, null);
                         if (docObject.da_calendar_uri != null)
                         {
                             var deleteUri = CalendarHelper.GetDeleteEventURI(docObject.da_calendar_uri);
                             ContentResolver.Delete(deleteUri, null, null);
                         }
-                        docObject.Delete<DoctorTABLE>(docObject.da_id);
+                        docObject.Delete();
                         SetListView();
                     }
                     , delegate { }
@@ -101,7 +96,7 @@ namespace HappyHealthyCSharp
         }
         public void SetListView()
         {
-            docList = docTable.GetJavaList<DoctorTABLE>($"SELECT * FROM DoctorTABLE", new DoctorTABLE().Column);
+            docList = docTable.SelectAll().ToJavaList();//docTable.GetJavaList<DoctorTABLE>($"SELECT * FROM DoctorTABLE", new DoctorTABLE().Column);
             //pillList = pillTable.getPillList($"SELECT * FROM PillTABLE WHERE UD_ID = {GlobalFunction.getPreference("ud_id", "", this)}");
             ListAdapter = new SimpleAdapter(this, docList, Resource.Layout.history_doc, new string[] { "da_name", "da_comment" }, new int[] { Resource.Id.his_doc_name, Resource.Id.docdetail }); //"D_DateTime",date
             ListView.Adapter = ListAdapter;

@@ -161,9 +161,8 @@
             android:layout_width="fill_parent"
             android:layout_height="45dp"
             android:id="@+id/register_button"
-            android:onClick="CLickLogin"
             android:src="@drawable/regisbutton"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="65dp"
             android:layout_marginBottom="20.5dp" />
     </LinearLayout>
 </RelativeLayout>

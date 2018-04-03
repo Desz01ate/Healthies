@@ -20,7 +20,7 @@ using Android.Views.InputMethods;
 namespace HappyHealthyCSharp
 {
     [Activity(Label = "Doctor", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait, WindowSoftInputMode = SoftInput.StateHidden)]
-    public class Doctor : Activity,ILocalActivity
+    public class Doctor : Activity, ILocalActivity
     {
         public struct App
         {
@@ -33,36 +33,44 @@ namespace HappyHealthyCSharp
         ImageView docAttendPicture;
         TextView docAttendDate;//, docRegisTime, docAppointmentTime;
         EditText et_docName, et_deptName, et_place, et_hospital, et_comment;
+        private ImageView saveButton;
         DoctorTABLE docObject;
+        private TextView header;
+        private ImageView addhiding;
+        private ImageView backbtt;
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             SetTheme(Resource.Style.Base_Theme_AppCompat_Light);
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_add_doc);
-            var header = FindViewById<TextView>(Resource.Id.textView_header_name_doc);
-            header.Text = "บันทึกการนัดพบแพทย์";
-            var addhiding = FindViewById<ImageView>(Resource.Id.imageview_button_add_doc);
-            addhiding.Visibility = ViewStates.Gone;
-            //var camerabtt = FindViewById<ImageView>(Resource.Id.imageView_button_save_pic_doc);
-            //camerabtt.Visibility = ViewStates.Gone;
-            var backbtt = FindViewById<ImageView>(Resource.Id.imageViewbackdoc);
-            //var deletebtt = FindViewById<ImageView>(Resource.Id.imageView_button_delete_doc);
-            docAttendDate = FindViewById<TextView>(Resource.Id.choosedate_doc);
-            //docRegisTime = FindViewById<TextView>(Resource.Id.chooseregtime_doc);
-            //docRegisTime.Visibility = ViewStates.Gone;
-            //docAppointmentTime = FindViewById<TextView>(Resource.Id.chooseappttime_doc);
-            //docAppointmentTime.Visibility = ViewStates.Gone;
-            et_docName = FindViewById<EditText>(Resource.Id.da_name);
-            et_deptName = FindViewById<EditText>(Resource.Id.da_dept);
-            et_place = FindViewById<EditText>(Resource.Id.da_place);
-            et_hospital = FindViewById<EditText>(Resource.Id.da_hospital);
-            et_comment = FindViewById<EditText>(Resource.Id.da_comment);
-            //docAttendPicture = FindViewById<ImageView>(Resource.Id.imageView_show_image);
-            //docAttendPicture.Visibility = ViewStates.Gone;
-            var saveButton = FindViewById<ImageView>(Resource.Id.imageView_button_save_doc);
-            //code goes below
             var flagObjectJson = Intent.GetStringExtra("targetObject") ?? string.Empty;
             docObject = string.IsNullOrEmpty(flagObjectJson) ? new DoctorTABLE() { da_id = -1 } : JsonConvert.DeserializeObject<DoctorTABLE>(flagObjectJson);
+            InitializeControl();
+            InitializeControlEvent();
+            InitializeData();
+            if (IsAppToTakePicturesAvailable())
+            {
+                CreateDirForPictures();
+  
+            }
+
+            // Create your application here
+
+        }
+
+        private void InitializeData()
+        {
+            addhiding.Visibility = ViewStates.Gone;
+            header.Text = "บันทึกการนัดพบแพทย์";
+            if (docObject.da_id == -1)
+                docAttendDate.Text = "คลิกที่นี่เพื่อเลือกวันที่";
+            else
+                docAttendDate.Text = docObject.da_date.ToString("dd/MM/yyyy");
+        }
+
+        private void InitializeControlEvent()
+        {
             if (docObject.da_id == -1)
             {
                 saveButton.Click += SaveValue;
@@ -71,48 +79,41 @@ namespace HappyHealthyCSharp
             {
                 InitialForUpdateEvent();
                 saveButton.Click += UpdateValue;
-                //deletebtt.Click += DeleteValue;
             }
-            backbtt.Click += delegate {
+            backbtt.Click += delegate
+            {
                 this.Finish();
             };
-            docAttendDate.Click += delegate {
+            docAttendDate.Click += delegate
+            {
                 docCarlendar = Calendar.GetInstance(Java.Util.TimeZone.GetTimeZone("GMT+7"));
-                docDatePicker = new DatePickerDialog(this, delegate {
+                docDatePicker = new DatePickerDialog(this, delegate
+                {
                     docCarlendar.Set(docDatePicker.DatePicker.Year, docDatePicker.DatePicker.Month, docDatePicker.DatePicker.DayOfMonth);
                     Date date = docCarlendar.Time;
                     var textDate = new SimpleDateFormat("MM-dd-yyyy").Format(date);
                     docObject.da_date = Convert.ToDateTime(textDate).AddDays(1);
-                    docAttendDate.Text = Convert.ToDateTime(textDate).ToThaiLocale().ToString("dd/MM/yyyy");
+                    docAttendDate.Text = Convert.ToDateTime(textDate).ToString("dd/MM/yyyy");
+                    //docAttendDate.Text = Convert.ToDateTime(textDate).ToThaiLocale().ToString("dd/MM/yyyy");
                 }, DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
                 docDatePicker.Show();
             };
-            //docRegisTime.Click += delegate {
-            //    var tpickerFragment = TimePickerFragment.NewInstance(
-            //    delegate (DateTime time)
-            //    {
-            //        docRegisTime.Text = time.ToShortTimeString();
-            //    });
-            //    tpickerFragment.Show(FragmentManager, TimePickerFragment.TAG);
-            //};
-            //docAppointmentTime.Click+= delegate {
-            //    var tpickerFragment = TimePickerFragment.NewInstance(
-            //    delegate (DateTime time)
-            //    {
-            //        docAppointmentTime.Text = time.ToShortTimeString();
-            //    });
-            //    tpickerFragment.Show(FragmentManager, TimePickerFragment.TAG);
-            //};
-            if (IsAppToTakePicturesAvailable())
-            {
-                CreateDirForPictures();
-                //camerabtt.Click += cameraClickEvent;
-   
-            }
-
-            // Create your application here
-            
         }
+
+        private void InitializeControl()
+        {
+            header = FindViewById<TextView>(Resource.Id.textView_header_name_doc);
+            addhiding = FindViewById<ImageView>(Resource.Id.imageview_button_add_doc);
+            backbtt = FindViewById<ImageView>(Resource.Id.imageViewbackdoc);
+            docAttendDate = FindViewById<TextView>(Resource.Id.choosedate_doc);
+            et_docName = FindViewById<EditText>(Resource.Id.da_name);
+            et_deptName = FindViewById<EditText>(Resource.Id.da_dept);
+            et_place = FindViewById<EditText>(Resource.Id.da_place);
+            et_hospital = FindViewById<EditText>(Resource.Id.da_hospital);
+            et_comment = FindViewById<EditText>(Resource.Id.da_comment);
+            saveButton = FindViewById<ImageView>(Resource.Id.imageView_button_save_doc);
+        }
+
         protected override void OnResume()
         {
             base.OnResume();
@@ -120,7 +121,7 @@ namespace HappyHealthyCSharp
         private void HideKeyboard()
         {
             InputMethodManager inputManager = (InputMethodManager)GetSystemService(Context.InputMethodService);
-            if(CurrentFocus != null)
+            if (CurrentFocus != null)
                 inputManager.HideSoftInputFromWindow(CurrentFocus.WindowToken, HideSoftInputFlags.None);
         }
         public void DeleteValue(object sender, EventArgs e)
@@ -135,7 +136,7 @@ namespace HappyHealthyCSharp
                  {
                      var deleteUri = CalendarHelper.GetDeleteEventURI(docObject.da_calendar_uri);
                      ContentResolver.Delete(deleteUri, null, null);
-                     docObject.Delete<DoctorTABLE>(docObject.da_id);
+                     docObject.Delete();
                      Finish();
                  }
                  , delegate { }
@@ -210,7 +211,7 @@ namespace HappyHealthyCSharp
             var year = Convert.ToInt32(docObject.da_date.ToString("yyyy"));
             var month = Convert.ToInt32(docObject.da_date.ToString("MM"));
             var date = Convert.ToInt32(docObject.da_date.ToString("dd"));
-            var eventValues = CalendarHelper.GetEventContentValues(4, et_hospital.Text, et_comment.Text, year, month-1, date-1, 10, 11);
+            var eventValues = CalendarHelper.GetEventContentValues(4, et_hospital.Text, et_comment.Text, year, month - 1, date - 1, 10, 11);
             System.Console.WriteLine(CalendarContract.Events.ContentUri.ToString() + eventValues.ToString());
             var uri = ContentResolver.Insert(CalendarContract.Events.ContentUri, eventValues);
             docObject.da_calendar_uri = uri.ToString();
@@ -265,10 +266,10 @@ namespace HappyHealthyCSharp
         {
             Calendar c = Calendar.GetInstance(Java.Util.TimeZone.Default);
 
-            c.Set(Java.Util.CalendarField.DayOfMonth, day-1);
+            c.Set(Java.Util.CalendarField.DayOfMonth, day - 1);
             c.Set(Java.Util.CalendarField.HourOfDay, hr);
             c.Set(Java.Util.CalendarField.Minute, min);
-            c.Set(Java.Util.CalendarField.Month, month-1);
+            c.Set(Java.Util.CalendarField.Month, month - 1);
             c.Set(Java.Util.CalendarField.Year, yr);
 
             return c.TimeInMillis;

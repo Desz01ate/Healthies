@@ -136,7 +136,7 @@
     <Compile Include="AndroidImageAdapter.cs" />
     <Compile Include="BitmapHelpers.cs" />
     <Compile Include="CalendarHelper.cs" />
-    <Compile Include="Database.cs" />
+    <Compile Include="DatabaseExtension.cs" />
     <Compile Include="Develop.cs" />
     <Compile Include="Diabetes.cs" />
     <Compile Include="Doctor.cs" />
@@ -145,8 +145,8 @@
     <Compile Include="IDatabaseSync.cs" />
     <Compile Include="ILocalActivity.cs" />
     <Compile Include="Service.cs" />
+    <Compile Include="SQLiteSInstance.cs" />
     <Compile Include="SummaryDiabetesTABLE.cs" />
-    <Compile Include="EmptyDemo.cs" />
     <Compile Include="FoodExchange.cs" />
     <Compile Include="PasswordReset.cs" />
     <Compile Include="History_Medicine.cs" />
@@ -162,7 +162,7 @@
     <Compile Include="Notification.cs" />
     <Compile Include="PressureTABLE.cs" />
     <Compile Include="KidneyTABLE.cs" />
-    <Compile Include="UserDetail.cs" />
+    <Compile Include="UserInfoActivity.cs" />
     <Compile Include="FoodDetail.cs" />
     <Compile Include="DiabetesTABLE.cs" />
     <Compile Include="FoodTABLE.cs" />
@@ -193,6 +193,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="GettingStarted.Xamarin" />
+    <None Include="google-services.json" />
     <None Include="packages.config" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
@@ -1243,10 +1244,10 @@
     <AndroidResource Include="Resources\drawable-hdpi\buttonsavefoodex.png" />
   </ItemGroup>
   <ItemGroup>
-    <WebReferenceUrl Include="http://192.168.137.1/HHCSService/HHCSService.asmx">
+    <WebReferenceUrl Include="http://hhcssdm.somee.com/HHCSService/HHCSService.asmx">
       <UrlBehavior>Dynamic</UrlBehavior>
       <RelPath>Web References\HHCSService\</RelPath>
-      <UpdateFromURL>http://192.168.137.1/HHCSService/HHCSService.asmx</UpdateFromURL>
+      <UpdateFromURL>http://hhcssdm.somee.com/HHCSService/HHCSService.asmx</UpdateFromURL>
       <ServiceLocationURL>
       </ServiceLocationURL>
       <CachedDynamicPropName>
@@ -1310,6 +1311,15 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\raw\bloodSugar.mp3" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-hdpi\icon_app.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-hdpi\icon_splasg_screen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\raw\sumBloodSugar.mp3" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Forms.2.3.4.247\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets" Condition="Exists('..\packages\Xamarin.Forms.2.3.4.247\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets')" />

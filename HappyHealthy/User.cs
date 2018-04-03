@@ -12,7 +12,7 @@ using Android.Widget;
 namespace HappyHealthyCSharp
 {
     [Activity]
-    class User : Activity
+    class User : Activity //not use
     {
         protected override void OnCreate(Bundle savedInstanceState)
         {
