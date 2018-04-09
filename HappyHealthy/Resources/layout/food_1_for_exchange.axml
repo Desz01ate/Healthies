@@ -64,7 +64,7 @@
         android:layout_width="45dp"
         android:layout_height="50dp"
         android:id="@+id/imageView47"
-        android:src="@drawable/ic_exchange"
+        android:src="@drawable/iconfood"
         android:layout_marginLeft="12dp"
         android:layout_marginTop="5dp" />
 </RelativeLayout>
