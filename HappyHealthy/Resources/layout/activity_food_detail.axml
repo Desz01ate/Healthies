@@ -83,7 +83,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizotal"
+                android:orientation="horizontal"
                 android:layout_weight="1"
                 android:layout_marginBottom="3.0dp">
                 <ImageView
@@ -97,7 +97,7 @@
                     android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     android:text="โซเดียม"
-                    android:id="@+id/food_sodium"
+                    android:id="@+id/food_sodium_label"
                     android:textSize="13dp"
                     android:textColor="#3a3a3a" />
                 <TextView
@@ -121,7 +121,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizotal"
+                android:orientation="horizontal"
                 android:layout_weight="1"
                 android:layout_marginBottom="3dp">
                 <ImageView
@@ -135,7 +135,7 @@
                     android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     android:text="ฟอสฟอรัส"
-                    android:id="@+id/food_phosphorus"
+                    android:id="@+id/food_phosphorus_label"
                     android:textSize="13dp"
                     android:textColor="#3a3a3a" />
                 <TextView
@@ -159,7 +159,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizotal"
+                android:orientation="horizontal"
                 android:layout_weight="1"
                 android:layout_marginBottom="3.0dp">
                 <ImageView
@@ -173,7 +173,7 @@
                     android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     android:text="โพแทสเซียม"
-                    android:id="@+id/food_potassium"
+                    android:id="@+id/food_potassium_label"
                     android:textSize="13dp"
                     android:textColor="#3a3a3a" />
                 <TextView
@@ -197,7 +197,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizotal"
+                android:orientation="horizontal"
                 android:layout_weight="1"
                 android:layout_marginBottom="3.0dp">
                 <ImageView
@@ -211,7 +211,7 @@
                     android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     android:text="โปรตีน"
-                    android:id="@+id/food_protein"
+                    android:id="@+id/food_protein_label"
                     android:textSize="13dp"
                     android:textColor="#3a3a3a" />
                 <TextView
@@ -235,7 +235,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizotal"
+                android:orientation="horizontal"
                 android:layout_weight="1"
                 android:layout_marginBottom="3.0dp">
                 <ImageView
@@ -249,7 +249,7 @@
                     android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     android:text="แมกนีเซียม"
-                    android:id="@+id/food_magnesium"
+                    android:id="@+id/food_magnesium_label"
                     android:textSize="13dp"
                     android:textColor="#3a3a3a" />
                 <TextView

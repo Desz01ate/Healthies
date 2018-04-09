@@ -20,18 +20,20 @@ namespace HappyHealthyCSharp
             SetTheme(Resource.Style.Base_Theme_AppCompat_Light);
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_food_exchange);
-            var title = FindViewById<TextView>(Resource.Id.textView27);
+            var title = FindViewById<TextView>(Resource.Id.textView24);
             title.Text = "รายการอาหารทดแทน";
-            var backBtt = FindViewById<ImageView>(Resource.Id.imageView46);
+            var backBtt = FindViewById<ImageView>(Resource.Id.imageViewFoodBackState);
             backBtt.Click +=delegate{
                 Finish();
             };
+            var addBtt = FindViewById<ImageView>(Resource.Id.imageViewFoodAdd);
+            addBtt.Visibility = ViewStates.Gone;
             setListFood(Intent.GetIntExtra("id", 0));
             // Create your application here
         }
         public void setListFood(int id)
         {
-            var foodList = new FoodTABLE().getFoodList(this,id);
+            var foodList = new FoodTABLE().GetFoodList(this,id);
             ListAdapter = new SimpleAdapter(this, foodList, Resource.Layout.food_1_for_exchange, 
                 new string[] { "food_name", "food_calories", "food_unit", "food_detail" }, 
                 new int[] { Resource.Id.his_foodex_name, Resource.Id.his_foodex_calories, Resource.Id.textView, Resource.Id.his_foodex_detail });

@@ -40,7 +40,7 @@ namespace HappyHealthyCSharp
         Dictionary<string, string> detailFood;
         double total;
         EditText editCal_Total;
-        TextView header,f_name, f_cal, f_unit, f_netweight, f_netunit, f_pro, f_fat, f_car, f_sugar, f_sodium, f_amount, f_detail;
+        TextView header,name,detail, sodium, phosphorus, potassium, protein, magnesium;
         protected override void OnCreate(Bundle savedInstanceState)
         {
 
@@ -49,24 +49,21 @@ namespace HappyHealthyCSharp
             SetContentView(Resource.Layout.activity_food_detail);
             //var addhiding = FindViewById<ImageView>(Resource.Id.imageViewFoodAdd);
             //addhiding.Visibility = ViewStates.Gone;
+            var addBtt = FindViewById<ImageView>(Resource.Id.imageViewFoodAdd);
+            addBtt.Visibility = ViewStates.Gone;
             var img_back = FindViewById<ImageView>(Resource.Id.imageViewFoodBackState);
             img_back.Click += delegate {
                 //StartActivity(new Intent(this, typeof(Food_Type_1)));
                 this.Finish();
             };//back button
-            total = 1;
             foodTABLE = new FoodTABLE();
-            f_name = FindViewById<TextView>(Resource.Id.food_name2);
-            f_cal = FindViewById<TextView>(Resource.Id.food_cal2);
-            f_unit = FindViewById<TextView>(Resource.Id.food_unit2);
-            f_netweight = FindViewById<TextView>(Resource.Id.food_netweight2);
-            f_netunit = FindViewById<TextView>(Resource.Id.food_netunit2);
-            f_pro = FindViewById<TextView>(Resource.Id.food_protein2);
-            f_fat = FindViewById<TextView>(Resource.Id.food_fat2);
-            f_car = FindViewById<TextView>(Resource.Id.food_carbohydrate2);
-            f_sugar = FindViewById<TextView>(Resource.Id.food_sugar2);
-            f_sodium = FindViewById<TextView>(Resource.Id.food_sodium2);
-            f_detail = FindViewById<TextView>(Resource.Id.tv_food_detail);
+            name = FindViewById<TextView>(Resource.Id.food_name);
+            detail = FindViewById<TextView>(Resource.Id.food_note_detail);
+            sodium = FindViewById<TextView>(Resource.Id.food_sodium);
+            phosphorus = FindViewById<TextView>(Resource.Id.food_phosphorus);
+            potassium = FindViewById<TextView>(Resource.Id.food_potassium);
+            protein = FindViewById<TextView>(Resource.Id.food_protein);
+            magnesium = FindViewById<TextView>(Resource.Id.food_magnesium);
             editCal_Total = FindViewById<EditText>(Resource.Id.et_exe2);
             var foodExchange = FindViewById<ImageView>(Resource.Id.foodExchangeBtt);
             foodExchange.Click += delegate {
@@ -74,21 +71,23 @@ namespace HappyHealthyCSharp
                 intent.PutExtra("id", Intent.GetIntExtra("food_id", 0));
                 StartActivity(intent);
             };
-            editCal_Total.Click += delegate {
-                total = Convert.ToDouble(editCal_Total.Text);
-                SetFoodDetail(total);
-            };
-            detailFood = foodTABLE.selectDetailByID(Intent.GetIntExtra("food_id", 0));
-            SetFoodDetail(total);
+            detailFood = foodTABLE.SelectFoodDetailByID(Intent.GetIntExtra("food_id", 0));
+            SetFoodDetail();
             //GlobalFunction.createDialog(this, Intent.GetIntExtra("food_id", 0).ToString()).Show();
             // Create your application here
 
         }
-        public void SetFoodDetail(double t)
+        public void SetFoodDetail()
         {
-            f_name.Text = detailFood["food_name"];
             header = FindViewById<TextView>(Resource.Id.textView24);
             header.Text = detailFood["food_name"];
+            name.Text = detailFood["food_name"];
+            detail.Text = detailFood["food_note_detail"];
+            sodium.Text = detailFood["food_sodium_str"];
+            phosphorus.Text = detailFood["food_phosphorus_str"];
+            potassium.Text = detailFood["food_potassium_str"];
+            protein.Text = detailFood["food_protein_str"];
+            magnesium.Text = detailFood["food_magnesium_str"];
             
         }
         protected override void OnPause()

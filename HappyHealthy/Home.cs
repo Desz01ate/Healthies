@@ -112,8 +112,6 @@ namespace HappyHealthyCSharp
 
         public async void ClickFood(object sender, EventArgs e)
         {
-            Extension.CreateDialogue(this, "ระบบยังไม่เปิดให้บริการ").Show();
-            return;
             ProgressDialog progressDialog = null;
             try
             {

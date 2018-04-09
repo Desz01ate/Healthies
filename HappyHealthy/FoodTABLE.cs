@@ -61,7 +61,7 @@ namespace HappyHealthyCSharp
         /// <param name="word"></param>
         /// <param name="c"></param>
         /// <returns></returns>
-        public JavaList<IDictionary<string, object>> getFoodList(Context c,string word)
+        public JavaList<IDictionary<string, object>> GetFoodList(Context c,string word)
         {
              var service = new HHCSService.HHCSService();
             var tickets = service.GetFoodData(Service.GetInstance.WebServiceAuthentication, word);
@@ -78,7 +78,7 @@ namespace HappyHealthyCSharp
             }
             return foodList;
         }
-        public JavaList<IDictionary<string, object>> getFoodList(Context c,int exchangeId)
+        public JavaList<IDictionary<string, object>> GetFoodList(Context c,int exchangeId)
         {
             //var sodium = new KidneyTABLE().Select<double>($@"SELECT SUM(ckd_sodium) FROM KidneyTABLE WHERE UD_ID = '{Extension.getPreference("ud_id", 0, c)}")[0];
             //var potassium = new KidneyTABLE().Select<double>($@"SELECT SUM(ckd_potassium) FROM KidneyTABLE WHERE UD_ID = '{Extension.getPreference("ud_id", 0, c)}")[0];
@@ -97,7 +97,7 @@ namespace HappyHealthyCSharp
             }
             return foodList;
         }
-        public Dictionary<string, string> selectDetailByID(int id)
+        public Dictionary<string, string> SelectFoodDetailByID(int id)
         {
             var service = new HHCSService.HHCSService();
             var tickets = service.GetFoodData(Service.GetInstance.WebServiceAuthentication, "");
