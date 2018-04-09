@@ -18,73 +18,8 @@ namespace HappyHealthyCSharp
 {
     abstract class DatabaseHelper
     {
-        private bool isSyncing = false;
         //public abstract List<string> Column { get; }
         public virtual bool Delete() { throw new NotImplementedException(); }
-        public virtual void TrySyncWithMySQL(Context c) {
-            var t = new Thread(() =>
-            {
-                try
-                {
-                    if (!isSyncing) //locking mechanics to make a thread-safe synchronization
-                    {
-                        isSyncing = true; //lock
-                        var ws = new HHCSService.HHCSService();
-                        var diaList = new List<HHCSService.TEMP_DiabetesTABLE>();
-                        new TEMP_DiabetesTABLE().SelectAll(x => x.ud_id == Extension.getPreference("ud_id", 0, c)).ForEach(row =>
-                        {
-                            var wsObject = new HHCSService.TEMP_DiabetesTABLE();
-                            SetValues(row, ref wsObject);
-                            diaList.Add(wsObject);
-                        });
-                        var kidneyList = new List<HHCSService.TEMP_KidneyTABLE>();
-                        new TEMP_KidneyTABLE().SelectAll(x => x.ud_id == Extension.getPreference("ud_id", 0, c)).ForEach(row => {
-                            var wsObject = new HHCSService.TEMP_KidneyTABLE();
-                            SetValues(row, ref wsObject);
-                            kidneyList.Add(wsObject);
-                        });
-                        var pressureList = new List<HHCSService.TEMP_PressureTABLE>();
-                        new TEMP_PressureTABLE().SelectAll(x => x.ud_id == Extension.getPreference("ud_id", 0, c)).ForEach(row => {
-                            var wsObject = new HHCSService.TEMP_PressureTABLE();
-                            SetValues(row, ref wsObject);
-                            pressureList.Add(wsObject);
-                        });
-                        var result = ws.SynchonizeData(
-                            Service.GetInstance.WebServiceAuthentication
-                            , diaList.ToArray()
-                            , kidneyList.ToArray()
-                            , pressureList.ToArray());
-                        diaList.Clear();
-                        kidneyList.Clear();
-                        pressureList.Clear();
-                        SQLiteInstance.GetConnection.Execute($"DELETE FROM TEMP_DiabetesTABLE WHERE ud_id = {Extension.getPreference("ud_id", 0, c)}");
-                        SQLiteInstance.GetConnection.Execute($"DELETE FROM TEMP_KidneyTABLE WHERE ud_id = {Extension.getPreference("ud_id", 0, c)}");
-                        SQLiteInstance.GetConnection.Execute($"DELETE FROM TEMP_PressureTABLE WHERE ud_id = {Extension.getPreference("ud_id", 0, c)}");
-                        isSyncing = false; //unlock
-                    }
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message); //Exception mostly throw only when the server is down
-                    //or device is not able to reach the server
-                }
-            });
-            t.Start();
-        }
-        private void SetValues<T1, T2>(T1 baseObject, ref T2 wsObject)
-        {
-            var ctype = typeof(T1);
-            var cprop = ctype.GetProperty("Column", BindingFlags.Public | BindingFlags.Static);
-            var cvalue = cprop.GetValue(null, null);
-            var columnTag = (List<string>)cvalue;
-            foreach (var property in columnTag)
-            {
-                var type = baseObject.GetType();
-                var prop = type.GetProperty(property);
-                var value = prop.GetValue(baseObject);
-                wsObject.GetType().GetProperty(property).SetValue(wsObject, value);
-            }
-        }
         [Obsolete("Please use ToJavaList() extension instead")]
         public virtual JavaList<IDictionary<string, object>> GetJavaList<T>(string queryCustomized, List<string> columnTag) where T : new()
         {
@@ -105,6 +40,7 @@ namespace HappyHealthyCSharp
     }
     static class DatabaseHelperExtension
     {
+        private static bool isSyncing = false;
         /// <summary>
         /// This function will perform an SQL-like in LINQ manner to get the result for 1 row, no matter how much the data it got
         /// </summary>
@@ -304,11 +240,75 @@ namespace HappyHealthyCSharp
                 {
                     var currentProp = dataRow.GetType().GetProperty(attribute);
                     data.Add(attribute, currentProp.GetValue(dataRow));
-                    //data.Add(attribute, currentProp.PropertyType == typeof(DateTime) ? ((DateTime)currentProp.GetValue(dataRow)).ToLocalTime() : currentProp.GetValue(dataRow));
                 };
                 dataList.Add(data);
             };
             return dataList;
+        }
+        public static void TrySyncWithMySQL(Context c)
+        {
+            var t = new Thread(() =>
+            {
+                try
+                {
+                    if (!isSyncing) //locking mechanics to make a thread-safe synchronization
+                    {
+                        isSyncing = true; //lock
+                        var ws = new HHCSService.HHCSService();
+                        var diaList = new List<HHCSService.TEMP_DiabetesTABLE>();
+                        new TEMP_DiabetesTABLE().SelectAll(x => x.ud_id == Extension.getPreference("ud_id", 0, c)).ForEach(row =>
+                        {
+                            var wsObject = new HHCSService.TEMP_DiabetesTABLE();
+                            SetValues(row, ref wsObject);
+                            diaList.Add(wsObject);
+                        });
+                        var kidneyList = new List<HHCSService.TEMP_KidneyTABLE>();
+                        new TEMP_KidneyTABLE().SelectAll(x => x.ud_id == Extension.getPreference("ud_id", 0, c)).ForEach(row => {
+                            var wsObject = new HHCSService.TEMP_KidneyTABLE();
+                            SetValues(row, ref wsObject);
+                            kidneyList.Add(wsObject);
+                        });
+                        var pressureList = new List<HHCSService.TEMP_PressureTABLE>();
+                        new TEMP_PressureTABLE().SelectAll(x => x.ud_id == Extension.getPreference("ud_id", 0, c)).ForEach(row => {
+                            var wsObject = new HHCSService.TEMP_PressureTABLE();
+                            SetValues(row, ref wsObject);
+                            pressureList.Add(wsObject);
+                        });
+                        var result = ws.SynchonizeData(
+                            Service.GetInstance.WebServiceAuthentication
+                            , diaList.ToArray()
+                            , kidneyList.ToArray()
+                            , pressureList.ToArray());
+                        diaList.Clear();
+                        kidneyList.Clear();
+                        pressureList.Clear();
+                        SQLiteInstance.GetConnection.Execute($"DELETE FROM TEMP_DiabetesTABLE WHERE ud_id = {Extension.getPreference("ud_id", 0, c)}");
+                        SQLiteInstance.GetConnection.Execute($"DELETE FROM TEMP_KidneyTABLE WHERE ud_id = {Extension.getPreference("ud_id", 0, c)}");
+                        SQLiteInstance.GetConnection.Execute($"DELETE FROM TEMP_PressureTABLE WHERE ud_id = {Extension.getPreference("ud_id", 0, c)}");
+                        isSyncing = false; //unlock
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message); //Exception mostly throw only when the server is down
+                    //or device is not able to reach the server
+                }
+            });
+            t.Start();
+        }
+        private static void SetValues<T1, T2>(T1 baseObject, ref T2 wsObject)
+        {
+            var ctype = typeof(T1);
+            var cprop = ctype.GetProperty("Column", BindingFlags.Public | BindingFlags.Static);
+            var cvalue = cprop.GetValue(null, null);
+            var columnTag = (List<string>)cvalue;
+            foreach (var property in columnTag)
+            {
+                var type = baseObject.GetType();
+                var prop = type.GetProperty(property);
+                var value = prop.GetValue(baseObject);
+                wsObject.GetType().GetProperty(property).SetValue(wsObject, value);
+            }
         }
     }
     static class MySQLDatabaseHelper

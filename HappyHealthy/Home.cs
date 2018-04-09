@@ -27,8 +27,6 @@ namespace HappyHealthyCSharp
         #region Experimental Section
         private bool isRecording;
         private readonly int VOICE = 10;
-        private Button recButton;
-        private EditText testResult;
         #endregion
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -42,7 +40,7 @@ namespace HappyHealthyCSharp
             ImageView DoctorButton = FindViewById<ImageView>(Resource.Id.imageView_button_doctor);
             ImageView DevButton = FindViewById<ImageView>(Resource.Id.imageView4);
             homeHeaderText = FindViewById<TextView>(Resource.Id.textView18);
-
+            homeHeaderText.Text = $@"ยินดีต้อนรับ {new UserTABLE().SelectOne(x=>x.ud_id == Extension.getPreference("ud_id",0,this)).ud_name}";
             DiabetesButton.Click += ClickDiabetes;
             KidneyButton.Click += ClickKidney;
             PressureButton.Click += ClickPressure;
@@ -52,47 +50,6 @@ namespace HappyHealthyCSharp
             DevButton.Click += ClickDev;
             var imageView = FindViewById<ImageView>(Resource.Id.imageView4);
             imageView.Click += NotImplemented;
-            HomeHeaderStateChange();
-            //TestSTTImplementation(imageView);
-        }
-
-        private async void HomeHeaderStateChange()
-        {
-            var r = new Random();
-            user = user.SelectOne(x => x.ud_id == Extension.getPreference("ud_id", 0, this));
-            var data = new List<string>() { $"ยินดีต้อนรับกลับมา {user.ud_name}" };
-            var action = new List<EventHandler>() { delegate { } };
-            new DoctorTABLE().SelectAll().ForEach(x => {
-                if ((x.da_date - DateTime.Now).Days < 3)
-                {
-                    data.Add($"มีนัดพบแพทย์ใน 3 วัน (คลิก)");
-                    action.Add(delegate {
-                        var jsonObject = JsonConvert.SerializeObject(x);
-                        var DoctorIntent = new Intent(this, typeof(Doctor));
-                        DoctorIntent.PutExtra("targetObject", jsonObject);
-                        StartActivity(DoctorIntent);
-                    });
-                }
-            });
-            /*
-            new DiabetesTABLE().SelectAll().ForEach(x => {
-                if(x.fbs_fbs_lvl > 1)
-                {
-                    data.Add($"พบค่าเบาหวานผิดปกติ (คลิก)");
-                    action.Add(delegate
-                    {
-
-                    });
-                }
-            });
-            */
-            while (true)
-            {
-                var index = r.Next(0, data.Count);
-                homeHeaderText.Text = data[index];
-                homeHeaderText.Click += action[index];
-                await Task.Delay(30000);
-            }
         }
 
         private void ClickDev(object sender, EventArgs e)
@@ -181,7 +138,6 @@ namespace HappyHealthyCSharp
             {
                 progressDialog.Dismiss();
             }
-            //NotImplemented(sender, e);
         }
 
 

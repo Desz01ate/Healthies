@@ -76,7 +76,6 @@ namespace HappyHealthyCSharp
             }
             t2sEngine = new TTS(this);
         }
-
         private void InitializeData()
         {
             header.Text = "บันทึกค่าเบาหวาน";
@@ -191,7 +190,13 @@ namespace HappyHealthyCSharp
             diaObject.fbs_time = DateTime.Now;//.ToThaiLocale();
             diaObject.Update();
             //diaObject.TrySyncWithMySQL(this);
-            this.Finish();
+            if (diaObject.IsInDangerousState())
+                Extension.CreateDialogue(this, "ค่าที่คุณทำการบันทึก อยู่ในเกณฑ์เสี่ยง หรือ อันตราย กรุณาพบแพทย์เพื่อรับคำแนะนำเพิ่มเติม", delegate
+                {
+                    Finish();
+                }).Show();
+            else
+                this.Finish();
         }
         private async Task AutomationTalker()
         {
@@ -249,30 +254,30 @@ namespace HappyHealthyCSharp
                 Toast.MakeText(this, "กรุณากรอกค่าให้ครบ ก่อนทำการบันทึก", ToastLength.Short).Show();
                 return;
             }
-            var diaTable = new DiabetesTABLE();
+            var diabetesObject = new DiabetesTABLE();
             try
             {
-                
-                diaTable.fbs_id = SQLiteInstance.GetConnection.ExecuteScalar<int>($"SELECT MAX(fbs_id)+1 FROM DiabetesTABLE");
+
+                diabetesObject.fbs_id = SQLiteInstance.GetConnection.ExecuteScalar<int>($"SELECT MAX(fbs_id)+1 FROM DiabetesTABLE");
                 //diaTable.fbs_id = new SQLite.SQLiteConnection(Extension.sqliteDBPath).ExecuteScalar<int>($"SELECT MAX(fbs_id)+1 FROM DiabetesTABLE");
             }
             catch
             {
-                diaTable.fbs_id = 1;
+                diabetesObject.fbs_id = 1;
             }
-            diaTable.fbs_fbs = (decimal)double.Parse(BloodValue.Text);
-            diaTable.fbs_fbs_sum = (decimal)double.Parse(SumBloodValue.Text);
-            diaTable.ud_id = Extension.getPreference("ud_id", 0, this);
-            diaTable.fbs_time = DateTime.Now;//.ToThaiLocale();
-            diaTable.Insert();
+            diabetesObject.fbs_fbs = (decimal)double.Parse(BloodValue.Text);
+            diabetesObject.fbs_fbs_sum = (decimal)double.Parse(SumBloodValue.Text);
+            diabetesObject.ud_id = Extension.getPreference("ud_id", 0, this);
+            diabetesObject.fbs_time = DateTime.Now;//.ToThaiLocale();
+            diabetesObject.Insert();
             //diaTable.TrySyncWithMySQL(this);
-            this.Finish();
-        }
-
-        [Export("ClickBackDiaHome")]
-        public void ClickBackDiaHome(View v)
-        {
-            this.Finish();
+            if (diabetesObject.IsInDangerousState())
+                Extension.CreateDialogue(this, "ค่าที่คุณทำการบันทึก อยู่ในเกณฑ์เสี่ยง หรือ อันตราย กรุณาพบแพทย์เพื่อรับคำแนะนำเพิ่มเติม", delegate
+                {
+                    Finish();
+                }).Show();
+            else
+                Finish();
         }
 
         #region Experiment TTS methods

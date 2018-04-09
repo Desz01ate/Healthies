@@ -31,11 +31,18 @@ namespace HappyHealthyCSharp
             diaTable = new DiabetesTABLE();
             SetListView();
         }
-
+        public override void OnBackPressed()
+        {
+            base.OnBackPressed();
+            DatabaseHelperExtension.TrySyncWithMySQL(this);
+            Finish();
+        }
         private void InitializeControlEvent()
         {
             add.Click += delegate { StartActivity(new Intent(this, typeof(Diabetes))); };
-            back.Click += delegate { Finish(); };
+            back.Click += delegate {
+                DatabaseHelperExtension.TrySyncWithMySQL(this);
+                Finish(); };
             ListView.ItemClick += onItemClick;
         }
 

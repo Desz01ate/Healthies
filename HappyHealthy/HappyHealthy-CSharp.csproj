@@ -141,6 +141,7 @@
     <Compile Include="Diabetes.cs" />
     <Compile Include="Doctor.cs" />
     <Compile Include="DoctorTABLE.cs" />
+    <Compile Include="GlobalState.cs" />
     <Compile Include="History_Doctor.cs" />
     <Compile Include="IDatabaseSync.cs" />
     <Compile Include="ILocalActivity.cs" />

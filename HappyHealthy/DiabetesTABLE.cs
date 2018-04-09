@@ -33,6 +33,27 @@ namespace HappyHealthyCSharp
             "ud_id"
         };
         public static dynamic caseLevel = new { Low = 100, Mid = 125, High = 126 };
+        public static string[] reportKeys => new[] { "fbs_fbs", "fbs_fbs_sum" }; 
+        public static double[] reportValuesMinimum => new[] { 70.0, 0 }; //5.7
+        public static double[] reportValuesMaximum => new[] { 150.0, 7 };
+        public bool IsInDangerousState()
+        {
+            for (var pIndex = 0; pIndex < reportKeys.Length; pIndex++)
+            {
+                var prop = reportKeys[pIndex];
+                var value = this.GetType().GetProperty(prop).GetValue(this);
+                var realvalue = Convert.ToDouble(value);
+                if (realvalue < reportValuesMinimum[pIndex])
+                {
+                    return true;
+                }
+                else if (realvalue > reportValuesMaximum[pIndex])
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         [SQLite.PrimaryKey]
         public int fbs_id { get; set; }
         public DateTime fbs_time { get; set; }

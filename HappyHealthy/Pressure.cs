@@ -263,7 +263,13 @@ namespace HappyHealthyCSharp
             pressureObject.bp_hr = Convert.ToInt32(HeartRate.Text);
             pressureObject.Update();
             //pressureObject.TrySyncWithMySQL(this);
-            Finish();
+            if (pressureObject.IsInDangerousState())
+                Extension.CreateDialogue(this, "ค่าที่คุณทำการบันทึก อยู่ในเกณฑ์เสี่ยง หรือ อันตราย กรุณาพบแพทย์เพื่อรับคำแนะนำเพิ่มเติม", delegate
+                {
+                    Finish();
+                }).Show();
+            else
+                Finish();
 
         }
 
@@ -276,23 +282,29 @@ namespace HappyHealthyCSharp
                 Toast.MakeText(this, "กรุณากรอกค่าให้ครบ ก่อนทำการบันทึก", ToastLength.Short).Show();
                 return;
             }
-            var bpTable = new PressureTABLE();
+            var pressureObject = new PressureTABLE();
             try
             {
-                bpTable.bp_id = SQLiteInstance.GetConnection.ExecuteScalar<int>($"SELECT MAX(bp_id)+1 FROM PressureTABLE");
+                pressureObject.bp_id = SQLiteInstance.GetConnection.ExecuteScalar<int>($"SELECT MAX(bp_id)+1 FROM PressureTABLE");
             }
             catch
             {
-                bpTable.bp_id = 1;
+                pressureObject.bp_id = 1;
             }
-            bpTable.bp_up = Convert.ToDecimal(BPUp.Text);
-            bpTable.bp_lo = Convert.ToDecimal(BPLow.Text);
-            bpTable.bp_hr = Convert.ToInt32(HeartRate.Text);
-            bpTable.bp_time = DateTime.Now;//.ToThaiLocale();
-            bpTable.ud_id = Extension.getPreference("ud_id", 0, this);
-            bpTable.Insert();
+            pressureObject.bp_up = Convert.ToDecimal(BPUp.Text);
+            pressureObject.bp_lo = Convert.ToDecimal(BPLow.Text);
+            pressureObject.bp_hr = Convert.ToInt32(HeartRate.Text);
+            pressureObject.bp_time = DateTime.Now;//.ToThaiLocale();
+            pressureObject.ud_id = Extension.getPreference("ud_id", 0, this);
+            pressureObject.Insert();
             //bpTable.TrySyncWithMySQL(this);
-            this.Finish();
+            if (pressureObject.IsInDangerousState())
+                Extension.CreateDialogue(this, "ค่าที่คุณทำการบันทึก อยู่ในเกณฑ์เสี่ยง หรือ อันตราย กรุณาพบแพทย์เพื่อรับคำแนะนำเพิ่มเติม", delegate
+                {
+                    Finish();
+                }).Show();
+            else
+                Finish();
 
         }
         [Export("ClickBackPreHome")]

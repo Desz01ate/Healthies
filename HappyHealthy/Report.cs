@@ -50,87 +50,35 @@ namespace HappyHealthyCSharp
             secondSpinner.ItemSelected += delegate
             {
                 string[] keys = null;
-                double[] lwst = null;
-                double[] exc = null;
+                double[] minimum = null;
+                double[] maximum = null;
                 string timeExtractor = string.Empty;
                 JavaList<IDictionary<string, object>> data = null;
-                var user = new UserTABLE().SelectOne(x => x.ud_id == Extension.getPreference("ud_id", 0, this));
-                var userAge = DateTime.Now.Year - user.ud_birthdate.Year;
+
                 if (mainSpinner.SelectedItemPosition == 0)
                 {
 
                     //a1c ref : http://www.yaandyou.net/content-view.php?conid=531
-                    keys = new[] { "fbs_fbs", "fbs_fbs_sum" };
-                    lwst = new[] {      70.0,          5.7  };
-                    exc =  new[] {     150.0,            7  };
+                    keys = DiabetesTABLE.reportKeys;
+                    minimum = DiabetesTABLE.reportValuesMinimum;
+                    maximum = DiabetesTABLE.reportValuesMaximum;
                     timeExtractor = "fbs_time";
                     data = new DiabetesTABLE().SelectAll(x => x.ud_id == Extension.getPreference("ud_id", 0, this)).OrderBy(x => x.fbs_time).ToJavaList();
                 }
                 else if (mainSpinner.SelectedItemPosition == 1)
                 {
-
-                    //heart rate ref : http://heartratezone.com/what-is-my-pulse-rate-supposed-to-be/
-                    keys = new[] { "bp_up", "bp_lo", "bp_hr" };
-                    lwst = new[] { 90.0   ,   60.0 ,    -1.0};
-                    exc =  new[] { 180.0  ,   110.0,    -1.0};
-                    if (userAge < 30)
-                    {
-                        lwst[2] = 120;
-                        exc[2] = 160;
-                    }
-                    else if (userAge < 40)
-                    {
-                        lwst[2] = 114;
-                        exc[2] = 152;
-                    }
-                    else if (userAge < 50)
-                    {
-                        lwst[2] = 108;
-                        exc[2] = 144;
-                    }
-                    else if (userAge < 60)
-                    {
-                        lwst[2] = 102;
-                        exc[2] = 136;
-                    }
-                    else if (userAge < 70)
-                    {
-                        lwst[2] = 96;
-                        exc[2] = 128;
-                    }
-                    else
-                    {
-                        lwst[2] = 90;
-                        exc[2] = 120;
-                    }
+                    keys = PressureTABLE.reportKeys;
+                    minimum = PressureTABLE.reportValuesMinimum();
+                    maximum = PressureTABLE.reportValuesMaximum();
                     timeExtractor = "bp_time";
                     data = new PressureTABLE().SelectAll(x => x.ud_id == Extension.getPreference("ud_id", 0, this)).OrderBy(x => x.bp_time).ToJavaList();
                     
                 }
                 else if (mainSpinner.SelectedItemPosition == 2)
                 {
-
-                    //GFR ref : https://medlineplus.gov/ency/article/007305.htm
-                    //Creatinine ref : https://www.medicinenet.com/creatinine_blood_test/article.htm
-                    //BUN ref : https://emedicine.medscape.com/article/2073979-overview#a1
-                    //sodium ref : https://www.kidney.org/atoz/content/hyponatremia
-                    //phosphorus ref : https://www.kidney.org/atoz/content/phosphorus
-                    //potassium ref : https://www.davita.com/kidney-disease/diet-and-nutrition/diet-basics/sodium-and-chronic-kidney-disease/e/5310
-                    //blood-albumin ref : https://www.davita.com/kidney-disease/diet-and-nutrition/diet-basics/what-is-albumin?/e/5317
-                    //urine-albumin ref : https://www.niddk.nih.gov/health-information/professionals/clinical-tools-patient-education-outreach/quick-reference-uacr-gfr
-                    keys = new[] { "ckd_gfr", "ckd_creatinine", "ckd_bun", "ckd_sodium", "ckd_potassium", "ckd_phosphorus_blood", "ckd_albumin_blood", "ckd_albumin_urine" };
-                    lwst = new[] {        60,             -1.0,         3,         135,             3.5,                    2.5,                 4.0,                    0};
-                    exc =  new[] {       120,             -1.0,        20,         145,             5.5,                    4.5,                 999,                   30};
-                    if(user.ud_gender == "M")
-                    {
-                        lwst[1] = 97.0;
-                        exc[1] = 137.0;
-                    }
-                    else
-                    {
-                        lwst[1] = 88.0;
-                        exc[1] = 128.0;
-                    }
+                    keys = KidneyTABLE.reportKeys;
+                    minimum = KidneyTABLE.reportValuesMinimum;
+                    maximum = KidneyTABLE.reportValuesMaximum;
                     timeExtractor = "ckd_time";
                     data = new KidneyTABLE().SelectAll(x => x.ud_id == Extension.getPreference("ud_id", 0, this)).OrderBy(x => x.ckd_time).ToJavaList();
                 }
@@ -139,8 +87,8 @@ namespace HappyHealthyCSharp
                     data,
                     timeExtractor,
                     keys[secondSpinner.SelectedItemPosition],
-                    lwst[secondSpinner.SelectedItemPosition],
-                    exc[secondSpinner.SelectedItemPosition]);
+                    minimum[secondSpinner.SelectedItemPosition],
+                    maximum[secondSpinner.SelectedItemPosition]);
             };
             var firstIndex = Intent.GetIntExtra("first", 0); 
             var secondIndex = Intent.GetIntExtra("second", 0);

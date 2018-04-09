@@ -47,6 +47,95 @@ namespace HappyHealthyCSharp
             uHigh = 179,
             uVeryHigh = 180
         };
+        //heart rate ref : http://heartratezone.com/what-is-my-pulse-rate-supposed-to-be/
+        public static string[] reportKeys => new[] { "bp_up", "bp_lo", "bp_hr" };
+        public static double[] reportValuesMinimum()
+        {
+            var baseValues = new[] { 90.0, 60.0, -1.0 };
+            var user = new UserTABLE().SelectOne(x => x.ud_id == Extension.getPreference("ud_id", 0, Login.getContext()));
+            var userAge = DateTime.Now.Year - user.ud_birthdate.Year;
+            if (userAge < 30)
+            {
+                baseValues[2] = 120;
+                //maximum[2] = 160;
+            }
+            else if (userAge < 40)
+            {
+                baseValues[2] = 114;
+                //maximum[2] = 152;
+            }
+            else if (userAge < 50)
+            {
+                baseValues[2] = 108;
+                //maximum[2] = 144;
+            }
+            else if (userAge < 60)
+            {
+                baseValues[2] = 102;
+                //maximum[2] = 136;
+            }
+            else if (userAge < 70)
+            {
+                baseValues[2] = 96;
+                //maximum[2] = 128;
+            }
+            else
+            {
+                baseValues[2] = 90;
+                //maximum[2] = 120;
+            }
+            return baseValues;
+        }
+        public static double[] reportValuesMaximum() {
+            {
+                var baseValues = new[] { 180.0, 110.0, -1.0 };
+                var user = new UserTABLE().SelectOne(x => x.ud_id == Extension.getPreference("ud_id", 0, Login.getContext()));
+                var userAge = DateTime.Now.Year - user.ud_birthdate.Year;
+                if (userAge < 30)
+                {
+                    baseValues[2] = 160;
+                }
+                else if (userAge < 40)
+                {
+                    baseValues[2] = 152;
+                }
+                else if (userAge < 50)
+                {
+                    baseValues[2] = 144;
+                }
+                else if (userAge < 60)
+                {
+                    baseValues[2] = 136;
+                }
+                else if (userAge < 70)
+                {
+                    baseValues[2] = 128;
+                }
+                else
+                {
+                    baseValues[2] = 120;
+                }
+                return baseValues;
+            }
+        }
+        public bool IsInDangerousState()
+        {
+            for (var pIndex = 0; pIndex < reportKeys.Length; pIndex++)
+            {
+                var prop = reportKeys[pIndex];
+                var value = this.GetType().GetProperty(prop).GetValue(this);
+                var realvalue = Convert.ToDouble(value);
+                if (realvalue < reportValuesMinimum()[pIndex])
+                {
+                    return true;
+                }
+                else if (realvalue > reportValuesMaximum()[pIndex])
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         [SQLite.PrimaryKey]
         public int bp_id { get; set; }
         public DateTime bp_time { get; set; }

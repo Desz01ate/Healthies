@@ -29,16 +29,21 @@ namespace HappyHealthyCSharp
             SetContentView(Resource.Layout.activity_history_pressure);
             InitializeControl();
             InitializeControlEvent();
-
             bpTable = new PressureTABLE();
-
             SetListView();
         }
-
+        public override void OnBackPressed()
+        {
+            base.OnBackPressed();
+            DatabaseHelperExtension.TrySyncWithMySQL(this);
+            Finish();
+        }
         private void InitializeControlEvent()
         {
             add.Click += delegate { StartActivity(new Intent(this, typeof(Pressure))); };
-            back.Click += delegate { Finish(); };
+            back.Click += delegate {
+                DatabaseHelperExtension.TrySyncWithMySQL(this);
+                Finish(); };
             ListView.ItemClick += onItemClick;
         }
 
@@ -55,11 +60,9 @@ namespace HappyHealthyCSharp
         }
         private void onItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
-            //bpList[e.Position].TryGetValue("bp_up", out object bpValue);
             bpList[e.Position].TryGetValue("bp_id", out dynamic bpID);
             var pressureObject = new PressureTABLE();
             pressureObject = pressureObject.SelectOne(x => x.bp_id == bpID);
-            //pressureObject = pressureObject.SelectAll<PressureTABLE>($"PressureTABLE",x=>x.bp_id == bpID)[0];
             Extension.CreateDialogue(this, "กรุณาเลือกรายการที่ต้องการจะดำเนินการ",
                 delegate
                 {
@@ -78,7 +81,6 @@ namespace HappyHealthyCSharp
                     , delegate
                     {
                         pressureObject.Delete();
-                        //pressureObject.TrySyncWithMySQL(this);
                         SetListView();
                     }
                     , delegate { }
@@ -88,9 +90,8 @@ namespace HappyHealthyCSharp
         }
         public void SetListView()
         {
-            bpList = bpTable.SelectAll(x => x.ud_id == Extension.getPreference("ud_id", 0, this)).OrderBy(x => x.bp_time).ToJavaList(); //bpTable.GetJavaList<PressureTABLE>($"SELECT * FROM PressureTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)} ORDER BY BP_TIME", bpTable.Column);
-            //bpList = bpTable.getPressureList($"SELECT * FROM PressureTABLE WHERE UD_ID = {GlobalFunction.getPreference("ud_id", "", this)} ORDER BY BP_TIME");
-            ListAdapter = new SimpleAdapter(this, bpList, Resource.Layout.history_diabetes, new string[] { "bp_time" }, new int[] { Resource.Id.date }); //"D_DateTime",date
+            bpList = bpTable.SelectAll(x => x.ud_id == Extension.getPreference("ud_id", 0, this)).OrderBy(x => x.bp_time).ToJavaList();
+            ListAdapter = new SimpleAdapter(this, bpList, Resource.Layout.history_diabetes, new string[] { "bp_time" }, new int[] { Resource.Id.date });
             ListView.Adapter = ListAdapter;
         }
     }

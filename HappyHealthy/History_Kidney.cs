@@ -31,10 +31,17 @@ namespace HappyHealthyCSharp
             kidneyTable = new KidneyTABLE();
             SetListView();
         }
-
+        public override void OnBackPressed()
+        {
+            base.OnBackPressed();
+            DatabaseHelperExtension.TrySyncWithMySQL(this);
+            Finish();
+        }
         private void InitializeControlEvent()
         {
-            back.Click += delegate { Finish(); };
+            back.Click += delegate {
+                DatabaseHelperExtension.TrySyncWithMySQL(this);
+                Finish(); };
             add.Click += delegate { StartActivity(new Intent(this, typeof(Kidney))); };
             ListView.ItemClick += onItemClick;
         }
@@ -69,7 +76,6 @@ namespace HappyHealthyCSharp
                     , delegate
                     {
                         kidneyObject.Delete();
-                        //kidneyObject.TrySyncWithMySQL(this);
                         SetListView();
                     }
                     , delegate { }

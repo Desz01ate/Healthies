@@ -263,28 +263,34 @@ namespace HappyHealthyCSharp
                 Toast.MakeText(this, "กรุณากรอกค่าให้ครบ ก่อนทำการบันทึก", ToastLength.Short).Show();
                 return;
             }
-            var kidney = new KidneyTABLE();
+            var kidneyObject = new KidneyTABLE();
             try
             {
-                kidney.ckd_id = SQLiteInstance.GetConnection.ExecuteScalar<int>($"SELECT MAX(ckd_id)+1 FROM KidneyTABLE");
+                kidneyObject.ckd_id = SQLiteInstance.GetConnection.ExecuteScalar<int>($"SELECT MAX(ckd_id)+1 FROM KidneyTABLE");
             }
             catch
             {
-                kidney.ckd_id = 1;
+                kidneyObject.ckd_id = 1;
             }
-            kidney.ckd_gfr = Convert.ToDecimal(field_gfr.Text);
-            kidney.ckd_creatinine = Convert.ToDecimal(field_creatinine.Text);
-            kidney.ckd_bun = Convert.ToDecimal(field_bun.Text);
-            kidney.ckd_sodium = Convert.ToDecimal(field_sodium.Text);
-            kidney.ckd_potassium = Convert.ToDecimal(field_potassium.Text);
-            kidney.ckd_albumin_blood = Convert.ToDecimal(field_albumin_blood.Text);
-            kidney.ckd_albumin_urine = Convert.ToDecimal(field_albumin_urine.Text);
-            kidney.ckd_phosphorus_blood = Convert.ToDecimal(field_phosphorus_blood.Text);
-            kidney.ckd_time = DateTime.Now;//.ToThaiLocale();
-            kidney.ud_id = Extension.getPreference("ud_id", 0, this);
-            kidney.Insert();
+            kidneyObject.ckd_gfr = Convert.ToDecimal(field_gfr.Text);
+            kidneyObject.ckd_creatinine = Convert.ToDecimal(field_creatinine.Text);
+            kidneyObject.ckd_bun = Convert.ToDecimal(field_bun.Text);
+            kidneyObject.ckd_sodium = Convert.ToDecimal(field_sodium.Text);
+            kidneyObject.ckd_potassium = Convert.ToDecimal(field_potassium.Text);
+            kidneyObject.ckd_albumin_blood = Convert.ToDecimal(field_albumin_blood.Text);
+            kidneyObject.ckd_albumin_urine = Convert.ToDecimal(field_albumin_urine.Text);
+            kidneyObject.ckd_phosphorus_blood = Convert.ToDecimal(field_phosphorus_blood.Text);
+            kidneyObject.ckd_time = DateTime.Now;//.ToThaiLocale();
+            kidneyObject.ud_id = Extension.getPreference("ud_id", 0, this);
+            kidneyObject.Insert();
             //kidney.TrySyncWithMySQL(this);
-            this.Finish();
+            if (kidneyObject.IsInDangerousState())
+                Extension.CreateDialogue(this, "ค่าที่คุณทำการบันทึก อยู่ในเกณฑ์เสี่ยง หรือ อันตราย กรุณาพบแพทย์เพื่อรับคำแนะนำเพิ่มเติม", delegate
+                {
+                    Finish();
+                }).Show();
+            else
+                Finish();
         }
 
 
@@ -303,15 +309,14 @@ namespace HappyHealthyCSharp
             kidneyObject.ud_id = Extension.getPreference("ud_id", 0, this);
             kidneyObject.Update();
             //kidneyObject.TrySyncWithMySQL(this);
-            this.Finish();
+            if (kidneyObject.IsInDangerousState())
+                Extension.CreateDialogue(this, "ค่าที่คุณทำการบันทึก อยู่ในเกณฑ์เสี่ยง หรือ อันตราย กรุณาพบแพทย์เพื่อรับคำแนะนำเพิ่มเติม", delegate
+                {
+                    Finish();
+                }).Show();
+            else
+                Finish();
         }
-
-        [Export("ClickBackKidHome")]
-        public void ClickBackKidHome(View v)
-        {
-            this.Finish();
-        }
-
         protected override void OnActivityResult(int requestCode, Result resultVal, Intent data)
         {
             base.OnActivityResult(requestCode, resultVal, data);
