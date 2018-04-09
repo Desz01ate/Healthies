@@ -40,7 +40,7 @@ namespace HappyHealthyCSharp
             ImageView DoctorButton = FindViewById<ImageView>(Resource.Id.imageView_button_doctor);
             ImageView DevButton = FindViewById<ImageView>(Resource.Id.imageView4);
             homeHeaderText = FindViewById<TextView>(Resource.Id.textView18);
-            homeHeaderText.Text = $@"ยินดีต้อนรับ {new UserTABLE().SelectOne(x=>x.ud_id == Extension.getPreference("ud_id",0,this)).ud_name}";
+            homeHeaderText.Text = $@"ยินดีต้อนรับ {new UserTABLE().SelectOne(x=>x.ud_id == this.GetPreference("ud_id",0)).ud_name}";
             DiabetesButton.Click += ClickDiabetes;
             KidneyButton.Click += ClickKidney;
             PressureButton.Click += ClickPressure;
@@ -112,8 +112,8 @@ namespace HappyHealthyCSharp
 
         public async void ClickFood(object sender, EventArgs e)
         {
-            Extension.CreateDialogue(this, "ระบบยังไม่เปิดให้บริการ").Show();
-            return;
+            //Extension.CreateDialogue(this, "ระบบยังไม่เปิดให้บริการ").Show();
+            //return;
             ProgressDialog progressDialog = null;
             try
             {
@@ -163,7 +163,7 @@ namespace HappyHealthyCSharp
         }
         public void ClickMedicine(object sender, EventArgs e)
         {
-            var user = new UserTABLE().SelectOne(x=>x.ud_id == Extension.getPreference("ud_id", 0, this)); 
+            var user = new UserTABLE().SelectOne(x=>x.ud_id == this.GetPreference("ud_id", 0)); 
             if (!user.ud_bf_time.TimeValidate() || !user.ud_lu_time.TimeValidate() || !user.ud_dn_time.TimeValidate() || !user.ud_sl_time.TimeValidate())
             { //by using this technique a set-up time can't be an 0.00AM
                 Extension.CreateDialogue(this, "กรุณาตั้งค่าเวลาทานอาหาร และเวลาเข้านอน ก่อนใช้งานการบันทึกแจ้งเตือนทานยา").Show();

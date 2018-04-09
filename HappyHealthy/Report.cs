@@ -63,7 +63,7 @@ namespace HappyHealthyCSharp
                     minimum = DiabetesTABLE.reportValuesMinimum;
                     maximum = DiabetesTABLE.reportValuesMaximum;
                     timeExtractor = "fbs_time";
-                    data = new DiabetesTABLE().SelectAll(x => x.ud_id == Extension.getPreference("ud_id", 0, this)).OrderBy(x => x.fbs_time).ToJavaList();
+                    data = new DiabetesTABLE().SelectAll(x => x.ud_id == this.GetPreference("ud_id", 0)).OrderBy(x => x.fbs_time).ToJavaList();
                 }
                 else if (mainSpinner.SelectedItemPosition == 1)
                 {
@@ -71,7 +71,7 @@ namespace HappyHealthyCSharp
                     minimum = PressureTABLE.reportValuesMinimum();
                     maximum = PressureTABLE.reportValuesMaximum();
                     timeExtractor = "bp_time";
-                    data = new PressureTABLE().SelectAll(x => x.ud_id == Extension.getPreference("ud_id", 0, this)).OrderBy(x => x.bp_time).ToJavaList();
+                    data = new PressureTABLE().SelectAll(x => x.ud_id == this.GetPreference("ud_id", 0)).OrderBy(x => x.bp_time).ToJavaList();
                     
                 }
                 else if (mainSpinner.SelectedItemPosition == 2)
@@ -80,7 +80,7 @@ namespace HappyHealthyCSharp
                     minimum = KidneyTABLE.reportValuesMinimum;
                     maximum = KidneyTABLE.reportValuesMaximum;
                     timeExtractor = "ckd_time";
-                    data = new KidneyTABLE().SelectAll(x => x.ud_id == Extension.getPreference("ud_id", 0, this)).OrderBy(x => x.ckd_time).ToJavaList();
+                    data = new KidneyTABLE().SelectAll(x => x.ud_id == this.GetPreference("ud_id", 0)).OrderBy(x => x.ckd_time).ToJavaList();
                 }
                 view.Model = CreatePlotModel(
                     $@"รายงานค่า{secondSpinner.SelectedItem.ToString()}",

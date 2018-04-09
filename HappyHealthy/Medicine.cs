@@ -191,7 +191,7 @@ namespace HappyHealthyCSharp
             medObject.ma_name = medName.Text;
             medObject.ma_desc = medDesc.Text;
             medObject.ma_pic = picPath;
-            medObject.ud_id = Extension.getPreference("ud_id", 0, this);
+            medObject.ud_id = this.GetPreference("ud_id", 0);
             medObject.Insert();
             var idHeader = medObject.ma_id.ToString();
             var beforeAfterDecision = Convert.ToInt32(timeText.Text);//before.Checked ? Convert.ToInt32(timeText.Text) : Convert.ToInt32(afterText.Text);

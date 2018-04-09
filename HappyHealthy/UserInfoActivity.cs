@@ -27,7 +27,7 @@ namespace HappyHealthyCSharp
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_display_user);
-            user = user.SelectOne(x => x.ud_id == Extension.getPreference("ud_id", 0, this));
+            user = user.SelectOne(x => x.ud_id == this.GetPreference("ud_id", 0));
             InitializeControl();
             InitializeData();
             InitializeControlEvent();
@@ -53,9 +53,9 @@ namespace HappyHealthyCSharp
             };
             autoSound.CheckedChange += delegate
             {
-                Extension.setPreference("autosound", autoSound.Checked, this);
+                this.SetPreference("autosound", autoSound.Checked);
             };
-            autoSound.Checked = Extension.getPreference("autosound", false, this);
+            autoSound.Checked = this.GetPreference("autosound", false);
         }
 
         private void InitializeControl()
@@ -84,7 +84,7 @@ namespace HappyHealthyCSharp
         }
         private void Logout(object sender, DialogClickEventArgs e)
         {
-            Extension.clearAllPreference(this);
+            Extension.ClearAllReferences(this);
             StartActivity(new Intent(this, typeof(Login)));
             this.Finish();
         }

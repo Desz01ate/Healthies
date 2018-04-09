@@ -66,7 +66,7 @@ namespace HappyHealthyCSharp
                 };
             }
 
-            if (Extension.getPreference("autosound", false, this) && onSaveState)
+            if (this.GetPreference("autosound", false) && onSaveState)
                 AutomationTalker();
         }
 
@@ -295,7 +295,7 @@ namespace HappyHealthyCSharp
             pressureObject.bp_lo = Convert.ToDecimal(BPLow.Text);
             pressureObject.bp_hr = Convert.ToInt32(HeartRate.Text);
             pressureObject.bp_time = DateTime.Now;//.ToThaiLocale();
-            pressureObject.ud_id = Extension.getPreference("ud_id", 0, this);
+            pressureObject.ud_id = this.GetPreference("ud_id", 0);
             pressureObject.Insert();
             //bpTable.TrySyncWithMySQL(this);
             if (pressureObject.IsInDangerousState())

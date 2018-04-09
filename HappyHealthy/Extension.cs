@@ -1,20 +1,20 @@
-﻿using System.Text;
-using System.Collections.Generic;
-using System.Linq;
-using System;
-using System.Threading.Tasks;
-using Android.App;
+﻿using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Runtime;
+using Android.Speech.Tts;
 using Android.Views;
 using Android.Widget;
-using Android.Speech.Tts;
-using System.Net.Mail;
-using System.Net;
-using System.IO;
+using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace HappyHealthyCSharp
 {
@@ -87,56 +87,55 @@ namespace HappyHealthyCSharp
             createdButton.GetButton((int)DialogButtonType.Neutral).SetTextColor(neutralTxtColor);
             createdButton.GetButton((int)DialogButtonType.Negative).SetTextColor(negativeTxtColor);
         }
-
-        public static void setPreference(string key, string value, Context c)
+        public static void SetPreference(this Context c, string key, string value)
         {
             ISharedPreferences prefs = Android.Preferences.PreferenceManager.GetDefaultSharedPreferences(c);
             ISharedPreferencesEditor editor = prefs.Edit();
             editor.PutString(key, value);
             editor.Apply();
         }
-        public static void setPreference(string key, int value, Context c)
+        public static void SetPreference(this Context c, string key, int value)
         {
             ISharedPreferences prefs = Android.Preferences.PreferenceManager.GetDefaultSharedPreferences(c);
             ISharedPreferencesEditor editor = prefs.Edit();
             editor.PutInt(key, value);
             editor.Apply();
         }
-        public static void setPreference(string key, bool value, Context c)
+        public static void SetPreference(this Context c, string key, bool value)
         {
             ISharedPreferences prefs = Android.Preferences.PreferenceManager.GetDefaultSharedPreferences(c);
             ISharedPreferencesEditor editor = prefs.Edit();
             editor.PutBoolean(key, value);
             editor.Apply();
         }
-        public static void setPreference(string key, float value, Context c)
+        public static void SetPreference(this Context c, string key, float value)
         {
             ISharedPreferences prefs = Android.Preferences.PreferenceManager.GetDefaultSharedPreferences(c);
             ISharedPreferencesEditor editor = prefs.Edit();
             editor.PutFloat(key, value);
             editor.Apply();
         }
-        public static string getPreference(string key, string defVal, Context c)
+        public static string GetPreference(this Context c, string key, string defVal)
         {
             ISharedPreferences prefs = Android.Preferences.PreferenceManager.GetDefaultSharedPreferences(c);
             return prefs.GetString(key, defVal);
         }
-        public static int getPreference(string key, int defVal, Context c)
+        public static int GetPreference(this Context c, string key, int defVal)
         {
             ISharedPreferences prefs = Android.Preferences.PreferenceManager.GetDefaultSharedPreferences(c);
             return prefs.GetInt(key, defVal);
         }
-        public static bool getPreference(string key, bool defVal, Context c)
+        public static bool GetPreference(this Context c, string key, bool defVal)
         {
             ISharedPreferences prefs = Android.Preferences.PreferenceManager.GetDefaultSharedPreferences(c);
             return prefs.GetBoolean(key, defVal);
         }
-        public static float getPreference(string key, float defVal, Context c)
+        public static float GetPreference(this Context c, string key, float defVal)
         {
             ISharedPreferences prefs = Android.Preferences.PreferenceManager.GetDefaultSharedPreferences(c);
             return prefs.GetFloat(key, defVal);
         }
-        public static void clearAllPreference(Context c)
+        public static void ClearAllReferences(this Context c)
         {
             ISharedPreferences prefs = Android.Preferences.PreferenceManager.GetDefaultSharedPreferences(c);
             prefs.Edit().Clear().Commit();

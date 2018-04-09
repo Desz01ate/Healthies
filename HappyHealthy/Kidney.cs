@@ -76,7 +76,7 @@ namespace HappyHealthyCSharp
                 };
 
             }
-            if (Extension.getPreference("autosound", false, this) && onSaveState)
+            if (this.GetPreference("autosound", false) && onSaveState)
                 AutomationTalker();
             t2sEngine = new TTS(this);
         }
@@ -281,7 +281,7 @@ namespace HappyHealthyCSharp
             kidneyObject.ckd_albumin_urine = Convert.ToDecimal(field_albumin_urine.Text);
             kidneyObject.ckd_phosphorus_blood = Convert.ToDecimal(field_phosphorus_blood.Text);
             kidneyObject.ckd_time = DateTime.Now;//.ToThaiLocale();
-            kidneyObject.ud_id = Extension.getPreference("ud_id", 0, this);
+            kidneyObject.ud_id = this.GetPreference("ud_id", 0);
             kidneyObject.Insert();
             //kidney.TrySyncWithMySQL(this);
             if (kidneyObject.IsInDangerousState())
@@ -306,7 +306,7 @@ namespace HappyHealthyCSharp
             kidneyObject.ckd_albumin_blood = Convert.ToDecimal(field_albumin_blood.Text);
             kidneyObject.ckd_albumin_urine = Convert.ToDecimal(field_albumin_urine.Text);
             kidneyObject.ckd_phosphorus_blood = Convert.ToDecimal(field_phosphorus_blood.Text);
-            kidneyObject.ud_id = Extension.getPreference("ud_id", 0, this);
+            kidneyObject.ud_id = this.GetPreference("ud_id", 0);
             kidneyObject.Update();
             //kidneyObject.TrySyncWithMySQL(this);
             if (kidneyObject.IsInDangerousState())

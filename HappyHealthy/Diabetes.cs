@@ -69,7 +69,7 @@ namespace HappyHealthyCSharp
                         AutomationTalker();
                     }
                 };
-                if (Extension.getPreference("autosound", false, this))
+                if (this.GetPreference("autosound", false))
                 {
                     AutomationTalker();
                 }
@@ -186,7 +186,7 @@ namespace HappyHealthyCSharp
         {
             diaObject.fbs_fbs = (decimal)double.Parse(BloodValue.Text);
             diaObject.fbs_fbs_sum = (decimal)double.Parse(SumBloodValue.Text);
-            diaObject.ud_id = Extension.getPreference("ud_id", 0, this);
+            diaObject.ud_id = this.GetPreference("ud_id", 0);
             diaObject.fbs_time = DateTime.Now;//.ToThaiLocale();
             diaObject.Update();
             //diaObject.TrySyncWithMySQL(this);
@@ -267,7 +267,7 @@ namespace HappyHealthyCSharp
             }
             diabetesObject.fbs_fbs = (decimal)double.Parse(BloodValue.Text);
             diabetesObject.fbs_fbs_sum = (decimal)double.Parse(SumBloodValue.Text);
-            diabetesObject.ud_id = Extension.getPreference("ud_id", 0, this);
+            diabetesObject.ud_id = this.GetPreference("ud_id", 0);
             diabetesObject.fbs_time = DateTime.Now;//.ToThaiLocale();
             diabetesObject.Insert();
             //diaTable.TrySyncWithMySQL(this);

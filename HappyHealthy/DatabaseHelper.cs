@@ -256,20 +256,20 @@ namespace HappyHealthyCSharp
                         isSyncing = true; //lock
                         var ws = new HHCSService.HHCSService();
                         var diaList = new List<HHCSService.TEMP_DiabetesTABLE>();
-                        new TEMP_DiabetesTABLE().SelectAll(x => x.ud_id == Extension.getPreference("ud_id", 0, c)).ForEach(row =>
+                        new TEMP_DiabetesTABLE().SelectAll(x => x.ud_id == c.GetPreference("ud_id", 0)).ForEach(row =>
                         {
                             var wsObject = new HHCSService.TEMP_DiabetesTABLE();
                             SetValues(row, ref wsObject);
                             diaList.Add(wsObject);
                         });
                         var kidneyList = new List<HHCSService.TEMP_KidneyTABLE>();
-                        new TEMP_KidneyTABLE().SelectAll(x => x.ud_id == Extension.getPreference("ud_id", 0, c)).ForEach(row => {
+                        new TEMP_KidneyTABLE().SelectAll(x => x.ud_id == c.GetPreference("ud_id", 0)).ForEach(row => {
                             var wsObject = new HHCSService.TEMP_KidneyTABLE();
                             SetValues(row, ref wsObject);
                             kidneyList.Add(wsObject);
                         });
                         var pressureList = new List<HHCSService.TEMP_PressureTABLE>();
-                        new TEMP_PressureTABLE().SelectAll(x => x.ud_id == Extension.getPreference("ud_id", 0, c)).ForEach(row => {
+                        new TEMP_PressureTABLE().SelectAll(x => x.ud_id == c.GetPreference("ud_id", 0)).ForEach(row => {
                             var wsObject = new HHCSService.TEMP_PressureTABLE();
                             SetValues(row, ref wsObject);
                             pressureList.Add(wsObject);
@@ -282,9 +282,9 @@ namespace HappyHealthyCSharp
                         diaList.Clear();
                         kidneyList.Clear();
                         pressureList.Clear();
-                        SQLiteInstance.GetConnection.Execute($"DELETE FROM TEMP_DiabetesTABLE WHERE ud_id = {Extension.getPreference("ud_id", 0, c)}");
-                        SQLiteInstance.GetConnection.Execute($"DELETE FROM TEMP_KidneyTABLE WHERE ud_id = {Extension.getPreference("ud_id", 0, c)}");
-                        SQLiteInstance.GetConnection.Execute($"DELETE FROM TEMP_PressureTABLE WHERE ud_id = {Extension.getPreference("ud_id", 0, c)}");
+                        SQLiteInstance.GetConnection.Execute($"DELETE FROM TEMP_DiabetesTABLE WHERE ud_id = {c.GetPreference("ud_id", 0)}");
+                        SQLiteInstance.GetConnection.Execute($"DELETE FROM TEMP_KidneyTABLE WHERE ud_id = {c.GetPreference("ud_id", 0)}");
+                        SQLiteInstance.GetConnection.Execute($"DELETE FROM TEMP_PressureTABLE WHERE ud_id = {c.GetPreference("ud_id", 0)}");
                         isSyncing = false; //unlock
                     }
                 }

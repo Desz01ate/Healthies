@@ -25,8 +25,8 @@ namespace HappyHealthyCSharp
         }
         Service(Context c)
         {
-            WebServiceAuthentication.Username = Extension.getPreference("ud_email", string.Empty, c);
-            WebServiceAuthentication.Password = Extension.getPreference("ud_pass",string.Empty,c);
+            WebServiceAuthentication.Username = c.GetPreference("ud_email", string.Empty);
+            WebServiceAuthentication.Password = c.GetPreference("ud_pass",string.Empty);
         }
     }
 }

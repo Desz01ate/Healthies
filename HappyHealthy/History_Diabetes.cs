@@ -90,7 +90,7 @@ namespace HappyHealthyCSharp
         }
         public void SetListView()
         {
-            diabList = diaTable.SelectAll(x => x.ud_id == Extension.getPreference("ud_id", 0, this)).OrderBy(x => x.fbs_time).ToJavaList();//diaTable.GetJavaList<DiabetesTABLE>($"SELECT * FROM DiabetesTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)} ORDER BY FBS_TIME", new DiabetesTABLE().Column);
+            diabList = diaTable.SelectAll(x => x.ud_id == this.GetPreference("ud_id", 0)).OrderBy(x => x.fbs_time).ToJavaList();//diaTable.GetJavaList<DiabetesTABLE>($"SELECT * FROM DiabetesTABLE WHERE UD_ID = {Extension.getPreference("ud_id", 0, this)} ORDER BY FBS_TIME", new DiabetesTABLE().Column);
             ListAdapter = new SimpleAdapter(this, diabList, Resource.Layout.history_diabetes, new string[] { "fbs_time" }, new int[] { Resource.Id.date }); //"D_DateTime",date
             ListView.Adapter = ListAdapter;
         }

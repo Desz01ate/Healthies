@@ -93,9 +93,9 @@ namespace HappyHealthyCSharp
                             var conn = SQLiteInstance.GetConnection;//new SQLiteConnection(Extension.sqliteDBPath);
                             var sql = $@"select * from UserTABLE where ud_email = '{email}'";
                             var result = conn.Query<UserTABLE>(sql);
-                            Extension.setPreference("ud_email", email.Text, this);
-                            Extension.setPreference("ud_pass", pw.Text, this);
-                            Extension.setPreference("ud_id", user.ud_id, this);
+                            this.SetPreference("ud_email", email.Text);
+                            this.SetPreference("ud_pass", pw.Text);
+                            this.SetPreference("ud_id", user.ud_id);
                             Extension.CreateDialogue(this, "การลงทะเบียนเสร็จสมบูรณ์", delegate
                             {
                                 StartActivity(typeof(MainActivity));

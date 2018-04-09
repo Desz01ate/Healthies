@@ -52,7 +52,7 @@ namespace HappyHealthyCSharp
         public static double[] reportValuesMinimum()
         {
             var baseValues = new[] { 90.0, 60.0, -1.0 };
-            var user = new UserTABLE().SelectOne(x => x.ud_id == Extension.getPreference("ud_id", 0, Login.getContext()));
+            var user = new UserTABLE().SelectOne(x => x.ud_id == Login.getContext().GetPreference("ud_id", 0));
             var userAge = DateTime.Now.Year - user.ud_birthdate.Year;
             if (userAge < 30)
             {
@@ -89,7 +89,7 @@ namespace HappyHealthyCSharp
         public static double[] reportValuesMaximum() {
             {
                 var baseValues = new[] { 180.0, 110.0, -1.0 };
-                var user = new UserTABLE().SelectOne(x => x.ud_id == Extension.getPreference("ud_id", 0, Login.getContext()));
+                var user = new UserTABLE().SelectOne(x => x.ud_id == Login.getContext().GetPreference("ud_id", 0));
                 var userAge = DateTime.Now.Year - user.ud_birthdate.Year;
                 if (userAge < 30)
                 {

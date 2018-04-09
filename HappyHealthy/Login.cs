@@ -29,7 +29,7 @@ namespace HappyHealthyCSharp
             // Create your application here
             _loginContext = this;
             //is Cache data available?
-            if ((Extension.getPreference("ud_id", 0, this) != 0))
+            if ((this.GetPreference("ud_id", 0) != 0))
             {
                 StartActivity(typeof(MainActivity));
                 Finish();
@@ -46,8 +46,8 @@ namespace HappyHealthyCSharp
             ProgressDialog progressDialog = new ProgressDialog(this);
             login.Click += async delegate
             {
-                Extension.setPreference("ud_email", id.Text, this);
-                Extension.setPreference("ud_pass", pw.Text, this);
+                this.SetPreference("ud_email", id.Text);
+                this.SetPreference("ud_pass", pw.Text);
                 if (new UserTABLE().SelectAll(x=>x.ud_email == id.Text).Count == 0)
                 {
                     progressDialog.SetProgressStyle(ProgressDialogStyle.Spinner);
@@ -105,7 +105,7 @@ namespace HappyHealthyCSharp
             var result = new UserTABLE().SelectOne( x => x.ud_email == id);//conn.Query<UserTABLE>(sql);
             //Extension.setPreference("ud_email", id, this);
             //Extension.setPreference("ud_pass", password, this);
-            Extension.setPreference("ud_id", result.ud_id, this);
+            this.SetPreference("ud_id", result.ud_id);
         }
         public static Context getContext()
         {
