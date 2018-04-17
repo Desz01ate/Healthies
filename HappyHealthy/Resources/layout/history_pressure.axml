@@ -31,5 +31,16 @@
             android:layout_marginRight="25dp"
             android:textColor="#3a3a3a"
             android:hint="DD-MM-YYYY  HH:MM" />
+      <TextView
+            android:id="@+id/pstate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textIsSelectable="false"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            android:layout_weight="1"
+            android:layout_alignParentRight="true"
+            android:text="test"
+            android:textColor="#ff0000" />
     </LinearLayout>
 </RelativeLayout>

@@ -263,8 +263,9 @@ namespace HappyHealthyCSharp
             pressureObject.bp_hr = Convert.ToInt32(HeartRate.Text);
             pressureObject.Update();
             //pressureObject.TrySyncWithMySQL(this);
-            if (pressureObject.IsInDangerousState())
-                Extension.CreateDialogue(this, "ค่าที่คุณทำการบันทึก อยู่ในเกณฑ์เสี่ยง หรือ อันตราย กรุณาพบแพทย์เพื่อรับคำแนะนำเพิ่มเติม", delegate
+            var status = pressureObject.IsInDangerousState();
+            if (status.Length > 0)
+                Extension.CreateDialogue(this, $@"ค่าที่คุณทำการบันทึก อยู่ในเกณฑ์ {status}", delegate
                 {
                     Finish();
                 }).Show();
@@ -295,11 +296,13 @@ namespace HappyHealthyCSharp
             pressureObject.bp_lo = Convert.ToDecimal(BPLow.Text);
             pressureObject.bp_hr = Convert.ToInt32(HeartRate.Text);
             pressureObject.bp_time = DateTime.Now;//.ToThaiLocale();
+            //pressureObject.bp_time_string = pressureObject.bp_time.ToString("dd-MMMM-yyyy hh:mm:ss tt");
             pressureObject.ud_id = this.GetPreference("ud_id", 0);
             pressureObject.Insert();
             //bpTable.TrySyncWithMySQL(this);
-            if (pressureObject.IsInDangerousState())
-                Extension.CreateDialogue(this, "ค่าที่คุณทำการบันทึก อยู่ในเกณฑ์เสี่ยง หรือ อันตราย กรุณาพบแพทย์เพื่อรับคำแนะนำเพิ่มเติม", delegate
+            var status = pressureObject.IsInDangerousState();
+            if (status.Length > 0)
+                Extension.CreateDialogue(this, $@"ค่าที่คุณทำการบันทึก อยู่ในเกณฑ์ {status}", delegate
                 {
                     Finish();
                 }).Show();

@@ -30,6 +30,7 @@ namespace HappyHealthyCSharp
             "fbs_fbs",
             "fbs_fbs_lvl",
             "fbs_fbs_sum",
+            "fbs_state",
             "ud_id"
         };
         public static dynamic caseLevel = new { Low = 100, Mid = 125, High = 126 };
@@ -57,8 +58,9 @@ namespace HappyHealthyCSharp
         [SQLite.PrimaryKey]
         public int fbs_id { get; set; }
         public DateTime fbs_time { get; set; }
-        public string fbs_time_string { get; set; }
+        public string fbs_time_string { get;set; }
         public decimal fbs_fbs_sum { get; set; }
+        public string fbs_state { get; private set; }
         private decimal _fbs;
         public decimal fbs_fbs
         {
@@ -69,12 +71,15 @@ namespace HappyHealthyCSharp
             set
             {
                 _fbs = value;
-                if (_fbs < caseLevel.Low)
-                    fbs_fbs_lvl = 0;
-                else if (_fbs <= caseLevel.Mid)
-                    fbs_fbs_lvl = 1;
-                else if (_fbs >= caseLevel.High)
-                    fbs_fbs_lvl = 2;
+                if (!IsInDangerousState())
+                {
+                    fbs_fbs_lvl = (int)HealthState.Fine;
+                }
+                else
+                {
+                    fbs_fbs_lvl = (int)HealthState.Danger;
+                }
+                fbs_state = Extension.HealthStateCheck((HealthState)fbs_fbs_lvl);
             }
         }
         public int fbs_fbs_lvl { get; private set; }

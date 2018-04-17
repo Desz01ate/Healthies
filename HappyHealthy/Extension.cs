@@ -18,6 +18,15 @@ using System.Threading.Tasks;
 
 namespace HappyHealthyCSharp
 {
+    public enum HealthState
+    {
+        VeryFine = 5,
+        Fine = 4,
+        Normal = 3,
+        BeAware = 2,
+        Danger = 1,
+        VeryDanger = 0
+    }
     public static class Extension
     {
         public static readonly string fileStorePath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
@@ -309,6 +318,17 @@ namespace HappyHealthyCSharp
         public static bool TimeValidate(this DateTime dt)
         {
             return dt.Hour != 0 || dt.Minute != 0;
+        }
+        public static string HealthStateCheck(params HealthState[] input)
+        {
+            for(var i = 0; i < input.Length; i++)
+            {
+                if(input[i] < HealthState.Normal)
+                {
+                    return "!!!";
+                }
+            }
+            return string.Empty;
         }
 
     }

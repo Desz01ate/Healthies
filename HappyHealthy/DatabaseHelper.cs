@@ -239,7 +239,15 @@ namespace HappyHealthyCSharp
                 foreach(var attribute in columnTag)
                 {
                     var currentProp = dataRow.GetType().GetProperty(attribute);
-                    data.Add(attribute, currentProp.GetValue(dataRow));
+                    if (attribute.EndsWith("time"))
+                    {
+                        //dirty way to format a date..., but I have no time to do it elegantly :(
+                        data.Add(attribute, ((DateTime)currentProp.GetValue(dataRow)).ToString("dd-MMMM-yyyy hh:mm:ss tt"));
+                    }
+                    else
+                    {
+                        data.Add(attribute, currentProp.GetValue(dataRow));
+                    }
                 };
                 dataList.Add(data);
             };
@@ -365,8 +373,8 @@ namespace HappyHealthyCSharp
                     {
                         var tempDiabetes = new DiabetesTABLE();
                         tempDiabetes.fbs_id = Convert.ToInt32(row[0].ToString());
-                        tempDiabetes.fbs_time = ((DateTime)row[1]);//.ToThaiLocale();
-                        tempDiabetes.fbs_time_string = row[1].ToString();
+                        tempDiabetes.fbs_time = ((DateTime)row[1]).AddHours(-14);//.ToThaiLocale();
+                        //tempDiabetes.fbs_time_string = row[1].ToString();
                         tempDiabetes.fbs_fbs = Convert.ToDecimal(row[2].ToString());
                         //tempDiabetes.fbs_fbs_lvl = Convert.ToInt32(row[3].ToString());
                         tempDiabetes.fbs_fbs_sum = Convert.ToDecimal(row[4].ToString());
@@ -377,8 +385,8 @@ namespace HappyHealthyCSharp
                     {
                         var tempKidney = new KidneyTABLE();
                         tempKidney.ckd_id = Convert.ToInt32(row[0].ToString());
-                        tempKidney.ckd_time = ((DateTime)row[1]);//.ToThaiLocale();
-                        tempKidney.ckd_time_string = row[1].ToString();
+                        tempKidney.ckd_time = ((DateTime)row[1]).AddHours(-14);//.ToThaiLocale();
+                        //tempKidney.ckd_time_string = "NONE";
                         tempKidney.ckd_gfr = Convert.ToDecimal(row[2].ToString());
                         //tempKidney.ckd_gfr_level = Convert.ToInt32(row[3].ToString());
                         tempKidney.ckd_creatinine = Convert.ToDecimal(row[4].ToString());
@@ -395,8 +403,8 @@ namespace HappyHealthyCSharp
                     {
                         var tempPressure = new PressureTABLE();
                         tempPressure.bp_id = Convert.ToInt32(row[0].ToString());
-                        tempPressure.bp_time = ((DateTime)row[1]);//.ToThaiLocale();
-                        tempPressure.bp_time_string = row[1].ToString();
+                        tempPressure.bp_time = ((DateTime)row[1]).AddHours(-14);//.ToThaiLocale();
+                        //tempPressure.bp_time_string = "NONE";
                         tempPressure.bp_up = Convert.ToDecimal(row[2].ToString());
                         tempPressure.bp_lo = Convert.ToDecimal(row[3].ToString());
                         tempPressure.bp_hr = Convert.ToInt32(row[4].ToString());

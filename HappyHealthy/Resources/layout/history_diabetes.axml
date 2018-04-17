@@ -18,7 +18,7 @@
             android:layout_marginBottom="5dp" />
         <TextView
             android:id="@+id/date"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textIsSelectable="false"
             android:textSize="16dp"
@@ -27,7 +27,17 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="25dp"
-            android:hint="DD-MM-YYYY  HH:MM"
             android:textColor="#3a3a3a" />
+        <TextView
+            android:id="@+id/dstate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textIsSelectable="false"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
+            android:textColor="#ff0000" />
     </LinearLayout>
 </RelativeLayout>

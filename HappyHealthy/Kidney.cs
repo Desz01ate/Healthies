@@ -281,6 +281,7 @@ namespace HappyHealthyCSharp
             kidneyObject.ckd_albumin_urine = Convert.ToDecimal(field_albumin_urine.Text);
             kidneyObject.ckd_phosphorus_blood = Convert.ToDecimal(field_phosphorus_blood.Text);
             kidneyObject.ckd_time = DateTime.Now;//.ToThaiLocale();
+            //kidneyObject.ckd_time_string = kidneyObject.ckd_time.ToString("dd-MMMM-yyyy hh:mm:ss tt");
             kidneyObject.ud_id = this.GetPreference("ud_id", 0);
             kidneyObject.Insert();
             //kidney.TrySyncWithMySQL(this);

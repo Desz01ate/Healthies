@@ -31,7 +31,8 @@ namespace HappyHealthyCSharp
             "ckd_potassium",
             "ckd_albumin_blood",
             "ckd_albumin_urine",
-            "ckd_phosphorus_blood"
+            "ckd_phosphorus_blood",
+            "ckd_state"
         };
         public static dynamic caseLevel = new { Low = 100, Mid = 125, High = 126 };
         //GFR ref : https://medlineplus.gov/ency/article/007305.htm
@@ -40,9 +41,9 @@ namespace HappyHealthyCSharp
         //sodium ref : https://www.kidney.org/atoz/content/hyponatremia
         //phosphorus ref : https://www.kidney.org/atoz/content/phosphorus
         //potassium ref : https://www.davita.com/kidney-disease/diet-and-nutrition/diet-basics/sodium-and-chronic-kidney-disease/e/5310
-        public static string[] reportKeys          => new[] { "ckd_gfr", "ckd_creatinine"                                    , "ckd_bun", "ckd_sodium", "ckd_potassium", "ckd_phosphorus_blood", "ckd_albumin_blood", "ckd_albumin_urine" };
-        public static double[] reportValuesMinimum => new[] { 60       , new UserTABLE().ud_gender == "M"?   97.0  :  88.0   , 3        , 135         , 3.5            , 2.5                   , 4.0                , 0 };
-        public static double[] reportValuesMaximum => new[] { 120      , new UserTABLE().ud_gender == "M" ? 137.0 : 128.0    , 20       , 145         , 5.5            , 4.5                   , 999                , 30 };
+        public static string[] reportKeys => new[] { "ckd_gfr", "ckd_creatinine", "ckd_bun", "ckd_sodium", "ckd_potassium", "ckd_phosphorus_blood", "ckd_albumin_blood", "ckd_albumin_urine" };
+        public static double[] reportValuesMinimum => new[] { 60, new UserTABLE().ud_gender == "M" ? 97.0 : 88.0, 3, 135, 3.5, 2.5, 4.0, 0 };
+        public static double[] reportValuesMaximum => new[] { 120, new UserTABLE().ud_gender == "M" ? 137.0 : 128.0, 20, 145, 5.5, 4.5, 999, 30 };
         public bool IsInDangerousState()
         {
             for (var pIndex = 0; pIndex < reportKeys.Length; pIndex++)
@@ -67,7 +68,8 @@ namespace HappyHealthyCSharp
         public string ckd_time_string { get; set; }
         private decimal _gfr;
         [SQLite.MaxLength(3)]
-        public decimal ckd_gfr {
+        public decimal ckd_gfr
+        {
             get
             {
                 return _gfr;
@@ -75,30 +77,136 @@ namespace HappyHealthyCSharp
             set
             {
                 _gfr = value;
-                if (_gfr < caseLevel.Low)
-                    ckd_gfr_level = 0;
-                else if (_gfr <= caseLevel.Mid)
-                    ckd_gfr_level = 1;
-                else if (_gfr >= caseLevel.High)
-                    ckd_gfr_level = 2;
+                if (!IsInDangerousState())
+                {
+                    ckd_gfr_level = (int)HealthState.Fine;
+                }
+                else
+                {
+                    ckd_gfr_level = (int)HealthState.Danger;
+                }
+                ckd_state = Extension.HealthStateCheck((HealthState)ckd_gfr_level);
             }
-        }      
+        }
+        public string ckd_state { get; private set; }
         [SQLite.MaxLength(4)]
-        public int ckd_gfr_level{ get;private set;}
+        public int ckd_gfr_level { get; private set; }
+        private decimal _creatinine;
         [SQLite.MaxLength(3)]
-        public decimal ckd_creatinine { get; set; }
+        public decimal ckd_creatinine
+        {
+            get
+            {
+                return _creatinine;
+            }
+            set
+            {
+                _creatinine = value;                
+                if (!IsInDangerousState())
+                    ckd_state = string.Empty;
+                else
+                    ckd_state = "!!!";
+            }
+        }
+        private decimal _bun;
         [SQLite.MaxLength(3)]
-        public decimal ckd_bun { get; set; }
+        public decimal ckd_bun
+        {
+            get
+            {
+                return _bun;
+            }
+            set
+            {
+                _bun = value;
+                if (!IsInDangerousState())
+                    ckd_state = string.Empty;
+                else
+                    ckd_state = "!!!";
+            }
+        }
+        private decimal _sodium;
         [SQLite.MaxLength(3)]
-        public decimal ckd_sodium { get; set; }
+        public decimal ckd_sodium
+        {
+            get
+            {
+                return _sodium;
+            }
+            set
+            {
+                _sodium = value;
+                if (!IsInDangerousState())
+                    ckd_state = string.Empty;
+                else
+                    ckd_state = "!!!";
+            }
+        }
+        private decimal _potassium;
         [SQLite.MaxLength(3)]
-        public decimal ckd_potassium { get; set; }
+        public decimal ckd_potassium
+        {
+            get
+            {
+                return _potassium;
+            }
+            set
+            {
+                _potassium = value;
+                if (!IsInDangerousState())
+                    ckd_state = string.Empty;
+                else
+                    ckd_state = "!!!";
+            }
+        }
+        private decimal _alb_blood;
         [SQLite.MaxLength(3)]
-        public decimal ckd_albumin_blood { get; set; }
+        public decimal ckd_albumin_blood {
+            get
+            {
+                return _alb_blood;
+            }
+            set
+            {
+                _alb_blood = value;
+                if (!IsInDangerousState())
+                    ckd_state = string.Empty;
+                else
+                    ckd_state = "!!!";
+            }
+        }
+        private decimal _alb_urine;
         [SQLite.MaxLength(3)]
-        public decimal ckd_albumin_urine { get; set; }
+        public decimal ckd_albumin_urine {
+            get
+            {
+                return _alb_urine;
+            }
+            set
+            {
+                _alb_urine = value;
+                if (!IsInDangerousState())
+                    ckd_state = string.Empty;
+                else
+                    ckd_state = "!!!";
+            }
+        }
+        private decimal _phos_blood;
         [SQLite.MaxLength(3)]
-        public decimal ckd_phosphorus_blood { get; set; }
+        public decimal ckd_phosphorus_blood {
+            get
+            {
+                return _phos_blood;
+            }
+            set
+            {
+                _phos_blood = value;
+                if (!IsInDangerousState())
+                    ckd_state = string.Empty;
+                else
+                    ckd_state = "!!!";
+            }
+        }
         public int ud_id { get; set; }
         [Ignore]
         public UserTABLE UserTABLE { get; set; }

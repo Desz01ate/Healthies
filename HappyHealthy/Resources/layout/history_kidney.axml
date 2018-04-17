@@ -3,33 +3,43 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="horizontal">
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
+  <LinearLayout
+      android:orientation="horizontal"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:background="#ffffff"
+      android:layout_marginTop="2dp">
+    <ImageView
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:id="@+id/imageView2"
+        android:padding="5dp"
+        android:layout_marginLeft="10dp"
+        android:src="@drawable/calender"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp" />
+    <TextView
+        android:id="@+id/dateKidney"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#ffffff"
-        android:layout_marginTop="2dp">
-        <ImageView
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:id="@+id/imageView2"
-            android:padding="5dp"
-            android:layout_marginLeft="10dp"
-            android:src="@drawable/calender"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp" />
-        <TextView
-            android:id="@+id/dateKidney"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textIsSelectable="false"
-            android:textSize="16dp"
-            android:textStyle="bold"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="25dp"
-            android:hint="DD-MM-YYYY  HH:MM"
-            android:textColor="#3a3a3a" />
-    </LinearLayout>
+        android:textIsSelectable="false"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        android:layout_weight="1"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="25dp"
+        android:hint="DD-MM-YYYY  HH:MM"
+        android:textColor="#3a3a3a" />
+    <TextView
+        android:id="@+id/kstate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textIsSelectable="false"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        android:layout_weight="1"
+        android:layout_alignParentRight="true"
+        android:textColor="#ff0000" />
+  </LinearLayout>
 </RelativeLayout>

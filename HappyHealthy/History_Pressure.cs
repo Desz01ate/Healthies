@@ -91,7 +91,7 @@ namespace HappyHealthyCSharp
         public void SetListView()
         {
             bpList = bpTable.SelectAll(x => x.ud_id == this.GetPreference("ud_id", 0)).OrderBy(x => x.bp_time).ToJavaList();
-            ListAdapter = new SimpleAdapter(this, bpList, Resource.Layout.history_diabetes, new string[] { "bp_time" }, new int[] { Resource.Id.date });
+            ListAdapter = new SimpleAdapter(this, bpList, Resource.Layout.history_diabetes, new string[] { "bp_time","bp_state" }, new int[] { Resource.Id.date,Resource.Id.dstate });
             ListView.Adapter = ListAdapter;
         }
     }

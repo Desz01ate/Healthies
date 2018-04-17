@@ -187,7 +187,6 @@ namespace HappyHealthyCSharp
             diaObject.fbs_fbs = (decimal)double.Parse(BloodValue.Text);
             diaObject.fbs_fbs_sum = (decimal)double.Parse(SumBloodValue.Text);
             diaObject.ud_id = this.GetPreference("ud_id", 0);
-            diaObject.fbs_time = DateTime.Now;//.ToThaiLocale();
             diaObject.Update();
             //diaObject.TrySyncWithMySQL(this);
             if (diaObject.IsInDangerousState())
@@ -269,6 +268,7 @@ namespace HappyHealthyCSharp
             diabetesObject.fbs_fbs_sum = (decimal)double.Parse(SumBloodValue.Text);
             diabetesObject.ud_id = this.GetPreference("ud_id", 0);
             diabetesObject.fbs_time = DateTime.Now;//.ToThaiLocale();
+            //diabetesObject.fbs_time_string = diabetesObject.fbs_time.ToString("dd-MMMM-yyyy hh:mm:ss tt");
             diabetesObject.Insert();
             //diaTable.TrySyncWithMySQL(this);
             if (diabetesObject.IsInDangerousState())
