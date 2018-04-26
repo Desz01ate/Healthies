@@ -84,6 +84,7 @@ namespace HappyHealthyCSharp
                         , user.ud_birthdate);
                     });
                     progressDialog.Dismiss();
+                    Console.WriteLine(Service.Url);
                     if (returnData.Length == 2)
                     {
                         user.ud_id = (int)returnData[0];

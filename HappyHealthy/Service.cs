@@ -14,7 +14,11 @@ namespace HappyHealthyCSharp
 {
     public sealed class Service
     {
-        public HHCSService.AuthHeader WebServiceAuthentication = new HHCSService.AuthHeader();
+        private Context context;
+        public HHCSService.AuthHeader WebServiceAuthentication => new HHCSService.AuthHeader() {
+            Username = context.GetPreference("ud_email", string.Empty),
+            Password = context.GetPreference("ud_pass", string.Empty)
+        };
         static readonly Service _instance = new Service(Login.getContext());
         public static Service GetInstance
         {
@@ -25,8 +29,7 @@ namespace HappyHealthyCSharp
         }
         Service(Context c)
         {
-            WebServiceAuthentication.Username = c.GetPreference("ud_email", string.Empty);
-            WebServiceAuthentication.Password = c.GetPreference("ud_pass",string.Empty);
+            context = c;
         }
     }
 }

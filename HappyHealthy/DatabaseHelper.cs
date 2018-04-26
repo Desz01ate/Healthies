@@ -86,7 +86,7 @@ namespace HappyHealthyCSharp
                 return result.Where(predicate).ToList();
         }
         [Obsolete("Due to this function required an id that can lead to MISDELETE value on runtime, to solve this please implement the delete function by inherit DatabaseHelper class into child class (but you can still use this function if you're not intended to implement on your own ofcourse)")]
-        public static bool Delete<T>(this T baseobj,int id) where T : new()
+        public static bool Delete<T>(this T baseobj, int id) where T : new()
         {
             try
             {
@@ -131,18 +131,17 @@ namespace HappyHealthyCSharp
         }
         public static bool CreateSQLiteTableIfNotExists()
         {
-
+            var sqliteConn = SQLiteInstance.GetConnection;
             try
             {
-                var sqliteConn = SQLiteInstance.GetConnection;
-                sqliteConn.CreateTable<DiabetesTABLE>();
-                sqliteConn.CreateTable<DoctorTABLE>();
-                sqliteConn.CreateTable<FoodTABLE>();
-                sqliteConn.CreateTable<KidneyTABLE>();
-                sqliteConn.CreateTable<MedicineTABLE>();
-                sqliteConn.CreateTable<PressureTABLE>();
-                sqliteConn.CreateTable<SummaryDiabetesTABLE>();
-                sqliteConn.CreateTable<UserTABLE>();
+                ExceptionHandlerClass.IgnoreError(() => { sqliteConn.CreateTable<DiabetesTABLE>(); });
+                ExceptionHandlerClass.IgnoreError(() => { sqliteConn.CreateTable<DoctorTABLE>(); });
+                ExceptionHandlerClass.IgnoreError(() => { sqliteConn.CreateTable<FoodTABLE>(); });
+                ExceptionHandlerClass.IgnoreError(() => { sqliteConn.CreateTable<KidneyTABLE>(); });
+                ExceptionHandlerClass.IgnoreError(() => { sqliteConn.CreateTable<MedicineTABLE>(); });
+                ExceptionHandlerClass.IgnoreError(() => { sqliteConn.CreateTable<PressureTABLE>(); });
+                ExceptionHandlerClass.IgnoreError(() => { sqliteConn.CreateTable<SummaryDiabetesTABLE>(); });
+                ExceptionHandlerClass.IgnoreError(() => { sqliteConn.CreateTable<UserTABLE>(); });
                 CreateTriggers(sqliteConn);
                 return true;
             }
@@ -154,7 +153,7 @@ namespace HappyHealthyCSharp
         }
         private static void CreateTriggers(SQLiteConnection c)
         {
-            c.CreateTable<TEMP_DiabetesTABLE>();
+            ExceptionHandlerClass.IgnoreError(() => { c.CreateTable<TEMP_DiabetesTABLE>(); });
             c.Execute($@"CREATE TRIGGER DiabetesTABLE_After_Insert_Trigger AFTER INSERT ON DiabetesTABLE 
                            BEGIN 
                                 INSERT INTO TEMP_DiabetesTABLE(fbs_id_pointer, fbs_time_new, fbs_fbs_new, fbs_fbs_lvl_new,fbs_fbs_sum_new, MODE,ud_id) 
@@ -176,7 +175,7 @@ namespace HappyHealthyCSharp
                                 VALUES(OLD.fbs_id, OLD.fbs_time, OLD.fbs_fbs, OLD.fbs_fbs_lvl,OLD.fbs_fbs_sum, 'D',OLD.ud_id); 
                             END");
 
-            c.CreateTable<TEMP_PressureTABLE>();
+            ExceptionHandlerClass.IgnoreError(() => { c.CreateTable<TEMP_PressureTABLE>(); });
             c.Execute($@"CREATE TRIGGER PressureTABLE_After_Insert_Trigger AFTER INSERT ON PressureTABLE 
                             BEGIN 
                                 INSERT INTO TEMP_PressureTABLE(bp_id_pointer, bp_time_new ,bp_up_new ,bp_lo_new ,bp_hr_new ,bp_up_lvl_new ,bp_lo_lvl_new ,bp_hr_lvl_new ,MODE,ud_id) 
@@ -198,7 +197,7 @@ namespace HappyHealthyCSharp
                                 values(OLD.bp_id, OLD.bp_time ,OLD.bp_up ,OLD.bp_lo ,OLD.bp_hr ,OLD.bp_up_lvl ,OLD.bp_lo_lvl ,OLD.bp_hr_lvl ,'D',OLD.ud_id); 
                             END");
 
-            c.CreateTable<TEMP_KidneyTABLE>();
+            ExceptionHandlerClass.IgnoreError(() => { c.CreateTable<TEMP_KidneyTABLE>(); });
             c.Execute($@"CREATE TRIGGER KidneyTABLE_After_Insert_Trigger AFTER INSERT ON KidneyTABLE 
                             BEGIN 
                                 INSERT INTO `TEMP_KidneyTABLE`(`ckd_id_pointer`, `ckd_time_new` , `ckd_gfr_new` , `ckd_gfr_level_new` , `ckd_creatinine_new` , `ckd_bun_new` , `ckd_sodium_new` , `ckd_potassium_new` , `ckd_albumin_blood_new` , `ckd_albumin_urine_new` , `ckd_phosphorus_blood_new` , `MODE`,ud_id) 
@@ -233,10 +232,10 @@ namespace HappyHealthyCSharp
             var value = prop.GetValue(null, null);
             var columnTag = (List<string>)value;
             var dataList = new JavaList<IDictionary<string, object>>();
-            foreach(var dataRow in dataset)
+            foreach (var dataRow in dataset)
             {
                 var data = new JavaDictionary<string, object>();
-                foreach(var attribute in columnTag)
+                foreach (var attribute in columnTag)
                 {
                     var currentProp = dataRow.GetType().GetProperty(attribute);
                     if (attribute.EndsWith("time"))
@@ -278,13 +277,15 @@ namespace HappyHealthyCSharp
                             diaList.Add(wsObject);
                         });
                         var kidneyList = new List<HHCSService.TEMP_KidneyTABLE>();
-                        new TEMP_KidneyTABLE().SelectAll(x => x.ud_id == c.GetPreference("ud_id", 0)).ForEach(row => {
+                        new TEMP_KidneyTABLE().SelectAll(x => x.ud_id == c.GetPreference("ud_id", 0)).ForEach(row =>
+                        {
                             var wsObject = new HHCSService.TEMP_KidneyTABLE();
                             SetValues(row, ref wsObject);
                             kidneyList.Add(wsObject);
                         });
                         var pressureList = new List<HHCSService.TEMP_PressureTABLE>();
-                        new TEMP_PressureTABLE().SelectAll(x => x.ud_id == c.GetPreference("ud_id", 0)).ForEach(row => {
+                        new TEMP_PressureTABLE().SelectAll(x => x.ud_id == c.GetPreference("ud_id", 0)).ForEach(row =>
+                        {
                             var wsObject = new HHCSService.TEMP_PressureTABLE();
                             SetValues(row, ref wsObject);
                             pressureList.Add(wsObject);
@@ -353,7 +354,8 @@ namespace HappyHealthyCSharp
                 DataSet pressureData = null;
                 var ws = new HHCSService.HHCSService();
 
-                await System.Threading.Tasks.Task.Run(delegate {
+                await System.Threading.Tasks.Task.Run(delegate
+                {
                     userData = ws.GetData(Service.GetInstance.WebServiceAuthentication, "UserTABLE");
                     diabetesData = ws.GetData(Service.GetInstance.WebServiceAuthentication, "DiabetesTABLE");
                     kidneyData = ws.GetData(Service.GetInstance.WebServiceAuthentication, "KidneyTABLE");

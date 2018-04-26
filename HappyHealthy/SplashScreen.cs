@@ -17,7 +17,7 @@ using Android.Speech.Tts;
 
 namespace HappyHealthyCSharp
 {
-    [Activity(Theme = "@style/MyMaterialTheme.Base", MainLauncher = true,NoHistory = true,ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
+    [Activity(Theme = "@style/MyMaterialTheme.Base", MainLauncher = true, NoHistory = true, ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
     public class SplashScreen : Activity
     {
         Animation view_animation;
@@ -38,9 +38,11 @@ namespace HappyHealthyCSharp
             var imageView = FindViewById<ImageView>(Resource.Id.splashScreenImg);
             view_animation = AnimationUtils.LoadAnimation(this, Resource.Animation.fade_in);
             imageView.StartAnimation(view_animation);
-            view_animation.AnimationEnd += delegate {
+            view_animation.AnimationEnd += delegate
+            {
                 StartActivity(typeof(Login));
             };
+
         }
     }
 }
