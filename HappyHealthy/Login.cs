@@ -41,8 +41,6 @@ namespace HappyHealthyCSharp
             var register = FindViewById<TextView>(Resource.Id.textViewRegis);
             var forgot = FindViewById<TextView>(Resource.Id.textViewForget);
             forgot.Visibility = ViewStates.Invisible;
-            //id.Text = "kunvutloveza@hotmail.com";
-            //pw.Text = "123456";
             ProgressDialog progressDialog = new ProgressDialog(this);
             login.Click += async delegate
             {
@@ -93,7 +91,7 @@ namespace HappyHealthyCSharp
             }
             catch(Exception ex)
             {
-                
+                //Extension.CreateDialogue(this, ex.ToString()).Show();
                 Extension.CreateDialogue(this, "ข้อมูลเข้าสู่ระบบของท่านผิดพลาด กรุณาตรวจสอบอีกครั้ง").Show();
             }
         }

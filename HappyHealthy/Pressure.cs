@@ -108,15 +108,9 @@ namespace HappyHealthyCSharp
             back = FindViewById<ImageView>(Resource.Id.imageView38);
             micButton = FindViewById<ImageView>(Resource.Id.ic_microphone_pressure);
         }
-
-        protected override void OnPause()
+        protected override void OnDestroy()
         {
-            base.OnPause();
-            LetsVoiceRunning = false;
-        }
-        protected override void OnStop()
-        {
-            base.OnStop();
+            base.OnDestroy();
             LetsVoiceRunning = false;
         }
         public override void OnBackPressed()
@@ -137,6 +131,7 @@ namespace HappyHealthyCSharp
             if (AllowToRun(currentControl))
                 await StartMicrophoneAsync("อัตราการเต้นของหัวใจ", Resource.Raw.heartRate);
             LetsVoiceRunning = false;
+            saveButton.PerformClick();
         }
 
         private bool AllowToRun(EditText currentControl)
@@ -165,7 +160,7 @@ namespace HappyHealthyCSharp
                     //Thread.Sleep(1000);
                     StartActivityForResult(voiceIntent, VOICE);
                 };
-                await Task.Run(() => autoEvent.WaitOne(new TimeSpan(0, 2, 0)));
+                await Task.Run(() => autoEvent.WaitOne(new TimeSpan(0, 0, 15)));
             }
             catch
             {

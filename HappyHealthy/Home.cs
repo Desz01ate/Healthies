@@ -117,10 +117,25 @@ namespace HappyHealthyCSharp
             ProgressDialog progressDialog = null;
             try
             {
-                progressDialog = ProgressDialog.Show(this, "ดาวน์โหลดข้อมูล", "กำลังดาวน์โหลดข้อมูล กรุณารอสักครู่", true);
+                //progressDialog = ProgressDialog.Show(this, "ดาวน์โหลดข้อมูล", "กำลังดาวน์โหลดข้อมูล กรุณารอสักครู่", true);
+                progressDialog = new ProgressDialog(this);
+                progressDialog.Max = 100;
+                progressDialog.SetMessage("กำลังดาวน์โหลดข้อมูล กรุณารอสักครู่");
+                progressDialog.SetCancelable(false);
+                progressDialog.SetProgressStyle(ProgressDialogStyle.Horizontal);
+                progressDialog.Show();
+                var thread = new Thread(new ThreadStart(delegate {
+                    for (var i = 1; i < 101; i++)
+                    {
+                        progressDialog.Progress = i;
+                        Thread.Sleep(40);
+                    }
+                }));
+                thread.Start();
                 var service = new HHCSService.HHCSService();
                 service.Timeout = 30 * 1000;
                 var result = await TestConnectionValidate(this,service);
+                progressDialog.Progress = 100;
                 if (result == true)
                 {
                     StartActivity(new Intent(this, typeof(History_Food)));

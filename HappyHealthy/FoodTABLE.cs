@@ -11,6 +11,7 @@ using Android.Views;
 using Android.Widget;
 using System.IO;
 using System.Data;
+using System.Threading.Tasks;
 
 namespace HappyHealthyCSharp
 {
@@ -61,11 +62,12 @@ namespace HappyHealthyCSharp
         /// <param name="word"></param>
         /// <param name="c"></param>
         /// <returns></returns>
-        public JavaList<IDictionary<string, object>> GetFoodList(Context c,string word)
+        public JavaList<IDictionary<string, object>> GetFoodList(Context c, string word)
         {
-             var service = new HHCSService.HHCSService();
+            var service = new HHCSService.HHCSService();
             var tickets = service.GetFoodData(Service.GetInstance.WebServiceAuthentication, word);
             var foodList = new JavaList<IDictionary<string, object>>();
+            /*
             foreach (DataRow x in tickets.Tables["FoodTABLE"].Rows)
             {
                 var food = new JavaDictionary<string, object>();
@@ -76,16 +78,28 @@ namespace HappyHealthyCSharp
                 foodList.Add(food);
                 
             }
+            */
+            IEnumerable<DataRow> dataCollection = tickets.Tables["FoodTABLE"].Rows.Cast<DataRow>(); //Parallel building foodList instead of sequential
+            Parallel.ForEach(dataCollection, x =>
+            {
+                var food = new JavaDictionary<string, object>();
+                Parallel.For(0, Column.Count, i =>
+                {
+                    food.Add(Column[i], Extension.StringValidation(x[i].ToString()));
+                });
+                foodList.Add(food);
+            });
             return foodList;
         }
-        public JavaList<IDictionary<string, object>> GetFoodList(Context c,int exchangeId)
+        public JavaList<IDictionary<string, object>> GetFoodList(Context c, int exchangeId)
         {
             //var sodium = new KidneyTABLE().Select<double>($@"SELECT SUM(ckd_sodium) FROM KidneyTABLE WHERE UD_ID = '{Extension.getPreference("ud_id", 0, c)}")[0];
             //var potassium = new KidneyTABLE().Select<double>($@"SELECT SUM(ckd_potassium) FROM KidneyTABLE WHERE UD_ID = '{Extension.getPreference("ud_id", 0, c)}")[0];
             //var phosphorus = new KidneyTABLE().Select<double>($@"SELECT SUM(ckd_phosphorus_blood) FROM KidneyTABLE WHERE UD_ID = '{Extension.getPreference("ud_id", 0, c)}")[0];
             var service = new HHCSService.HHCSService();
-            var tickets = service.GetFoodExchangeData(Service.GetInstance.WebServiceAuthentication,exchangeId);
+            var tickets = service.GetFoodExchangeData(Service.GetInstance.WebServiceAuthentication, exchangeId);
             var foodList = new JavaList<IDictionary<string, object>>();
+            /*
             foreach (DataRow x in tickets.Tables["FoodTABLE"].Rows)
             {
                 var food = new JavaDictionary<string, object>();
@@ -95,10 +109,20 @@ namespace HappyHealthyCSharp
                 }
                 foodList.Add(food);
             }
+            */
+            IEnumerable<DataRow> dataCollection = tickets.Tables["FoodTABLE"].Rows.Cast<DataRow>(); //Parallel building foodList instead of sequential
+            Parallel.ForEach(dataCollection, x =>
+            {
+                var food = new JavaDictionary<string, object>();
+                Parallel.For(0, Column.Count, i =>
+                {
+                    food.Add(Column[i], Extension.StringValidation(x[i].ToString()));
+                });
+                foodList.Add(food);
+            });
             return foodList;
         }
-        public Dictionary<string, string> SelectFoodDetailByID(int id)
-        {
+        public Dictionary<string, string> SelectFoodDetailByID(int id) { 
             var service = new HHCSService.HHCSService();
             var tickets = service.GetFoodData(Service.GetInstance.WebServiceAuthentication, "");
             var query = $@"SELECT * FROM Food where Food_ID = {id}";

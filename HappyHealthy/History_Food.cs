@@ -31,6 +31,7 @@ namespace HappyHealthyCSharp
             txt_search = FindViewById<EditText>(Resource.Id.tv_Sfood);
             var img_back = FindViewById<ImageView>(Resource.Id.imageViewFoodBackState);
             var addBtt = FindViewById<ImageView>(Resource.Id.imageViewFoodAdd);
+            addBtt.Visibility = ViewStates.Gone;
             addBtt.Click += delegate {
                 StartActivity(new Intent(this, typeof(Add_Food)));
             };
@@ -77,14 +78,6 @@ namespace HappyHealthyCSharp
             foodList = foodTable.GetFoodList(this,what_to_search);
             ListAdapter = new SimpleAdapter(this, foodList, Resource.Layout.food_1, new string[] { "food_name", "food_calories", "food_unit", "food_detail" }, new int[] { Resource.Id.food_name, Resource.Id.food_calories, Resource.Id.food_unit, Resource.Id.food_detail });
             ListView.Adapter = ListAdapter;
-            /* for reference on how to work with simpleadapter (it's ain't simple as its name, fuck off)
-            var data = new JavaList<IDictionary<string, object>>();
-            data.Add(new JavaDictionary<string, object> {
-                {"name","Bruce Banner" },{ "status","Bruce Banner feels like SMASHING!"}
-            });
-            var adapter = new SimpleAdapter(this, data, Android.Resource.Layout.SimpleListItem1, new[] { "name","status" }, new[] { Android.Resource.Id.Text1,Android.Resource.Id.Text2 });
-            ListView.Adapter = adapter;
-            */
         }
     }
 }

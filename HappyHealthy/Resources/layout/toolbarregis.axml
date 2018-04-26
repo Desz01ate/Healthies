@@ -26,7 +26,7 @@
     <TextView
         android:layout_width="290.0dp"
         android:layout_height="wrap_content"
-        android:text="สมัคเข้าใช้งาน"
+        android:text="สมัครเข้าใช้งาน"
         android:id="@+id/textView_header_name_regis"
         android:layout_centerHorizontal="true"
         android:textSize="20dp"

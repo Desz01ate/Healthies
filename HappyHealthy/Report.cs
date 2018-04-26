@@ -18,6 +18,7 @@ using OxyPlot.Axes;
 using OxyPlot.Series;
 using OxyPlot.Annotations;
 using SQLite;
+using System.Threading.Tasks;
 
 namespace HappyHealthyCSharp
 {

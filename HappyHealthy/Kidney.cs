@@ -151,15 +151,11 @@ namespace HappyHealthyCSharp
             if (AllowToRun(currentControl))
                 await StartMicrophoneAsync(" Albumin ในปัสสาวะ", Resource.Raw.albuminuria);
             LetsVoiceRunning = false;
+            saveButton.PerformClick();
         }
-        protected override void OnPause()
+        protected override void OnDestroy()
         {
-            base.OnPause();
-            LetsVoiceRunning = false;
-        }
-        protected override void OnStop()
-        {
-            base.OnStop();
+            base.OnDestroy();
             LetsVoiceRunning = false;
         }
         public override void OnBackPressed()
@@ -192,7 +188,7 @@ namespace HappyHealthyCSharp
                     //Thread.Sleep(1000);
                     StartActivityForResult(voiceIntent, VOICE);
                 };
-                await Task.Run(() => autoEvent.WaitOne(new TimeSpan(0, 2, 0)));
+                await Task.Run(() => autoEvent.WaitOne(new TimeSpan(0, 0, 15)));
             }
             catch
             {

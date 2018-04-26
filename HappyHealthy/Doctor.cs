@@ -164,7 +164,7 @@ namespace HappyHealthyCSharp
             var year = Convert.ToInt32(docObject.da_date.ToString("yyyy"));
             var month = Convert.ToInt32(docObject.da_date.ToString("MM"));
             var date = Convert.ToInt32(docObject.da_date.ToString("dd"));
-            var eventValues = CalendarHelper.GetEventContentValues(4, et_hospital.Text, et_comment.Text, year, month - 1, date - 1, 10, 11);
+            var eventValues = CalendarHelper.GetEventContentValues(4, et_hospital.Text, et_comment.Text, year, month - 1, date - 1, 0, 23);
             System.Console.WriteLine(CalendarContract.Events.ContentUri.ToString() + eventValues.ToString());
             var uri = ContentResolver.Insert(CalendarContract.Events.ContentUri, eventValues);
             docObject.da_calendar_uri = uri.ToString();
@@ -211,7 +211,7 @@ namespace HappyHealthyCSharp
             var year = Convert.ToInt32(docObject.da_date.ToString("yyyy"));
             var month = Convert.ToInt32(docObject.da_date.ToString("MM"));
             var date = Convert.ToInt32(docObject.da_date.ToString("dd"));
-            var eventValues = CalendarHelper.GetEventContentValues(4, et_hospital.Text, et_comment.Text, year, month - 1, date - 1, 10, 11);
+            var eventValues = CalendarHelper.GetEventContentValues(4, et_hospital.Text, et_comment.Text, year, month - 1, date - 1, 0, 23);
             System.Console.WriteLine(CalendarContract.Events.ContentUri.ToString() + eventValues.ToString());
             var uri = ContentResolver.Insert(CalendarContract.Events.ContentUri, eventValues);
             docObject.da_calendar_uri = uri.ToString();

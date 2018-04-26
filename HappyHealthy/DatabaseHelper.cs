@@ -242,7 +242,14 @@ namespace HappyHealthyCSharp
                     if (attribute.EndsWith("time"))
                     {
                         //dirty way to format a date..., but I have no time to do it elegantly :(
-                        data.Add(attribute, ((DateTime)currentProp.GetValue(dataRow)).ToString("dd-MMMM-yyyy hh:mm:ss tt"));
+                        try
+                        {
+                            data.Add(attribute, ((DateTime)currentProp.GetValue(dataRow)).ToString("dd-MMMM-yyyy hh:mm:ss tt"));
+                        }
+                        catch
+                        {
+                            data.Add(attribute, DateTime.Now.ToString("dd-MMMM-yyyy hh:mm:ss tt"));
+                        }
                     }
                     else
                     {

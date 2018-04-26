@@ -90,16 +90,15 @@ namespace HappyHealthyCSharp
         }
         public void SetListView()
         {
-            diabList = diaTable.SelectAll(x => x.ud_id == this.GetPreference("ud_id", 0)).OrderBy(x => x.fbs_time).ToJavaList();
-            /*
+            var data = diaTable.SelectAll(x => x.ud_id == this.GetPreference("ud_id", 0)).OrderBy(x => x.fbs_time);
             diabList = data.ToJavaList();
-            var dataArray = data.ToArray();
-            for (var index = 0;index < diabList.Count; index++)
-            {
-                diabList[index].Add("time", dataArray[index].fbs_time.ToString("dd-MMMM-yyyy hh:mm:ss tt"));
-            }
-            */
-            ListAdapter = new SimpleAdapter(this, diabList, Resource.Layout.history_diabetes, new string[] { "fbs_time","fbs_state" }, new int[] { Resource.Id.date,Resource.Id.dstate }); //"D_DateTime",date
+            var textList = new List<string>();
+            var boolList = new List<bool>();
+            data.ToList().ForEach(x => {
+                textList.Add(x.fbs_time.ToString("dd-MMMM-yyyy hh:mm:ss tt"));
+                boolList.Add(x.fbs_state.IsNull() ? true: false);
+            });
+            ListAdapter = new CAdapter(textList,boolList);
             ListView.Adapter = ListAdapter;
         }
 

@@ -90,8 +90,15 @@ namespace HappyHealthyCSharp
         }
         public void SetListView()
         {
-            bpList = bpTable.SelectAll(x => x.ud_id == this.GetPreference("ud_id", 0)).OrderBy(x => x.bp_time).ToJavaList();
-            ListAdapter = new SimpleAdapter(this, bpList, Resource.Layout.history_diabetes, new string[] { "bp_time","bp_state" }, new int[] { Resource.Id.date,Resource.Id.dstate });
+            var data = bpTable.SelectAll(x => x.ud_id == this.GetPreference("ud_id", 0)).OrderBy(x => x.bp_time);
+            bpList = data.ToJavaList();
+            var textList = new List<string>();
+            var boolList = new List<bool>();
+            data.ToList().ForEach(x => {
+                textList.Add(x.bp_time.ToString("dd-MMMM-yyyy hh:mm:ss tt"));
+                boolList.Add(x.bp_state.IsNull() ? true : false);
+            });
+            ListAdapter = new CAdapter(textList, boolList);
             ListView.Adapter = ListAdapter;
         }
     }
