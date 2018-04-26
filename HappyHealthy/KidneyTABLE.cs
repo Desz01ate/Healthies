@@ -32,7 +32,7 @@ namespace HappyHealthyCSharp
             "ckd_albumin_blood",
             "ckd_albumin_urine",
             "ckd_phosphorus_blood",
-            "ckd_state"
+            //"ckd_state"
         };
         public static dynamic caseLevel = new { Low = 100, Mid = 125, High = 126 };
         //GFR ref : https://medlineplus.gov/ency/article/007305.htm
@@ -85,10 +85,8 @@ namespace HappyHealthyCSharp
                 {
                     ckd_gfr_level = (int)HealthState.Danger;
                 }
-                ckd_state = Extension.HealthStateCheck((HealthState)ckd_gfr_level);
             }
         }
-        public string ckd_state { get; private set; }
         [SQLite.MaxLength(4)]
         public int ckd_gfr_level { get; private set; }
         private decimal _creatinine;
@@ -102,10 +100,6 @@ namespace HappyHealthyCSharp
             set
             {
                 _creatinine = value;                
-                if (!IsInDangerousState())
-                    ckd_state = string.Empty;
-                else
-                    ckd_state = "!!!";
             }
         }
         private decimal _bun;
@@ -119,10 +113,7 @@ namespace HappyHealthyCSharp
             set
             {
                 _bun = value;
-                if (!IsInDangerousState())
-                    ckd_state = string.Empty;
-                else
-                    ckd_state = "!!!";
+
             }
         }
         private decimal _sodium;
@@ -136,10 +127,6 @@ namespace HappyHealthyCSharp
             set
             {
                 _sodium = value;
-                if (!IsInDangerousState())
-                    ckd_state = string.Empty;
-                else
-                    ckd_state = "!!!";
             }
         }
         private decimal _potassium;
@@ -153,10 +140,7 @@ namespace HappyHealthyCSharp
             set
             {
                 _potassium = value;
-                if (!IsInDangerousState())
-                    ckd_state = string.Empty;
-                else
-                    ckd_state = "!!!";
+
             }
         }
         private decimal _alb_blood;
@@ -169,10 +153,6 @@ namespace HappyHealthyCSharp
             set
             {
                 _alb_blood = value;
-                if (!IsInDangerousState())
-                    ckd_state = string.Empty;
-                else
-                    ckd_state = "!!!";
             }
         }
         private decimal _alb_urine;
@@ -185,10 +165,6 @@ namespace HappyHealthyCSharp
             set
             {
                 _alb_urine = value;
-                if (!IsInDangerousState())
-                    ckd_state = string.Empty;
-                else
-                    ckd_state = "!!!";
             }
         }
         private decimal _phos_blood;
@@ -201,10 +177,6 @@ namespace HappyHealthyCSharp
             set
             {
                 _phos_blood = value;
-                if (!IsInDangerousState())
-                    ckd_state = string.Empty;
-                else
-                    ckd_state = "!!!";
             }
         }
         public int ud_id { get; set; }

@@ -31,7 +31,7 @@ namespace HappyHealthyCSharp
             "bp_up_lvl",
             "bp_lo_lvl",
             "bp_hr_lvl",
-            "bp_state"
+            //"bp_state"
         };
 
         //heart rate ref : http://heartratezone.com/what-is-my-pulse-rate-supposed-to-be/
@@ -121,9 +121,8 @@ namespace HappyHealthyCSharp
                 return baseValues;
             }
         }
-        public string IsInDangerousState()
+        public bool IsInDangerousState()
         {
-            /*
             for (var pIndex = 0; pIndex < reportKeys.Length; pIndex++)
             {
                 var prop = reportKeys[pIndex];
@@ -139,6 +138,11 @@ namespace HappyHealthyCSharp
                 }
             }
             return false;
+        }
+        public string IsInDangerousStateString()
+        {
+            /*
+
             */
             if ((HealthState)bp_up_lvl > HealthState.BeAware && (HealthState)bp_lo_lvl > HealthState.BeAware && (HealthState)bp_hr_lvl > HealthState.BeAware) //if everything is above 2, it's mean that user is fine
                 return string.Empty;
@@ -157,7 +161,6 @@ namespace HappyHealthyCSharp
         public DateTime bp_time { get; set; }
         public string bp_time_string { get; set; }
         private decimal _upValue;
-        public string bp_state { get; private set; }
         [SQLite.MaxLength(3)]
         public decimal bp_up
         {
@@ -183,7 +186,6 @@ namespace HappyHealthyCSharp
                 else
                     bp_up_lvl = (int)HealthState.VeryDanger;
 
-                StateChanger();
                 /*
                 if (!IsInDangerousState())
                 {
@@ -198,12 +200,6 @@ namespace HappyHealthyCSharp
                 */
             }
         }
-
-        private void StateChanger()
-        {
-            bp_state = Extension.HealthStateCheck((HealthState)bp_up_lvl, (HealthState)bp_lo_lvl, (HealthState)bp_hr_lvl);
-        }
-
         private decimal _lowValue;
         [SQLite.MaxLength(3)]
         public decimal bp_lo
@@ -230,7 +226,6 @@ namespace HappyHealthyCSharp
                 else
                     bp_lo_lvl = (int)HealthState.VeryDanger;
 
-                StateChanger();
                 /*
                 if (!IsInDangerousState())
                 {
@@ -271,7 +266,6 @@ namespace HappyHealthyCSharp
                 else
                     bp_hr_lvl = (int)HealthState.VeryDanger;
 
-                StateChanger();
             }
         }
         [SQLite.MaxLength(4)]

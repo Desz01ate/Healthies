@@ -46,7 +46,7 @@ namespace HappyHealthyCSharp
                 view.Tag = new ViewHolder() { Picture = pic,Date = text};
             }
             var holder = (ViewHolder)view.Tag;
-            holder.Picture.SetImageResource(_stateList[position]?Resource.Drawable.ok:Resource.Drawable.danger);
+            holder.Picture.SetImageResource(_stateList[position]?Resource.Drawable.danger:Resource.Drawable.ok);
             holder.Date.Text = _textList[position];
             return view;
         }

@@ -53,7 +53,7 @@ namespace HappyHealthyCSharp.HHCSService {
         
         /// <remarks/>
         public HHCSService() {
-            this.Url = "http://hhcssdm.somee.com/HHCSService/HHCSService.asmx";
+            this.Url = "http://hhcsdm.somee.com/HHCSService/HHCSService.asmx";
             if ((this.IsLocalFileSystemWebService(this.Url) == true)) {
                 this.UseDefaultCredentials = true;
                 this.useDefaultCredentialsSetExplicitly = false;
@@ -942,10 +942,6 @@ namespace HappyHealthyCSharp.HHCSService {
         
         private int fbs_fbs_lvl_oldField;
         
-        private double fbs_fbs_sum_newField;
-        
-        private double fbs_fbs_sum_oldField;
-        
         private string modeField;
         
         /// <remarks/>
@@ -1025,26 +1021,6 @@ namespace HappyHealthyCSharp.HHCSService {
             }
             set {
                 this.fbs_fbs_lvl_oldField = value;
-            }
-        }
-        
-        /// <remarks/>
-        public double fbs_fbs_sum_new {
-            get {
-                return this.fbs_fbs_sum_newField;
-            }
-            set {
-                this.fbs_fbs_sum_newField = value;
-            }
-        }
-        
-        /// <remarks/>
-        public double fbs_fbs_sum_old {
-            get {
-                return this.fbs_fbs_sum_oldField;
-            }
-            set {
-                this.fbs_fbs_sum_oldField = value;
             }
         }
         

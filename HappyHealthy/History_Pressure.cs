@@ -41,9 +41,11 @@ namespace HappyHealthyCSharp
         private void InitializeControlEvent()
         {
             add.Click += delegate { StartActivity(new Intent(this, typeof(Pressure))); };
-            back.Click += delegate {
+            back.Click += delegate
+            {
                 DatabaseHelperExtension.TrySyncWithMySQL(this);
-                Finish(); };
+                Finish();
+            };
             ListView.ItemClick += onItemClick;
         }
 
@@ -94,9 +96,10 @@ namespace HappyHealthyCSharp
             bpList = data.ToJavaList();
             var textList = new List<string>();
             var boolList = new List<bool>();
-            data.ToList().ForEach(x => {
+            data.ToList().ForEach(x =>
+            {
                 textList.Add(x.bp_time.ToString("dd-MMMM-yyyy hh:mm:ss tt"));
-                boolList.Add(x.bp_state.IsNull() ? true : false);
+                boolList.Add(x.IsInDangerousState());
             });
             ListAdapter = new CAdapter(textList, boolList);
             ListView.Adapter = ListAdapter;

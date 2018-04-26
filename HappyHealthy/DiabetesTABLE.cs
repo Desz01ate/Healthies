@@ -30,7 +30,7 @@ namespace HappyHealthyCSharp
             "fbs_fbs",
             "fbs_fbs_lvl",
             "fbs_fbs_sum",
-            "fbs_state",
+            //"fbs_state",
             "ud_id"
         };
         public static dynamic caseLevel = new { Low = 100, Mid = 125, High = 126 };
@@ -60,7 +60,6 @@ namespace HappyHealthyCSharp
         public DateTime fbs_time { get; set; }
         public string fbs_time_string { get;set; }
         public decimal fbs_fbs_sum { get; set; }
-        public string fbs_state { get; private set; }
         private decimal _fbs;
         public decimal fbs_fbs
         {
@@ -79,7 +78,6 @@ namespace HappyHealthyCSharp
                 {
                     fbs_fbs_lvl = (int)HealthState.Danger;
                 }
-                fbs_state = Extension.HealthStateCheck((HealthState)fbs_fbs_lvl);
             }
         }
         public int fbs_fbs_lvl { get; private set; }

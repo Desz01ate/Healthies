@@ -258,7 +258,7 @@ namespace HappyHealthyCSharp
             pressureObject.bp_hr = Convert.ToInt32(HeartRate.Text);
             pressureObject.Update();
             //pressureObject.TrySyncWithMySQL(this);
-            var status = pressureObject.IsInDangerousState();
+            var status = pressureObject.IsInDangerousStateString();
             if (status.Length > 0)
                 Extension.CreateDialogue(this, $@"ค่าที่คุณทำการบันทึก อยู่ในเกณฑ์ {status}", delegate
                 {
@@ -295,7 +295,7 @@ namespace HappyHealthyCSharp
             pressureObject.ud_id = this.GetPreference("ud_id", 0);
             pressureObject.Insert();
             //bpTable.TrySyncWithMySQL(this);
-            var status = pressureObject.IsInDangerousState();
+            var status = pressureObject.IsInDangerousStateString();
             if (status.Length > 0)
                 Extension.CreateDialogue(this, $@"ค่าที่คุณทำการบันทึก อยู่ในเกณฑ์ {status}", delegate
                 {

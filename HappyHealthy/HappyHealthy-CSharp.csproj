@@ -1255,10 +1255,10 @@
     <AndroidResource Include="Resources\drawable-hdpi\buttonsavefoodex.png" />
   </ItemGroup>
   <ItemGroup>
-    <WebReferenceUrl Include="http://hhcssdm.somee.com/HHCSService/HHCSService.asmx">
+    <WebReferenceUrl Include="http://hhcsdm.somee.com/HHCSService/HHCSService.asmx">
       <UrlBehavior>Dynamic</UrlBehavior>
       <RelPath>Web References\HHCSService\</RelPath>
-      <UpdateFromURL>http://hhcssdm.somee.com/HHCSService/HHCSService.asmx</UpdateFromURL>
+      <UpdateFromURL>http://hhcsdm.somee.com/HHCSService/HHCSService.asmx</UpdateFromURL>
       <ServiceLocationURL>
       </ServiceLocationURL>
       <CachedDynamicPropName>

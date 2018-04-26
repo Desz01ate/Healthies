@@ -106,7 +106,7 @@ namespace HappyHealthyCSharp
             var boolList = new List<bool>();
             data.ToList().ForEach(x => {
                 textList.Add(x.ckd_time.ToString("dd-MMMM-yyyy hh:mm:ss tt"));
-                boolList.Add(x.ckd_state.IsNull() ? true : false);
+                boolList.Add(x.IsInDangerousState());
             });
             ListAdapter = new CAdapter(textList, boolList);
             ListView.Adapter = ListAdapter;

@@ -147,8 +147,6 @@
           <s:element minOccurs="1" maxOccurs="1" name="fbs_fbs_old" type="s:int" />
           <s:element minOccurs="1" maxOccurs="1" name="fbs_fbs_lvl_new" type="s:int" />
           <s:element minOccurs="1" maxOccurs="1" name="fbs_fbs_lvl_old" type="s:int" />
-          <s:element minOccurs="1" maxOccurs="1" name="fbs_fbs_sum_new" type="s:double" />
-          <s:element minOccurs="1" maxOccurs="1" name="fbs_fbs_sum_old" type="s:double" />
           <s:element minOccurs="0" maxOccurs="1" name="mode" type="s:string" />
         </s:sequence>
       </s:complexType>
@@ -517,10 +515,10 @@
   </wsdl:binding>
   <wsdl:service name="HHCSService">
     <wsdl:port name="HHCSServiceSoap" binding="tns:HHCSServiceSoap">
-      <soap:address location="http://hhcssdm.somee.com/HHCSService/HHCSService.asmx" />
+      <soap:address location="http://hhcsdm.somee.com/HHCSService/HHCSService.asmx" />
     </wsdl:port>
     <wsdl:port name="HHCSServiceSoap12" binding="tns:HHCSServiceSoap12">
-      <soap12:address location="http://hhcssdm.somee.com/HHCSService/HHCSService.asmx" />
+      <soap12:address location="http://hhcsdm.somee.com/HHCSService/HHCSService.asmx" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>
