@@ -76,7 +76,7 @@ namespace HappyHealthyCSharp
         public void setListFood(string what_to_search)
         {
             foodList = foodTable.GetFoodList(this,what_to_search);
-            ListAdapter = new SimpleAdapter(this, foodList, Resource.Layout.food_1, new string[] { "food_name", "food_calories", "food_unit", "food_detail" }, new int[] { Resource.Id.food_name, Resource.Id.food_calories, Resource.Id.food_unit, Resource.Id.food_detail });
+            ListAdapter = new SimpleAdapter(this, foodList, Resource.Layout.food_1, new string[] { "food_name",  "food_detail" }, new int[] { Resource.Id.food_name,  Resource.Id.food_detail });
             ListView.Adapter = ListAdapter;
         }
     }

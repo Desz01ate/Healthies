@@ -88,7 +88,6 @@ namespace HappyHealthyCSharp
         //reconstruct of sqlite keys + attributes
         public DiabetesTABLE()
         {
-
             //constructor - no need for args since naming convention for instances variable mapping can be use : CB
         }
         public override bool Delete()

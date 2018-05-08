@@ -38,8 +38,8 @@ namespace HappyHealthyCSharp
                 .SetPriority((int)NotificationPriority.Max)
                 .SetAutoCancel(true)
                 .SetContentIntent(resultPendingIntent)
-                .SetContentTitle("Happy Healthy")
-                .SetSmallIcon(Resource.Drawable.iconfood)
+                .SetContentTitle("Healthies!")
+                .SetSmallIcon(Resource.Drawable.Icon)
                 .SetVibrate(new long[0])
                 .SetContentText(content);
             return builder;
@@ -158,7 +158,7 @@ namespace HappyHealthyCSharp
 
             //calendar.Set(date.Year, date.Month - 1, date.Day, date.Hour, date.Minute, date.Second);
             var am_pm = date.ToString("tt", CultureInfo.InvariantCulture) == "AM" ? Android.Icu.Util.Calendar.Am : Android.Icu.Util.Calendar.Pm;
-            //Ok, the above line is VERY VERY IMPORTANT PART of this functiom. Don't mess with it unless you know what you're doing.
+            //Ok, the above line is VERY VERY IMPORTANT PART of this functiom. Don't mess with it unless you know what are you going to do.
             calendar.Set(Java.Util.CalendarField.AmPm, am_pm);
             calendar.Set(Java.Util.CalendarField.Hour, date.Hour % 12);
             calendar.Set(Java.Util.CalendarField.Minute, date.Minute);
@@ -204,7 +204,7 @@ namespace HappyHealthyCSharp
             var pendingIntent = PendingIntent.GetActivity(context, 0, notificationIntent, PendingIntentFlags.UpdateCurrent);
             var alarmSound = RingtoneManager.GetDefaultUri(RingtoneType.Notification);
             var mNotifyBuilder = new NotificationCompat.Builder(context);
-            mNotifyBuilder.SetSmallIcon(Resource.Drawable.logormutsb);
+            mNotifyBuilder.SetSmallIcon(Resource.Drawable.Icon);
             mNotifyBuilder.SetContentTitle("ถึงเวลาทานยา " + alertContent);
             mNotifyBuilder.SetContentText($@"ถึงเวลาทานยา {alertContent} ({DateTime.Now.ToString("HH:mm")})").SetSound(alarmSound);
             mNotifyBuilder.SetAutoCancel(true).SetWhen(when);

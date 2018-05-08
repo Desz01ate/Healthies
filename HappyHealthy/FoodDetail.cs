@@ -83,11 +83,11 @@ namespace HappyHealthyCSharp
             header.Text = detailFood["food_name"];
             name.Text = detailFood["food_name"];
             detail.Text = detailFood["food_note_detail"];
-            sodium.Text = detailFood["food_sodium_str"];
-            phosphorus.Text = detailFood["food_phosphorus_str"];
-            potassium.Text = detailFood["food_potassium_str"];
-            protein.Text = detailFood["food_protein_str"];
-            magnesium.Text = detailFood["food_magnesium_str"];
+            sodium.Text = detailFood["food_sodium_str"].Length == 0 ? "N/A": detailFood["food_sodium_str"];
+            phosphorus.Text = detailFood["food_phosphorus_str"].Length == 0 ? "N/A" : detailFood["food_phosphorus_str"];
+            potassium.Text = detailFood["food_potassium_str"].Length == 0 ? "N/A": detailFood["food_potassium_str"];
+            protein.Text = detailFood["food_protein_str"].Length == 0 ? "N/A": detailFood["food_protein_str"];
+            magnesium.Text = detailFood["food_magnesium_str"].Length == 0 ? "N/A": detailFood["food_magnesium_str"];
             
         }
         protected override void OnPause()

@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/his_foodex_detail"
             android:textSize="11dp"
-            android:hint="food_detail"
+            android:hint=""
             android:layout_marginTop="8dp"
             android:textColor="#3a3a3a"
             android:textStyle="bold"

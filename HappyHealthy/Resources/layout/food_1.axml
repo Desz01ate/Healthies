@@ -20,7 +20,7 @@
             android:layout_marginTop="10dp" />
         <TextView
             android:layout_height="wrap_content"
-            android:text="Cal"
+            android:text=""
             android:textColor="#3a3a3a"
             android:id="@+id/food_calories"
             android:paddingLeft="10dp"
@@ -32,7 +32,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="kcal"
+            android:text=""
             android:textColor="#3a3a3a"
             android:id="@+id/textView"
             android:textSize="13.5dp"
@@ -50,7 +50,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ต่อ"
+            android:text=""
             android:textColor="#3a3a3a"
             android:id="@+id/textView2"
             android:textSize="12dp"
@@ -59,7 +59,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="unit"
+            android:text=""
             android:textColor="#3a3a3a"
             android:id="@+id/food_unit"
             android:textSize="11dp"

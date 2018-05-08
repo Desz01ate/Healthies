@@ -31,7 +31,7 @@ namespace HappyHealthyCSharp
     {
         public static readonly string fileStorePath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
         public static readonly string sqliteDBPath = Path.Combine(fileStorePath, "hhcs.db3");
-        public static readonly int flagValue = -9521;
+        public static readonly int flagValue = -9521; //whatever value you want
         public static readonly int adFontSize = 70;
         /// <summary>
         /// Simple dialog box for just showing the message.
@@ -164,15 +164,13 @@ namespace HappyHealthyCSharp
         public static DateTime ToThaiLocale(this DateTime n)
         {
             var thaiCalendar = new System.Globalization.ThaiBuddhistCalendar();
-            var now = n;
-            var thaiTime = new DateTime(thaiCalendar.GetYear(now), thaiCalendar.GetMonth(now), thaiCalendar.GetDayOfMonth(now), thaiCalendar.GetHour(now), thaiCalendar.GetMinute(now), thaiCalendar.GetSecond(now));
+            var thaiTime = new DateTime(thaiCalendar.GetYear(n), thaiCalendar.GetMonth(n), thaiCalendar.GetDayOfMonth(n), thaiCalendar.GetHour(n), thaiCalendar.GetMinute(n), thaiCalendar.GetSecond(n));
             return thaiTime;
         }
         public static DateTime RevertThaiLocale(this DateTime n)
         {
             var gregorianCalendar = new System.Globalization.GregorianCalendar();
-            var now = n;
-            var globalTime = new DateTime(gregorianCalendar.GetYear(now), gregorianCalendar.GetMonth(now), gregorianCalendar.GetDayOfMonth(now), gregorianCalendar.GetHour(now), gregorianCalendar.GetMinute(now), gregorianCalendar.GetSecond(now));
+            var globalTime = new DateTime(gregorianCalendar.GetYear(n), gregorianCalendar.GetMonth(n), gregorianCalendar.GetDayOfMonth(n), gregorianCalendar.GetHour(n), gregorianCalendar.GetMinute(n), gregorianCalendar.GetSecond(n));
             return globalTime;
         }
         public static string GetValidPathForFileStore(string filename)
@@ -286,11 +284,10 @@ namespace HappyHealthyCSharp
                         data.TryGetValue(listKeywords[keyIndex], out var value); //let's extract the value
                         etArray[index].Text = value; //assign it to that control
                         listKeywords.RemoveAt(keyIndex); //the keyword has been used, so jut remove these fcking keyword
-                        goto breakloop; //we found the value we're looking for, so just get out of the loop
+                        break; //we found the value we're looking for, so just get out of the inner loop
                         //these 2 above lines is about to make the code run 2 times faster at best case, so just leave it be
                     }
                 }
-                breakloop:;
             }
         }
         public static bool IsNull(this string objValue)
@@ -318,17 +315,6 @@ namespace HappyHealthyCSharp
         public static bool TimeValidate(this DateTime dt)
         {
             return dt.Hour != 0 || dt.Minute != 0;
-        }
-        public static string HealthStateCheck(params HealthState[] input)
-        {
-            for(var i = 0; i < input.Length; i++)
-            {
-                if(input[i] < HealthState.Normal)
-                {
-                    return "!!!";
-                }
-            }
-            return string.Empty;
         }
 
     }

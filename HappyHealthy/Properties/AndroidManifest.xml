@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="deszolate.HappyHealthyCS" android:versionName="1.6" android:installLocation="auto" android:versionCode="8">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="deszolate.Healthies" android:versionName="1.7" android:installLocation="auto" android:versionCode="9">
 	<uses-sdk android:minSdkVersion="16" />
 	<uses-permission android:name="android.permission.READ_CALENDAR" />
 	<uses-permission android:name="android.permission.WRITE_CALENDAR" />
 	<uses-permission android:name="android.permission.VIBRATE" />
 	<uses-permission android:name="android.permission.WAKE_LOCK" />
 	<uses-permission android:name="android.permission.INTERNET" />
-	<application android:label="I Need Healing!" android:largeHeap="true" android:icon="@drawable/Icon">
+	<application android:label="Healthies!" android:largeHeap="true" android:icon="@drawable/Icon">
 		<receiver android:name=".AlarmReceiver"></receiver>
 	</application>
 	<user-permission android:name="com.android.alarm.permission.SET_ALARM" />

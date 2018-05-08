@@ -142,7 +142,7 @@ namespace HappyHealthyCSharp
                 }
                 else
                 {
-                    Extension.CreateDialogue(this, "เกิดความผิดพลาดในการเชื่อมต่อฐานข้อมูล").Show();
+                    Extension.CreateDialogue(this, "เกิดข้อผิดพลาดในการเชื่อมต่อฐานข้อมูล").Show();
                 }
             }
             catch(Exception ex)
